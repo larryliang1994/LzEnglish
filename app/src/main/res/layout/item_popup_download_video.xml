@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="76dp"
+    android:layout_height="76dp"
+    android:layout_gravity="center">
+
+    <RelativeLayout
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_searchbox_gray">
+
+        <TextView
+            android:id="@+id/textView_ep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textSize="16sp"
+            android:textColor="@color/mainText"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/imageView_play"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            android:scaleType="fitCenter"
+            android:src="@drawable/play"
+            android:tint="@color/colorPrimary" />
+
+        <io.techery.properratingbar.ProperRatingBar
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            app:prb_clickable="false"
+            app:prb_defaultRating="0"
+            android:layout_marginBottom="5dp"
+            app:prb_tickNormalDrawable="@drawable/star_unchecked"
+            app:prb_tickSelectedDrawable="@drawable/star_checked"
+            app:prb_tickSpacing="1dp"
+            app:prb_totalTicks="5" />
+
+        <ImageView
+            android:id="@+id/imageView_lock"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone"
+            android:layout_margin="5dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/lock"
+            android:tint="@color/background_dark" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView_progress"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:scaleType="fitCenter"
+        android:src="@drawable/checked"
+        android:tint="@color/colorPrimary" />
+</RelativeLayout>

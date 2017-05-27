@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <ImageView
+        android:id="@+id/imageView_portrait"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/teacher" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <com.jiubai.lzenglish.widget.ChatImageView
+            android:id="@+id/chatImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:arrow_height="10dp"
+            app:arrow_top="15dp"
+            app:arrow_width="5dp"
+            app:direction="left"
+            app:offset="5dp"
+            app:radius="4dp" />
+
+        <LinearLayout
+            android:id="@+id/layout_eng"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:id="@+id/textView_eng"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="2.Back then, the world was divide into two parts."
+                android:textSize="18sp"
+                android:textColor="@color/mainText"
+                android:layout_marginLeft="20dp" />
+
+            <ImageView
+                android:id="@+id/imageView_play"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:padding="4dp"
+                android:src="@drawable/read_left_three"
+                android:tint="#A2A2A2" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView_ch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="在当时，世界分为两个阵营。"
+            android:textSize="16sp"
+            android:layout_below="@id/layout_eng"
+            android:textColor="@color/lightText"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="10dp"/>
+
+    </RelativeLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageView_dot"
+        android:layout_width="8dp"
+        android:layout_height="8dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="35dp"
+        android:visibility="invisible"
+        android:layout_gravity="top"
+        android:src="#EB4D4B" />
+
+</LinearLayout>

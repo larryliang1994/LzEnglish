@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="#ffffff"
+    android:elevation="4dp"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView_getText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ripple"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="转换为文字（英文）"
+        android:textColor="@color/primaryText"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/textView_delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ripple"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:padding="16dp"
+        android:text="删除"
+        android:textColor="@color/primaryText"
+        android:textSize="16sp" />
+
+</LinearLayout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    tools:context="com.jiubai.lzenglish.ui.activity.SearchVideoActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="73dp"
+        android:background="#ffffff"
+        android:elevation="4dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/appbar_height"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="64dp"
+            android:layout_marginTop="30dp"
+            android:transitionName="search">
+
+            <View
+                android:id="@+id/view_background"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_searchbox_gray" />
+
+            <ImageView
+                android:id="@+id/imageView_search"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:paddingLeft="10dp"
+                android:visibility="visible"
+                android:scaleType="fitCenter"
+                android:layout_centerVertical="true"
+                android:src="@drawable/search"
+                android:tint="@color/colorPrimary" />
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toRightOf="@id/imageView_search"
+                android:background="@null"
+                android:lines="1"
+                android:maxLines="1"
+                android:imeOptions="actionSearch"
+                android:paddingLeft="10dp"
+                android:imeActionLabel="搜索"
+                android:inputType="text"
+                android:hint="搜索动画视频"
+                android:textColor="@color/mainText"
+                android:textColorHint="@color/lightText"
+                android:textSize="16sp" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView_back"
+            android:layout_width="64dp"
+            android:layout_height="@dimen/appbar_height"
+            android:layout_marginTop="25dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/mainText"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

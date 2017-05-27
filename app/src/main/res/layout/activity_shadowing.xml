@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@color/background"
+    tools:context="com.jiubai.lzenglish.ui.activity.PlayVideoActivity">
+
+    <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+        android:id="@+id/videoplayer"
+        android:layout_width="match_parent"
+        android:transitionName="player"
+        android:layout_height="180dp"
+        android:background="#000000"
+        android:elevation="4dp" />
+
+    <View
+        android:id="@+id/view_video_cover"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="#00ffffff"
+        android:elevation="5dp" />
+
+    <ImageView
+        android:id="@+id/imageView_back"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="25dp"
+        android:background="#00000000"
+        android:elevation="5dp"
+        android:padding="10dp"
+        android:src="@drawable/back" />
+
+    <FrameLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:transitionName="bottomLayout"
+        android:layout_height="60dp"
+        android:background="#ffffff"
+        android:elevation="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
+
+        <com.jiubai.lzenglish.widget.recorder.manager.AudioRecordButton
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/round_button_login"
+            style="?android:attr/borderlessButtonStyle"
+            app:elevation="0dp"
+            android:text="按住录音 跟读"
+            android:textSize="18sp" />
+
+    </FrameLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/layout_bottom"
+        android:layout_below="@id/videoplayer" />
+
+    <View
+        android:id="@+id/view_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:layout_below="@id/videoplayer"
+        android:background="#ffffff" />
+
+</RelativeLayout>

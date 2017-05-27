@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
+    tools:context="com.jiubai.lzenglish.ui.activity.ChooseAgeActivity">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.45" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="32dp"
+            android:text="选择一些您喜欢的视频"
+            android:textColor="@color/primaryText"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_1"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="字母\n积木"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_2"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="数字虫"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_3"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="英文\n儿歌"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_4"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="单词\n世界"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_5"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="小猪\n佩奇"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_6"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="功夫\n熊猫"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_7"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="驯龙\n高手"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_8"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="疯狂\n动物城"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+            <com.jiubai.lzenglish.widget.RippleView
+                android:id="@+id/ripple_9"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/round_listview_white"
+                android:gravity="center"
+                app:rv_rippleDuration="200"
+                app:rv_type="rectangle">
+
+                <TextView
+                    android:id="@+id/textView_9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="美国\n之音"
+                    android:textColor="@color/primaryText"
+                    android:textSize="18sp" />
+
+            </com.jiubai.lzenglish.widget.RippleView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.55" />
+
+    <com.jiubai.lzenglish.widget.RippleView
+        android:id="@+id/ripple_next"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:elevation="4dp"
+        app:rv_color="#ffffff"
+        app:rv_rippleDuration="200"
+        app:rv_type="rectangle">
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/lightBlue"
+            android:text="进入量子英语"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+
+    </com.jiubai.lzenglish.widget.RippleView>
+</LinearLayout>
