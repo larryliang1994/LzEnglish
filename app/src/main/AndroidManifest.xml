@@ -54,6 +54,7 @@
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.PlayVideoActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.DownloadActivity"
@@ -63,17 +64,8 @@
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.ShadowingActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity android:name=".ui.activity.SeasonListActivity"/>
-
-        <!-- begin: baidu speech sdk-->
-        <!-- 请填写应用实际的APP_ID -->
-        <meta-data android:name="com.baidu.speech.APP_ID" android:value="9683237"/>
-        <!-- 请填写应用实际的API_KEY -->
-        <meta-data android:name="com.baidu.speech.API_KEY" android:value="woj7eN9XVF061hf3sbNd8f1o"/>
-        <!-- 请填写应用实际的SECRET_KEY -->
-        <meta-data android:name="com.baidu.speech.SECRET_KEY" android:value="d027c88d50283969cc39680e7432e7b2"/>
-        <service android:name="com.baidu.speech.VoiceRecognitionService" android:exported="false" />
     </application>
-
 </manifest>

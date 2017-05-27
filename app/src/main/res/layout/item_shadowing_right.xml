@@ -94,10 +94,9 @@
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/imageView_portrait"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/portrait_example" />
+        android:scaleType="centerCrop" />
 
 </LinearLayout>

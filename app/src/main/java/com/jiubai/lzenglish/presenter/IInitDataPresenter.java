@@ -8,4 +8,5 @@ public interface IInitDataPresenter {
     void getResourceUrl();
     void getAgeGroups();
     void getAllCartoon();
+    void getUserInfo();
 }

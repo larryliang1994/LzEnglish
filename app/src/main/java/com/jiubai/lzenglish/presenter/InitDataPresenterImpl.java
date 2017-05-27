@@ -51,6 +51,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iInitDataView.onGetResourceUrlResult(false, "图像资源地址数据源出错", e);
                         }
                     }
                 },
@@ -91,6 +92,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iInitDataView.onGetAgeGroupsResult(false, "年龄段数据源出错", e);
                         }
                     }
                 },
@@ -138,6 +140,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iInitDataView.onGetAllCartoonResult(false, "动画片列表数据源出错", e);
                         }
                     }
                 },
@@ -145,6 +148,44 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         iInitDataView.onGetAllCartoonResult(false, "获取动画片列表失败", error);
+                    }
+                });
+    }
+
+    @Override
+    public void getUserInfo() {
+        Map<String, String> params = new HashMap<>();
+        params.put("_url", "member/getUserInfo");
+        params.put("_ajax", "1");
+
+        RequestUtil.request(params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            String result = jsonObject.getString("code");
+
+                            if (Constants.SUCCESS.equals(result)) {
+                                JSONObject infoObject = jsonObject.getJSONObject("data").getJSONObject("_weixin_info_");
+                                Config.UserName = infoObject.getString("nickname");
+                                Config.UserImage = infoObject.getString("headimgurl");
+
+                                iInitDataView.onGetUserInfoResult(true, "", response);
+                            } else {
+                                iInitDataView.onGetUserInfoResult(false, jsonObject.getString("msg"), response);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            iInitDataView.onGetUserInfoResult(false, "用户信息数据源出错", e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        iInitDataView.onGetUserInfoResult(false, "获取用户信息失败", error);
                     }
                 });
     }

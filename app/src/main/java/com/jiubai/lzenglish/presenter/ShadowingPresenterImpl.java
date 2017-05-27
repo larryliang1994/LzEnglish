@@ -119,6 +119,7 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iShadowingView.onGetShadowingListResult(false, "跟读列表数据源出错", e);
                         }
                     }
                 },
@@ -163,16 +164,17 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
 
                         saveVoiceRecord(voice);
                     } else {
-                        iShadowingView.onSaveVoiceResult(false, jsonObject.getString("msg"), serverResponse);
+                        iShadowingView.onSaveVoiceResult(false, jsonObject.getString("msg"), voice);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    iShadowingView.onSaveVoiceResult(false, "上传录音文件数据源出错", voice);
                 }
             }
 
             @Override
             public void onCancelled(Context context, UploadInfo uploadInfo) {
-                iShadowingView.onSaveVoiceResult(false, "上传录音文件失败", uploadInfo);
+                iShadowingView.onSaveVoiceResult(false, "上传录音文件失败", voice);
             }
         });
     }
@@ -203,6 +205,7 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iShadowingView.onScoringVoiceResult(false, "打分数据源出错", e);
                         }
                     }
                 },
@@ -269,17 +272,18 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
 
                                 //iShadowingView.onSaveVoiceResult(true, "", voice);
                             } else {
-                                iShadowingView.onSaveVoiceResult(false, "保存录音记录失败", response);
+                                iShadowingView.onSaveVoiceResult(false, "保存录音记录失败", voice);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iShadowingView.onSaveVoiceResult(false, "保存录音记录数据源出错", voice);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        iShadowingView.onSaveVoiceResult(false, "保存录音记录失败", error);
+                        iShadowingView.onSaveVoiceResult(false, "保存录音记录失败", voice);
                     }
                 });
     }
@@ -306,17 +310,18 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
 
                                 iShadowingView.onSaveVoiceResult(true, "", voice);
                             } else {
-                                iShadowingView.onSaveVoiceResult(false, jsonObject.getString("msg"), response);
+                                iShadowingView.onSaveVoiceResult(false, jsonObject.getString("msg"), voice);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iShadowingView.onSaveVoiceResult(false, "获取文字数据源出错", voice);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        iShadowingView.onSaveVoiceResult(false, "获取文字失败", error);
+                        iShadowingView.onSaveVoiceResult(false, "获取文字失败", voice);
                     }
                 });
     }

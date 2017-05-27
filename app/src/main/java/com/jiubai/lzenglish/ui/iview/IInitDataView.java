@@ -8,4 +8,5 @@ public interface IInitDataView {
     void onGetResourceUrlResult(boolean result, String info, Object extras);
     void onGetAgeGroupsResult(boolean result, String info, Object extras);
     void onGetAllCartoonResult(boolean result, String info, Object extras);
+    void onGetUserInfoResult(boolean result, String info, Object extras);
 }

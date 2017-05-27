@@ -2,71 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:orientation="horizontal"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:paddingTop="16dp"
-    android:background="@color/background"
-    android:orientation="horizontal">
+    android:paddingRight="16dp">
 
-    <FrameLayout
-        android:id="@+id/layout1"
+    <ImageView
+        android:id="@+id/imageView1"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginRight="8dp"
-        android:layout_weight="1"
-        android:background="@drawable/round_listview_white_no_stroke"
-        android:orientation="vertical">
+        android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:scaleType="centerCrop"
-            android:paddingBottom="10dp"
-            android:src="@drawable/round_searchbox_gray"/>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="#ffffff"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:text="第一季"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/layout2"
+    <ImageView
+        android:id="@+id/imageView2"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="8dp"
-        android:layout_weight="1"
-        android:background="@drawable/round_listview_white_no_stroke"
-        android:orientation="vertical">
+        android:layout_weight="1" />
 
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:scaleType="centerCrop"
-            android:paddingBottom="10dp"
-            android:src="@drawable/round_searchbox_gray"/>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="36dp"
-            android:background="#ffffff"
-            android:layout_marginBottom="5dp"
-            android:layout_gravity="bottom"
-            android:gravity="center"
-            android:text="第一季"
-            android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
-
-    </FrameLayout>
 </LinearLayout>

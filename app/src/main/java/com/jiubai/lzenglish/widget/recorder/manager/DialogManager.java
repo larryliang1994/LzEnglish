@@ -7,7 +7,6 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
@@ -42,7 +41,9 @@ public class DialogManager {
 
     public DialogManager(Context context) {
         mContext = context;
+    }
 
+    public void showRecordingDialog() {
         mDialog = new Dialog(mContext, R.style.Theme_audioDialog);
         // 用layoutinflater来引用布局
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -50,18 +51,6 @@ public class DialogManager {
         mDialog.setContentView(view);
 
         ButterKnife.bind(this, view);
-    }
-
-    public void showRecordingDialog() {
-        if (mDialog == null) {
-            mDialog = new Dialog(mContext, R.style.Theme_audioDialog);
-            // 用layoutinflater来引用布局
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            View view = inflater.inflate(R.layout.dialog_manager, null);
-            mDialog.setContentView(view);
-
-            ButterKnife.bind(this, view);
-        }
 
         mDialog.show();
     }

@@ -26,6 +26,7 @@ import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Shadowing;
 import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.presenter.ShadowingPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
 import com.jiubai.lzenglish.widget.CardPopup;
@@ -153,6 +154,8 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                     .getVoiceList().get(position - arrangeIndex.get(position) - 1);
 
             final RightItemViewHolder viewHolder = (RightItemViewHolder) holder;
+
+            ImageLoader.getInstance().displayImage(Config.UserImage, viewHolder.portraitImageView);
 
             if (voice.getId() == -99) {
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -368,6 +371,9 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
         @Bind(R.id.layout_chat)
         RelativeLayout layout;
+
+        @Bind(R.id.imageView_portrait)
+        ImageView portraitImageView;
 
         public RightItemViewHolder(View itemView) {
             super(itemView);

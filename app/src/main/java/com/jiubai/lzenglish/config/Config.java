@@ -16,4 +16,7 @@ public class Config {
 
     public static boolean IS_CONNECTED = false;
     public static int DeviceType;
+
+    public static String UserName = "";
+    public static String UserImage = "";
 }

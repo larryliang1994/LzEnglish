@@ -2,6 +2,7 @@ package com.jiubai.lzenglish.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,10 +37,13 @@ import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import me.shaohui.bottomdialog.BottomDialog;
@@ -96,7 +100,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     private ArrayList<Video> videoList;
 
     private int seasonId;
-    private int currentVideoIndex;
+    private int currentVideoIndex = 0;
+
+    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,17 +146,17 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
             videoList = (ArrayList<Video>) mDetailedSeason.getVideoList();
 
-            mTitleTextView.setText(videoList.get(0).getName());
+            mTitleTextView.setText(videoList.get(currentVideoIndex).getName());
             mKeywordsTextView.setText(mDetailedSeason.getSeoKeywords());
             mKeywordsTextView.setVisibility(View.GONE);
-            mAbstractContentTextView.setText(videoList.get(0).getNote());
+            mAbstractContentTextView.setText(videoList.get(currentVideoIndex).getNote());
 
-            setupPlayer(0);
+            setupPlayer(currentVideoIndex);
 
             mVideoAdapter = new PlayVideoAdapter(this, (ArrayList<Video>) mDetailedSeason.getVideoList());
             mVideoAdapter.setListener(this);
+            mVideoAdapter.setCurrentVideo(currentVideoIndex);
             mVideoRecyclerView.setAdapter(mVideoAdapter);
-            mVideoRecyclerView.setNestedScrollingEnabled(false);
 
             mEPTextView.setText("第1集/共" + mDetailedSeason.getVideoList().size() + "集");
 
@@ -159,15 +165,56 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                 mAbstractImageView.setVisibility(View.GONE);
             }
 
-            if (videoList.get(0).isAllowReview()) {
+            if (videoList.get(currentVideoIndex).isAllowReview()) {
                 mLockImageView.setVisibility(View.GONE);
             } else {
                 mLockImageView.setVisibility(View.VISIBLE);
             }
 
-            mCoverView.setVisibility(View.GONE);
+            if (videoList.get(currentVideoIndex).isHasReview()) {
+                mBottomLayout.setVisibility(View.VISIBLE);
+            } else {
+                mBottomLayout.setVisibility(View.GONE);
+            }
 
-            UtilBox.dismissLoading(false);
+            if (timer != null) {
+                timer.cancel();
+            }
+            timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    PlayVideoActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                if (JCMediaManager.instance().mediaPlayer.isPlaying()) {
+                                    if (JCMediaManager.instance().mediaPlayer.getCurrentPosition() * 1.0
+                                            / JCMediaManager.instance().mediaPlayer.getDuration() >= 0.8) {
+                                        new GetCartoonInfoPresenterImpl(null).finishedWatched(
+                                                videoList.get(currentVideoIndex).getId());
+                                    } else {
+                                        new GetCartoonInfoPresenterImpl(null).saveWatchHistory(
+                                                videoList.get(currentVideoIndex).getId(),
+                                                JCMediaManager.instance().mediaPlayer.getCurrentPosition());
+                                    }
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            }, 5000, 5000);
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mCoverView.setVisibility(View.GONE);
+
+                    UtilBox.dismissLoading(false);
+                }
+            }, 500);
         } else {
             UtilBox.dismissLoading(false);
 
@@ -179,8 +226,6 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
     @Override
     public void onItemClick(int position) {
-        Log.i("text", "img = " + videoList.get(position).getHeadImg());
-
         currentVideoIndex = position;
 
         mEPTextView.setText("第" + (position + 1) + "集/共" + mDetailedSeason.getVideoList().size() + "集");
@@ -221,7 +266,6 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
             String proxyUrl = proxy.getProxyUrl(Config.ResourceUrl + videoList.get(position).getVideo());
             mJVideoPlayer.setUp(proxyUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         }
-
         mJVideoPlayer.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoader.getInstance().displayImage(Config.ResourceUrl + videoList.get(position).getHeadImg(), mJVideoPlayer.thumbImageView);
     }
@@ -330,10 +374,29 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                     intent.putExtra("videoId", videoList.get(currentVideoIndex).getId());
                     intent.putExtra("videoImage", Config.ResourceUrl + videoList.get(currentVideoIndex).getHeadImg());
 
-                    UtilBox.startActivity(this, intent, false);
+                    startActivityForResult(intent, 99);
+                    overridePendingTransition(R.anim.in_right_left, R.anim.out_right_left);
                 } else {
                     Toast.makeText(this, "您还未购买跟读", Toast.LENGTH_SHORT).show();
                 }
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case 99:
+                if(resultCode == RESULT_OK){
+                    UtilBox.showLoading(this, false);
+
+                    new GetCartoonInfoPresenterImpl(this).getVideoList(seasonId);
+                }
+                break;
+
+            default:
                 break;
         }
     }
@@ -350,6 +413,16 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     public void onPause() {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+
+        super.onDestroy();
     }
 
     @Override

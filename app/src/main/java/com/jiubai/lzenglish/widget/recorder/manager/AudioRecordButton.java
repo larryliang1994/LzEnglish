@@ -8,7 +8,6 @@ import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.Button;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.widget.recorder.utils.FileUtils;
@@ -52,6 +51,8 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
     private boolean mHasRecordPromission = true;
     //是否允许短时间内再次点击录音，主要是防止故意多次连续点击。
     private boolean canRecord=true;
+
+    private String content = "";
 
     public boolean isHasRecordPromission() {
         return mHasRecordPromission;
@@ -147,6 +148,7 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
                 case MSG_AUDIO_PREPARED:
                     // 显示应该是在audio end prepare之后回调
                     mDialogManager.showRecordingDialog();
+                    mDialogManager.setContentTextView(content);
                     isRecording = true;
                     new Thread(mGetVoiceLevelRunnable).start();
 
@@ -351,7 +353,7 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
     }
 
     public void setContent(String content) {
-        mDialogManager.setContentTextView(content);
+        this.content = content;
     }
 
     public int getMaxRecordTime() {

@@ -5,15 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
+    android:background="@color/background"
     tools:context="com.jiubai.lzenglish.ui.activity.PlayVideoActivity">
 
     <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
         android:id="@+id/videoplayer"
         android:layout_width="match_parent"
-        android:transitionName="player"
         android:layout_height="180dp"
         android:background="#000000"
-        android:elevation="4dp" />
+        android:transitionName="player" />
 
     <ImageView
         android:id="@+id/imageView_back"
@@ -21,55 +21,60 @@
         android:layout_height="48dp"
         android:layout_marginTop="25dp"
         android:background="#00000000"
-        android:elevation="5dp"
+        android:elevation="1dp"
         android:padding="10dp"
         android:src="@drawable/back" />
 
     <FrameLayout
         android:id="@+id/framelayout_bottom"
         android:layout_width="match_parent"
-        android:transitionName="bottomLayout"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
-        android:elevation="4dp">
+        android:elevation="1dp"
+        android:transitionName="bottomLayout">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
 
         <Button
             android:id="@+id/button_shadowing"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:textColor="#ffffff"
             android:background="@drawable/round_button_login"
-            style="?android:attr/borderlessButtonStyle"
             android:text=""
+            android:textColor="#ffffff"
             android:textSize="18sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:gravity="center"
             android:elevation="5dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#ffffff"
                 android:text="跟着视频读 英语"
-                android:textSize="18sp"/>
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/imageView_lock"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
-                android:src="@drawable/lock"
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="8dp"
                 android:scaleType="fitCenter"
+                android:src="@drawable/lock"
                 android:tint="#ffffff" />
 
         </LinearLayout>
@@ -81,7 +86,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/layout_bottom"
-        android:background="@color/background"
         android:layout_below="@id/videoplayer">
 
         <LinearLayout
@@ -154,8 +158,8 @@
                 android:id="@+id/layout_abstract_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <View
                     android:layout_width="16dp"
@@ -176,21 +180,21 @@
             </LinearLayout>
 
             <TextView
-                android:visibility="gone"
                 android:id="@+id/textView_abstract_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
                 android:background="#ffffff"
+                android:padding="16dp"
                 android:text="这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长"
                 android:textColor="@color/mainText"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="visible"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="visible">
 
                 <View
                     android:layout_width="16dp"
@@ -213,14 +217,14 @@
                 android:id="@+id/layout_ep"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#ffffff"
+                android:clickable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 android:paddingBottom="12dp"
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
-                android:paddingTop="16dp"
-                android:clickable="true"
-                android:background="#ffffff"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:paddingTop="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -248,7 +252,7 @@
                     android:layout_height="14dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/to_right"
+                    android:src="@drawable/to_down"
                     android:tint="@color/lightText" />
 
             </LinearLayout>
@@ -261,11 +265,11 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recyclerView_video"
                     android:layout_width="match_parent"
-                    android:layout_height="68dp"
-                    android:background="#ffffff"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
                     android:layout_marginLeft="12dp"
                     android:layout_marginRight="12dp"
-                    android:layout_marginBottom="12dp" />
+                    android:background="#ffffff" />
 
             </FrameLayout>
 
@@ -278,10 +282,10 @@
                 android:id="@+id/layout_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:clickable="true"
                 android:background="@drawable/ripple"
-                android:orientation="horizontal">
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -298,8 +302,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="缓存观看"
                     android:layout_gravity="center_vertical"
+                    android:text="缓存观看"
                     android:textColor="@color/lightText"
                     android:textSize="14sp" />
 
@@ -315,35 +319,41 @@
 
             <View
                 android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+            <View
+                android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:background="@color/divider" />
+                android:background="@color/divider"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
-                android:background="@color/background" />
+                android:background="@color/background"
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:visibility="gone"
-                android:background="@color/divider" />
+                android:background="@color/divider"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="猜您喜欢"
-                android:visibility="gone"
                 android:textColor="@color/primaryText"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView_recommend"
                 android:layout_width="match_parent"
-                android:visibility="gone"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginBottom="12dp"
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -353,8 +363,8 @@
         android:id="@+id/view_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
         android:layout_below="@id/videoplayer"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:visibility="gone" />
 
 </RelativeLayout>

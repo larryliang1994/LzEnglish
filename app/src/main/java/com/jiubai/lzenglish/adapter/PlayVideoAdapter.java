@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +35,10 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
     public PlayVideoAdapter(Context context, ArrayList<Video> list) {
         this.context = context;
         this.videoList = list;
+    }
+
+    public void setCurrentVideo(int currentVideo) {
+        this.currentVideo = currentVideo;
     }
 
     @Override
@@ -81,10 +84,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
             }
         }
 
-        Log.i("text", video.getLogCartoonItemScore() + "");
-
         viewHolder.ratingBar.setRating(video.getLogCartoonItemScore());
-        //viewHolder.ratingBar.setRating(3);
 
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

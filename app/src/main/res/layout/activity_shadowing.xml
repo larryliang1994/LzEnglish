@@ -13,15 +13,14 @@
         android:layout_width="match_parent"
         android:transitionName="player"
         android:layout_height="180dp"
-        android:background="#000000"
-        android:elevation="4dp" />
+        android:background="#000000" />
 
     <View
         android:id="@+id/view_video_cover"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:background="#00ffffff"
-        android:elevation="5dp" />
+        android:elevation="1dp" />
 
     <ImageView
         android:id="@+id/imageView_back"
@@ -39,9 +38,14 @@
         android:transitionName="bottomLayout"
         android:layout_height="60dp"
         android:background="#ffffff"
-        android:elevation="4dp"
+        android:elevation="1dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
 
         <com.jiubai.lzenglish.widget.recorder.manager.AudioRecordButton
             android:id="@+id/button"

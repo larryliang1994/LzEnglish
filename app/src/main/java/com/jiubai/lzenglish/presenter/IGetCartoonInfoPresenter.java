@@ -8,4 +8,6 @@ public interface IGetCartoonInfoPresenter {
     void getCartoonList(int ageGroupsIndex);
     void getCartoonSeason(int cartoonId);
     void getVideoList(int seasonId);
+    void saveWatchHistory(int videoId, int progress);
+    void finishedWatched(int videoId);
 }

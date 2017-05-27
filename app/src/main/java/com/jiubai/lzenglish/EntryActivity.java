@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 public class EntryActivity extends BaseActivity implements IInitDataView {
 
     private int requestNum = 0;
-    private final int totalRequestNum = 3;
+    private final int totalRequestNum = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
         initDataPresenter.getResourceUrl();
         initDataPresenter.getAgeGroups();
         initDataPresenter.getAllCartoon();
+        initDataPresenter.getUserInfo();
     }
 
     @Override
@@ -66,6 +67,20 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
 
     @Override
     public void onGetAllCartoonResult(boolean result, String info, Object extras) {
+        if (result) {
+            requestNum ++;
+            if (requestNum == totalRequestNum) {
+                Intent intent = new Intent(EntryActivity.this, HomeActivity.class);
+                UtilBox.startActivity(EntryActivity.this, intent, true);
+                overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
+            }
+        } else {
+            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onGetUserInfoResult(boolean result, String info, Object extras) {
         if (result) {
             requestNum ++;
             if (requestNum == totalRequestNum) {

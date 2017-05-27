@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.ui.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -73,6 +74,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     private String videoUrl;
     private String videoImage;
     private int currentShadowingIndex;
+
+    private boolean changed = false;
 
     private View.OnTouchListener trueTouchListener = new View.OnTouchListener() {
         @Override
@@ -205,6 +208,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     @Override
     public void onSaveVoiceResult(boolean result, String info, Object extras) {
         if (result) {
+            changed = true;
+
             Voice voice = (Voice) extras;
 
             shadowingList.get(currentShadowingIndex).getVoiceList().set(
@@ -215,6 +220,18 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
             mAdapter.notifyDataSetChanged();
         } else {
             Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+
+            new ShadowingPresenterImpl(this).deleteVoice(
+                    shadowingList.get(currentShadowingIndex).getVoiceList().get(
+                            shadowingList.get(currentShadowingIndex).getVoiceList().size() - 1).getId()
+            );
+
+            shadowingList.get(currentShadowingIndex).getVoiceList().remove(
+                    shadowingList.get(currentShadowingIndex).getVoiceList().size() - 1);
+
+            mAdapter.initIndex();
+
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -316,8 +333,18 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     public void onBackPressed() {
         if (JCVideoPlayer.backPress()) {
             return;
+        } else {
+            Intent data = getIntent();
+            data.putExtra("changed", changed);
+
+            if (changed) {
+                setResult(RESULT_OK, data);
+            } else {
+                setResult(RESULT_CANCELED, data);
+            }
+
+            UtilBox.returnActivity(this);
         }
-        super.onBackPressed();
     }
 
     @Override

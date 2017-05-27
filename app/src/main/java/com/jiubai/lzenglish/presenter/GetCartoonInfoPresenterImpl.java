@@ -95,6 +95,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iGetCartoonInfoView.onGetCartoonListResult(false, "动画片列表数据源出错", e);
                         }
                     }
                 },
@@ -200,6 +201,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iGetCartoonInfoView.onGetCartoonSeasonListResult(false, "季列表数据源出错", e);
                         }
                     }
                 },
@@ -281,6 +283,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            iGetCartoonInfoView.onGetVideoListResult(false, "视频列表数据源出错", e);
                         }
                     }
                 },
@@ -288,6 +291,56 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         iGetCartoonInfoView.onGetVideoListResult(false, "获取视频列表失败", volleyError);
+                    }
+                });
+    }
+
+    @Override
+    public void saveWatchHistory(int videoId, int progress) {
+        Map<String, String> params = new HashMap<>();
+        params.put("_url", "memberLog/writeWatchCartoon");
+        params.put("_ajax", "1");
+
+        Map<String, String> postParams = new HashMap<>();
+        postParams.put("cartoon_item_id", videoId + "");
+        postParams.put("watch_time", progress / 1000 + "");
+        postParams.put("token_session_key", "***");
+
+        RequestUtil.request(params, postParams,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("saveWatchHistory", response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+    }
+
+    @Override
+    public void finishedWatched(int videoId) {
+        Map<String, String> params = new HashMap<>();
+        params.put("_url", "memberLog/writeWatchFinishCartoon");
+        params.put("_ajax", "1");
+
+        Map<String, String> postParams = new HashMap<>();
+        postParams.put("cartoon_item_id", videoId + "");
+
+        RequestUtil.request(params, postParams,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("finishedWatched", response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
                     }
                 });
     }
