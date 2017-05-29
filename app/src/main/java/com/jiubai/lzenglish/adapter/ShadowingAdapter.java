@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.badoo.mobile.util.WeakHandler;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
@@ -28,6 +32,7 @@ import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.presenter.ShadowingPresenterImpl;
+import com.jiubai.lzenglish.ui.activity.LoginActivity;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
 import com.jiubai.lzenglish.widget.CardPopup;
 import com.jiubai.lzenglish.widget.ChatImageView;
@@ -53,9 +58,13 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
     private Context context;
     private OnItemClickListener listener;
 
-    private ArrayList<Integer> voiceIndex;
-    private ArrayList<Integer> shadowIndex;
-    private ArrayList<Integer> arrangeIndex;
+    private OnConstructHandlerListener constructHandlerListener;
+
+    public ArrayList<Integer> voiceIndex;   // {   1, 2, 3,    5, 6, 7}
+    public ArrayList<Integer> shadowIndex;  // {0,          4         }
+    public ArrayList<Integer> arrangeIndex; // {0, 0, 0, 0, 1, 1, 1, 1}
+
+    public WeakHandler handler;
 
     private Timer readTimer;
 
@@ -64,8 +73,6 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
     public ShadowingAdapter(Context context, ArrayList<Shadowing> list) {
         this.context = context;
         this.shadowingList = list;
-
-        readTimer = new Timer();
 
         initIndex();
     }
@@ -105,7 +112,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (shadowIndex.contains(position)) {
             Shadowing shadowing = shadowingList.get(arrangeIndex.get(position));
 
@@ -233,6 +240,21 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
+                        try {
+                            if (AudioPlayer.getInstance().mediaPlayer != null
+                                    && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                                AudioPlayer.getInstance().pause();
+                                AudioPlayer.getInstance().stop();
+                            }
+                        } catch (IllegalStateException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (handler != null) {
+                            handler.removeMessages(0);
+                            handler.sendEmptyMessage(1);
+                        }
+
                         Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
                         vibrator.vibrate(50);
 
@@ -273,42 +295,78 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (true) {
-                            return;
+                        readTimer = new Timer();
+
+                        //readTimer.schedule();
+
+                        final int[] count = {0};
+
+                        if (handler != null) {
+                            handler.removeMessages(0);
+                            handler.sendEmptyMessage(1);
                         }
 
-                        if (AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
-                            AudioPlayer.getInstance().pause();
-                            readTimer.cancel();
-
-                            readTimer = new Timer();
-                        }
-
-                        HttpProxyCacheServer proxy = App.getProxy(context);
-                        String proxyUrl = proxy.getProxyUrl("http://music.baidutt.com/up/kwcswaks/ksdkk.mp3");
-
-                        AudioPlayer.getInstance().playUrl(proxyUrl);
-
-                        final int[] count = {1};
-                        readTimer.schedule(new TimerTask() {
+                        handler = new WeakHandler(new Handler.Callback() {
                             @Override
-                            public void run() {
-                                ((Activity)context).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                            public boolean handleMessage(Message message) {
+                                if (message.what == 0) {
+                                    ((Activity) context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
                                             int resId = context.getResources().getIdentifier("read_right_" + (count[0] % 3 + 1),
                                                     "drawable", context.getPackageName());
+                                            viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.WHITE));
                                             viewHolder.readImageView.setImageResource(resId);
+
                                             count[0]++;
-                                        } else {
-                                            readTimer.cancel();
-                                            viewHolder.readImageView.setImageResource(R.drawable.read_right_3);
+
+                                            handler.sendEmptyMessageDelayed(0, 300);
                                         }
-                                    }
-                                });
+                                    });
+                                } else if (message.what == 1) {
+                                    viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#439E1B")));
+                                    viewHolder.readImageView.setImageResource(R.drawable.read_right_3);
+                                }
+
+                                return false;
                             }
-                        }, 0, 500);
+                        });
+
+                        if (constructHandlerListener != null) {
+                            constructHandlerListener.onConstructed();
+                        }
+
+                        if (AudioPlayer.getInstance().currentId != voice.getId()) {
+                            handler.sendEmptyMessage(0);
+                        }
+
+                        if (AudioPlayer.getInstance().mediaPlayer != null
+                                && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                            AudioPlayer.getInstance().pause();
+                            AudioPlayer.getInstance().stop();
+                        }
+
+                        AudioPlayer.getInstance().setListener(new AudioPlayer.onAudioStateChangedListener() {
+                            @Override
+                            public void onCompleted() {
+                                if (handler != null) {
+                                    handler.removeMessages(0);
+                                    handler.sendEmptyMessage(1);
+                                }
+                            }
+                        });
+
+                        Log.i("text", voice.getWav());
+
+                        if (voice.getWav().contains("http")) {
+
+                            HttpProxyCacheServer proxy = App.getProxy(context);
+                            String proxyUrl = proxy.getProxyUrl("http://music.baidutt.com/up/kwcswaks/ksdkk.mp3");
+
+                            AudioPlayer.getInstance().playUrl(proxyUrl, voice.getId());
+                        } else {
+                            AudioPlayer.getInstance().playUrl(voice.getWav(), voice.getId());
+                        }
                     }
                 });
 
@@ -343,6 +401,14 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
     public void setListener(OnItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public OnConstructHandlerListener getConstructHandlerListener() {
+        return constructHandlerListener;
+    }
+
+    public void setConstructHandlerListener(OnConstructHandlerListener constructHandlerListener) {
+        this.constructHandlerListener = constructHandlerListener;
     }
 
     @Override
@@ -407,6 +473,11 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
     public interface OnItemClickListener {
         void onLeftItemClick(int position);
+
         void onRightItemClick(int position);
+    }
+
+    public interface OnConstructHandlerListener {
+        void onConstructed();
     }
 }

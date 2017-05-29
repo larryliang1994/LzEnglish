@@ -9,8 +9,11 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
@@ -40,6 +43,9 @@ public class SearchVideoActivity extends BaseActivity {
     @Bind(R.id.imageView_search)
     ImageView mSearchImageView;
 
+    @Bind(R.id.layout_toolbar)
+    RelativeLayout mToolbarLayout;
+
     private SearchVideoAdapter mAdapter;
     private ArrayList<Cartoon> resultList;
 
@@ -66,6 +72,8 @@ public class SearchVideoActivity extends BaseActivity {
         mAdapter = new SearchVideoAdapter(this, resultList);
         mRecyclerView.setAdapter(mAdapter);
 
+        mToolbarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
+
         mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -86,12 +94,15 @@ public class SearchVideoActivity extends BaseActivity {
 
             @Override
             public void afterTextChanged(Editable currentText) {
+                resultList = new ArrayList<>();
+
                 if (TextUtils.isEmpty(mEditText.getText().toString())) {
                     mAdapter = new SearchVideoAdapter(SearchVideoActivity.this, resultList);
                     mAdapter.setEditing(false);
                 } else {
                     for (Cartoon cartoon : Config.CartoonList) {
-                        if (cartoon.getName().contains(currentText.toString())) {
+                        String currentString = currentText.toString().toLowerCase();
+                        if (cartoon.getName().toLowerCase().contains(currentString)) {
                             resultList.add(cartoon);
                         }
                     }

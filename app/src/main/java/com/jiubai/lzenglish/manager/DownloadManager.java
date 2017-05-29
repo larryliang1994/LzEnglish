@@ -1,4 +1,4 @@
-package com.jiubai.lzenglish.net;
+package com.jiubai.lzenglish.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
+import com.jiubai.lzenglish.net.DownloadUtil;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -41,6 +42,7 @@ public class DownloadManager {
 
     public void downloadVideo(int videoId, String name, String url, String image) {
         Log.i("addTask", url);
+        Log.i("addTask", DownloadUtil.getFileName(videoId + ".mp4"));
 
         int downloadId = DownloadUtil.singleDownload(url, videoId + ".mp4",
                 new FileDownloadListener() {
@@ -81,6 +83,8 @@ public class DownloadManager {
                         if (listener != null) {
                             listener.onChanged(index);
                         }
+
+                        writeVideoSharedPreferences();
                     }
 
                     @Override
@@ -139,7 +143,7 @@ public class DownloadManager {
             PrefetchVideo prefetchVideo = new PrefetchVideo(videoId, downloadId, name, url,
                     image, 0, 0, PrefetchVideo.VideoStatus.Downloading, 0, false);
 
-            prefetchVideos.add(prefetchVideo);
+            prefetchVideos.add(0, prefetchVideo);
 
             writeVideoSharedPreferences();
         }
@@ -191,8 +195,7 @@ public class DownloadManager {
     }
 
     public void writeVideoSharedPreferences() {
-        SharedPreferences sp = App.Context.getSharedPreferences("LzEnglish", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
+        SharedPreferences.Editor editor = App.sharedPreferences.edit();
 
         JSONArray jsonArray = new JSONArray();
 
@@ -204,8 +207,8 @@ public class DownloadManager {
                 jsonObject.put("name", prefetchVideo.getName());
                 jsonObject.put("url", prefetchVideo.getUrl());
                 jsonObject.put("image", prefetchVideo.getImage());
-                jsonObject.put("soFarSize", prefetchVideo.getSoFarSize());
-                jsonObject.put("totalSize", prefetchVideo.getTotalSize());
+                jsonObject.put("soFarSize", prefetchVideo.getSoFarSize() + "");
+                jsonObject.put("totalSize", prefetchVideo.getTotalSize() + "");
                 jsonObject.put("downloaded", prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Downloaded);
 
                 jsonArray.put(jsonObject);
@@ -222,10 +225,12 @@ public class DownloadManager {
     }
 
     public void readVideoSharedPreferences() {
-        SharedPreferences sp = App.Context.getSharedPreferences("LzEnglish", Context.MODE_PRIVATE);
+        SharedPreferences sp = App.sharedPreferences;
 
         try {
-            JSONArray jsonArray = new JSONArray(sp.getString("video", ""));
+            JSONArray jsonArray = new JSONArray(sp.getString("video", "[]"));
+
+            Log.i("text", jsonArray.toString());
 
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -236,17 +241,12 @@ public class DownloadManager {
                         jsonObject.getString("name"),
                         jsonObject.getString("url"),
                         jsonObject.getString("image"),
-                        jsonObject.getLong("soFarSize"),
-                        jsonObject.getLong("totalSize"),
+                        Long.valueOf(jsonObject.getString("soFarSize")),
+                        Long.valueOf(jsonObject.getString("totalSize")),
                         jsonObject.getBoolean("downloaded") ?
                                 PrefetchVideo.VideoStatus.Downloaded : PrefetchVideo.VideoStatus.Paused,
                         0, false
                 );
-
-                if (prefetchVideo.getSoFarSize() == prefetchVideo.getTotalSize()
-                        && prefetchVideo.getTotalSize() != 0) {
-                    prefetchVideo.setVideoStatus(PrefetchVideo.VideoStatus.Downloaded);
-                }
 
                 prefetchVideos.add(prefetchVideo);
             }
@@ -256,11 +256,20 @@ public class DownloadManager {
             while (!prefetchVideos.isEmpty()
                     && prefetchVideos.size() != 0
                     && index < prefetchVideos.size()) {
-                Log.i("path", DownloadUtil.getFileName(prefetchVideos.get(index).getVideoId() + ".mp4"));
-                File file = new File(DownloadUtil.getFileName(prefetchVideos.get(index).getVideoId() + ".mp4"));
+
+                File file = null;
+
+                if (prefetchVideos.get(index).getVideoStatus() == PrefetchVideo.VideoStatus.Downloaded) {
+                    file = new File(DownloadUtil.getFileName(prefetchVideos.get(index).getVideoId() + ".mp4"));
+                } else {
+                    file = new File(DownloadUtil.getFileName(prefetchVideos.get(index).getVideoId() + ".mp4.temp"));
+                }
+
+                Log.i("text", file.getAbsolutePath());
 
                 // 已被莫名删除
                 if (!file.exists()) {
+                    Log.i("text", "deleted : " + DownloadUtil.getFileName(prefetchVideos.get(index).getVideoId() + ".mp4"));
                     prefetchVideos.remove(index);
                     continue;
                 } else {

@@ -1,8 +1,13 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,9 +20,11 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.badoo.mobile.util.WeakHandler;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
@@ -30,7 +37,7 @@ import com.jiubai.lzenglish.bean.Video;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
@@ -46,7 +53,12 @@ import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
+import io.hypertrack.smart_scheduler.Job;
+import io.hypertrack.smart_scheduler.SmartScheduler;
 import me.shaohui.bottomdialog.BottomDialog;
+
+import static io.hypertrack.smart_scheduler.Job.NetworkType.NETWORK_TYPE_ANY;
+import static io.hypertrack.smart_scheduler.Job.Type.JOB_TYPE_PERIODIC_TASK;
 
 public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoView, PlayVideoAdapter.OnStateChangeListener {
 
@@ -92,17 +104,22 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     @Bind(R.id.framelayout_bottom)
     FrameLayout mBottomLayout;
 
+    @Bind(R.id.imageView_back)
+    ImageView mBackImageView;
+
     private ArrayList<String> list = new ArrayList<>();
     private PlayVideoAdapter mVideoAdapter;
     private PlayVideoRecommendAdapter mRecommendAdapter;
+
+    private DownloadManager mDownloadManager;
+
+    private WeakHandler handler;
 
     private DetailedSeason mDetailedSeason;
     private ArrayList<Video> videoList;
 
     private int seasonId;
     private int currentVideoIndex = 0;
-
-    private Timer timer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +129,8 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         StatusBarUtil.StatusBarDarkMode(this, Config.DeviceType);
 
         ButterKnife.bind(this);
+
+        mDownloadManager = DownloadManager.getInstance();
 
         seasonId = getIntent().getIntExtra("seasonId", 0);
 
@@ -135,6 +154,10 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         mRecommendRecyclerView.setAdapter(mRecommendAdapter);
 
         mJVideoPlayer.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBackImageView.getLayoutParams();
+        params.setMargins(0, Config.StatusbarHeight, 0, 0);
+        mBackImageView.setLayoutParams(params);
 
         new GetCartoonInfoPresenterImpl(this).getVideoList(seasonId);
     }
@@ -177,18 +200,19 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                 mBottomLayout.setVisibility(View.GONE);
             }
 
-            if (timer != null) {
-                timer.cancel();
-            }
-            timer = new Timer();
-            timer.schedule(new TimerTask() {
+            handler = new WeakHandler(new Handler.Callback() {
                 @Override
-                public void run() {
+                public boolean handleMessage(Message message) {
+                    Log.i("text", "working");
+
                     PlayVideoActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             try {
                                 if (JCMediaManager.instance().mediaPlayer.isPlaying()) {
+                                    Log.i("text", JCMediaManager.instance().mediaPlayer.getCurrentPosition() / 1000
+                                            + " -- " + JCMediaManager.instance().mediaPlayer.getDuration() / 1000);
+
                                     if (JCMediaManager.instance().mediaPlayer.getCurrentPosition() * 1.0
                                             / JCMediaManager.instance().mediaPlayer.getDuration() >= 0.8) {
                                         new GetCartoonInfoPresenterImpl(null).finishedWatched(
@@ -199,13 +223,20 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                                                 JCMediaManager.instance().mediaPlayer.getCurrentPosition());
                                     }
                                 }
-                            } catch (Exception e) {
+                            } catch (IllegalStateException e) {
                                 e.printStackTrace();
+                                JCMediaManager.instance().mediaPlayer = new MediaPlayer();
                             }
                         }
                     });
+
+                    handler.sendEmptyMessageDelayed(0, 5000);
+
+                    return false;
                 }
-            }, 5000, 5000);
+            });
+
+            handler.sendEmptyMessage(0);
 
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -252,14 +283,14 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
     private void setupPlayer(int position) {
 
-        int index = DownloadManager.getInstance().getPrefetchVideoByVideoId(videoList.get(position).getId());
+        int index = mDownloadManager.getPrefetchVideoByVideoId(videoList.get(position).getId());
 
         if (index != -1
-                && DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoStatus()
+                && mDownloadManager.getPrefetchVideos().get(index).getVideoStatus()
                 == PrefetchVideo.VideoStatus.Downloaded) {
-            Log.i("prefetch", DownloadUtil.getFileName(DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoId() + ".mp4"));
+            Log.i("prefetch", DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"));
             mJVideoPlayer.setUp(
-                    DownloadUtil.getFileName(DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoId() + ".mp4"),
+                    DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"),
                     JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         } else {
             HttpProxyCacheServer proxy = App.getProxy(this);
@@ -318,14 +349,14 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                         recyclerView.setLayoutManager(gridLayoutManager);
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                        final Button checkDownloadButton = (Button)v.findViewById(R.id.button_check_downloaded);
+                        final Button checkDownloadButton = (Button) v.findViewById(R.id.button_check_downloaded);
 
-                        PopupDownloadVideoAdapter adapter = new PopupDownloadVideoAdapter(
+                        final PopupDownloadVideoAdapter adapter = new PopupDownloadVideoAdapter(
                                 PlayVideoActivity.this, (ArrayList<Video>) mDetailedSeason.getVideoList());
                         adapter.setListener(new PopupDownloadVideoAdapter.OnStateChangeListener() {
                             @Override
                             public void onItemClick(int position) {
-                                checkDownloadButton.setText("查看缓存视频(" + DownloadManager.getInstance().getPrefetchVideos().size() + ")");
+                                checkDownloadButton.setText("查看缓存视频(" + mDownloadManager.getPrefetchVideos().size() + ")");
                                 Toast.makeText(PlayVideoActivity.this, "正在缓存...", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -338,10 +369,10 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                             }
                         });
 
-                        if (DownloadManager.getInstance().getPrefetchVideos().size() == 0) {
+                        if (mDownloadManager.getPrefetchVideos().size() == 0) {
                             checkDownloadButton.setText("查看缓存视频");
                         } else {
-                            checkDownloadButton.setText("查看缓存视频(" + DownloadManager.getInstance().getPrefetchVideos().size() + ")");
+                            checkDownloadButton.setText("查看缓存视频(" + mDownloadManager.getPrefetchVideos().size() + ")");
                         }
 
                         checkDownloadButton.setOnClickListener(new View.OnClickListener() {
@@ -352,6 +383,60 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                                 UtilBox.startActivity(PlayVideoActivity.this, intent, false);
                             }
                         });
+
+                        final Button downloadAllButton = (Button) v.findViewById(R.id.button_download_all);
+
+                        boolean hasDownloadedAll = true;
+
+                        for (int i = 0; i < mDetailedSeason.getVideoList().size(); i++) {
+                            if (DownloadManager.getInstance().getPrefetchVideoByVideoId(mDetailedSeason.getVideoList().get(i).getId()) == -1
+                                    && mDetailedSeason.getVideoList().get(i).isAllowWatch()) {
+                                hasDownloadedAll = false;
+                                break;
+                            }
+                        }
+
+                        if (hasDownloadedAll) {
+                            downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.lightText));
+                            downloadAllButton.setEnabled(false);
+                            downloadAllButton.setClickable(false);
+                        } else {
+                            downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.mainText));
+                            downloadAllButton.setEnabled(true);
+                            downloadAllButton.setClickable(true);
+
+                            downloadAllButton.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    UtilBox.alert(PlayVideoActivity.this,
+                                            "确定要下载所有未缓存的视频？",
+                                            "下载", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+                                                    for (int j = 0; j < mDetailedSeason.getVideoList().size(); j++) {
+                                                        Video video = mDetailedSeason.getVideoList().get(j);
+
+                                                        if (DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) == -1
+                                                                && video.isAllowWatch()) {
+                                                            DownloadManager.getInstance().downloadVideo(video.getId(), video.getName(),
+                                                                    Config.ResourceUrl + video.getVideo(),
+                                                                    Config.ResourceUrl + video.getHeadImg());
+                                                        }
+                                                    }
+
+                                                    downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.lightText));
+                                                    downloadAllButton.setEnabled(false);
+                                                    downloadAllButton.setClickable(false);
+
+                                                    adapter.notifyDataSetChanged();
+
+                                                    checkDownloadButton.setText("查看缓存视频(" + mDownloadManager.getPrefetchVideos().size() + ")");
+                                                }
+                                            },
+                                            "取消", null);
+                                }
+                            });
+                        }
                     }
                 })
                 .show();
@@ -389,7 +474,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
         switch (requestCode) {
             case 99:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     UtilBox.showLoading(this, false);
 
                     new GetCartoonInfoPresenterImpl(this).getVideoList(seasonId);
@@ -410,18 +495,27 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (handler != null) {
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
+        if (handler != null) {
+            handler.removeMessages(0);
+        }
     }
 
     @Override
     protected void onDestroy() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (handler != null) {
+            handler.removeMessages(0);
         }
-
         super.onDestroy();
     }
 

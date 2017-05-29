@@ -32,7 +32,7 @@
             android:id="@+id/layout_status"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#9F000000"
+            android:background="@drawable/round_cover"
             android:gravity="center"
             android:orientation="vertical">
 

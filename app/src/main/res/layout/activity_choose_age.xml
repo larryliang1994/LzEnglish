@@ -138,7 +138,6 @@
         android:layout_height="50dp"
         app:rv_rippleDuration="200"
         app:rv_color="#ffffff"
-        android:elevation="4dp"
         app:rv_type="rectangle">
 
         <Button
@@ -148,7 +147,9 @@
             android:background="@color/buttonUnable"
             android:text="下一步"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true" />
 
     </com.jiubai.lzenglish.widget.RippleView>
 </LinearLayout>

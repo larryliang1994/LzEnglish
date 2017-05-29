@@ -51,7 +51,7 @@ public class LoginActivity extends BaseActivity {
         final com.tencent.mm.opensdk.modelmsg.SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "wechat_sdk_demo_test";
-        ((App)getApplication()).api.sendReq(req);
+        //((App)getApplication()).api.sendReq(req);
     }
 
     private void initAnimation() {

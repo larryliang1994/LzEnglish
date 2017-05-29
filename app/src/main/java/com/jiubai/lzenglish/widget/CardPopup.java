@@ -24,11 +24,12 @@ public class CardPopup extends RelativePopupWindow {
         setFocusable(true);
         setOutsideTouchable(true);
         setElevation(UtilBox.dip2px(context, 4));
+        setAnimationStyle(R.style.PopupAnimation);
         //setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
         // Disable default animation for circular reveal
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setAnimationStyle(0);
+            //setAnimationStyle(0);
         }
     }
 
@@ -41,7 +42,7 @@ public class CardPopup extends RelativePopupWindow {
     public void showOnAnchor(@NonNull View anchor, int vertPos, int horizPos, int x, int y, boolean fitInScreen) {
         super.showOnAnchor(anchor, vertPos, horizPos, x, y, fitInScreen);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            circularReveal(anchor);
+            //circularReveal(anchor);
         }
     }
 

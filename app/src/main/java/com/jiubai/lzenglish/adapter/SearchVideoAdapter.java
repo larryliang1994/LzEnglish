@@ -15,8 +15,11 @@ import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Cartoon;
+import com.jiubai.lzenglish.bean.SearchHistory;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 import com.jiubai.lzenglish.ui.activity.SeasonListActivity;
 
@@ -36,9 +39,12 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
     private boolean editing = false;
     private String hint;
 
+    private SearchHistoryManager searchHistoryManager;
+
     public SearchVideoAdapter(Context context, ArrayList<Cartoon> list) {
         this.context = context;
         this.list = list;
+        searchHistoryManager = SearchHistoryManager.getInstance();
     }
 
     @Override
@@ -63,15 +69,39 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
             if (holder instanceof HistoryItemViewHolder) {
                 HistoryItemViewHolder viewHolder = (HistoryItemViewHolder) holder;
 
-                if (position == getItemCount() - 1 && list.size() % 2 == 1) {
+                if (position == getItemCount() - 1 && searchHistoryManager.searchHistoryList.size() % 2 == 1) {
                     viewHolder.mHistoryTextView2.setVisibility(View.INVISIBLE);
+                } else {
+                    viewHolder.mHistoryTextView2.setVisibility(View.VISIBLE);
+                    viewHolder.mHistoryTextView2.setText(searchHistoryManager.searchHistoryList.get((position - 1) * 2 + 1).getName());
+                    viewHolder.mHistoryTextView2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(context, SeasonListActivity.class);
+                            intent.putExtra("cartoonId", searchHistoryManager.searchHistoryList.get((position - 1) * 2 + 1).getCartoonId());
+                            UtilBox.startActivity((Activity) context, intent, true);
+                        }
+                    });
                 }
 
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                viewHolder.mHistoryTextView1.setText(searchHistoryManager.searchHistoryList.get((position - 1) * 2).getName());
+                viewHolder.mHistoryTextView1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, PlayVideoActivity.class);
+                        Intent intent = new Intent(context, SeasonListActivity.class);
+                        intent.putExtra("cartoonId", searchHistoryManager.searchHistoryList.get((position - 1) * 2).getCartoonId());
                         UtilBox.startActivity((Activity) context, intent, true);
+                    }
+                });
+            } else {
+                HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+
+                viewHolder.mClearTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        searchHistoryManager.clearHistory();
+
+                        notifyDataSetChanged();
                     }
                 });
             }
@@ -84,13 +114,16 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
             ForegroundColorSpan span = new ForegroundColorSpan(ContextCompat.getColor(context, R.color.colorPrimary));
 
             SpannableStringBuilder builder = new SpannableStringBuilder(viewHolder.mVideoNameTextView.getText().toString());
-            builder.setSpan(span, text.indexOf(hint), text.indexOf(hint) + hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setSpan(span, text.toLowerCase().indexOf(hint), text.toLowerCase().indexOf(hint) + hint.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             viewHolder.mVideoNameTextView.setText(builder);
 
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    searchHistoryManager.saveHistory(
+                            new SearchHistory(list.get(position).getId(), list.get(position).getName()));
+
                     Intent intent = new Intent(context, SeasonListActivity.class);
                     intent.putExtra("cartoonId", list.get(position).getId());
                     UtilBox.startActivity((Activity) context, intent, true);
@@ -101,7 +134,7 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return editing ? list.size() : (int)(Math.ceil(list.size() / 2.0) + 1);
+        return editing ? list.size() : (int)(Math.ceil(searchHistoryManager.searchHistoryList.size() / 2.0) + 1);
     }
 
     @Override
@@ -130,8 +163,13 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
     }
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.textView_clear)
+        TextView mClearTextView;
+
         public HeaderViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 

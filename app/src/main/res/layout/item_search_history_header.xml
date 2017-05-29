@@ -10,7 +10,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:text="历史搜索"
-        android:textColor="@color/mainText"
+        android:textColor="@color/primaryText"
         android:textSize="16sp" />
 
     <View
@@ -19,6 +19,7 @@
         android:layout_weight="1" />
 
     <TextView
+        android:id="@+id/textView_clear"
         android:layout_width="wrap_content"
         android:layout_height="56dp"
         android:gravity="center_vertical"

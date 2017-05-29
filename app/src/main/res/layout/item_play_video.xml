@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/round_searchbox_gray">
+        android:background="@drawable/round_searchbox_gray_4">
 
         <TextView
             android:id="@+id/textView_ep"

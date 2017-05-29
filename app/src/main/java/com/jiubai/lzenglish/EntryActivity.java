@@ -2,6 +2,7 @@ package com.jiubai.lzenglish;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.jiubai.lzenglish.common.StatusBarUtil;
@@ -27,6 +28,8 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
         setContentView(R.layout.activity_entry);
 
         Config.DeviceType = StatusBarUtil.StatusBarLightMode(this);
+        Config.AppbarHeight = (int) (getResources().getDimension(R.dimen.appbar_height));
+        Config.StatusbarHeight = UtilBox.getStatusBarHeight(this);
 
         ButterKnife.bind(this);
 

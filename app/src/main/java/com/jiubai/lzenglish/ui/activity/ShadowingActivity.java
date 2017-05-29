@@ -11,7 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -26,10 +29,11 @@ import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.ShadowingPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
+import com.jiubai.lzenglish.widget.recorder.AudioPlayer;
 import com.jiubai.lzenglish.widget.recorder.manager.AudioRecordButton;
 import com.jiubai.lzenglish.widget.recorder.manager.MediaManager;
 import com.jiubai.lzenglish.widget.recorder.utils.PermissionHelper;
@@ -62,11 +66,16 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     @Bind(R.id.view_cover)
     View mCoverView;
 
+    @Bind(R.id.imageView_back)
+    ImageView mBackImageView;
+
     private ArrayList<String> list = new ArrayList<>();
     private ShadowingAdapter mAdapter;
 
     private List<Record> mRecords = new ArrayList<>();
     private PermissionHelper mHelper;
+
+    private DownloadManager mDownloadManager;
 
     private ArrayList<Shadowing> shadowingList;
 
@@ -104,6 +113,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         videoUrl = getIntent().getStringExtra("videoUrl");
         videoImage = getIntent().getStringExtra("videoImage");
 
+        mDownloadManager = DownloadManager.getInstance();
+
         initView();
 
         initListener();
@@ -122,17 +133,21 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBackImageView.getLayoutParams();
+        params.setMargins(0, Config.StatusbarHeight, 0, 0);
+        mBackImageView.setLayoutParams(params);
     }
 
     private void initPlayer() {
-        int index = DownloadManager.getInstance().getPrefetchVideoByVideoId(videoId);
+        int index = mDownloadManager.getPrefetchVideoByVideoId(videoId);
 
         if (index != -1
-                && DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoStatus()
+                && mDownloadManager.getPrefetchVideos().get(index).getVideoStatus()
                 == PrefetchVideo.VideoStatus.Downloaded) {
-            Log.i("prefetch", DownloadUtil.getFileName(DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoId() + ".mp4"));
+            Log.i("prefetch", DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"));
             jcVideoPlayerStandard.setUp(
-                    DownloadUtil.getFileName(DownloadManager.getInstance().getPrefetchVideos().get(index).getVideoId() + ".mp4"),
+                    DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"),
                     JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         } else {
             HttpProxyCacheServer proxy = App.getProxy(this);
@@ -142,6 +157,15 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         }
 
         jcVideoPlayerStandard.progressBar.setOnTouchListener(trueTouchListener);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
+        jcVideoPlayerStandard.progressBar.setLayoutParams(params);
+        jcVideoPlayerStandard.fullscreenButton.setLayoutParams(params);
+        jcVideoPlayerStandard.currentTimeTextView.setLayoutParams(params);
+        jcVideoPlayerStandard.totalTimeTextView.setLayoutParams(params);
+
+        //RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(0, 0);
+        //jcVideoPlayerStandard.startButton.setLayoutParams(buttonParams);
 
         jcVideoPlayerStandard.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoader.getInstance().displayImage(videoImage, jcVideoPlayerStandard.thumbImageView);
@@ -159,13 +183,6 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                         mRecordButton.setAudioFinishRecorderListener(new AudioRecordButton.AudioFinishRecorderListener() {
                             @Override
                             public void onFinished(float seconds, String filePath) {
-                                Record record = new Record();
-                                record.setSecond((int) seconds <= 0 ? 1 : (int) seconds);
-                                record.setPath(filePath);
-                                record.setPlayed(false);
-                                record.setId(new Date().getTime() + "");
-                                mRecords.add(record);
-
                                 Voice voice = new Voice(
                                         -99,
                                         new Date().getTime(),
@@ -179,7 +196,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                                         "",
                                         new Date().getTime() + "",
                                         "",
-                                        ""
+                                        filePath
                                 );
 
                                 Log.i("text", filePath);
@@ -189,6 +206,10 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                                 mAdapter.initIndex();
 
                                 mAdapter.notifyDataSetChanged();
+
+                                mRecyclerView.smoothScrollToPosition(
+                                        mAdapter.arrangeIndex.lastIndexOf(currentShadowingIndex)
+                                );
 
                                 new ShadowingPresenterImpl(ShadowingActivity.this)
                                         .saveVoice(ShadowingActivity.this, voice);
@@ -277,6 +298,13 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
             mRecordButton.setContent(shadowingList.get(0).getSentenceEng());
 
+            mAdapter.setConstructHandlerListener(new ShadowingAdapter.OnConstructHandlerListener() {
+                @Override
+                public void onConstructed() {
+                    mRecordButton.setHandler(mAdapter.handler);
+                }
+            });
+
             mCoverView.setVisibility(View.GONE);
 
             UtilBox.dismissLoading(false);
@@ -354,5 +382,17 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         JCVideoPlayer.releaseAllVideos();
     }
 
+    @Override
+    protected void onDestroy() {
+        if (AudioPlayer.getInstance().mediaPlayer != null && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+            AudioPlayer.getInstance().pause();
+            AudioPlayer.getInstance().stop();
+        }
 
+        if (mAdapter.handler != null) {
+            mAdapter.handler.removeMessages(0);
+        }
+
+        super.onDestroy();
+    }
 }

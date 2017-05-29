@@ -1,5 +1,6 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.app.ActivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -7,19 +8,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
+import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.ui.fragment.RecommendFragment;
 import com.jiubai.lzenglish.ui.fragment.UserFragment;
 import com.jiubai.lzenglish.ui.fragment.VideoFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,6 +55,8 @@ public class HomeActivity extends BaseActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         initViewPager();
+
+        Log.i("text", "height = " + UtilBox.px2dip(this, UtilBox.getStatusBarHeight(this)));
     }
 
     private void initViewPager() {

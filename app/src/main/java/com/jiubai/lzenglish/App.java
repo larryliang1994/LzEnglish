@@ -2,11 +2,14 @@ package com.jiubai.lzenglish;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.manager.DownloadManager;
+import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -18,23 +21,27 @@ import com.nostra13.universalimageloader.utils.L;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Larry Liang on 12/05/2017.
  */
 
 public class App extends Application {
-
-    public static Context Context;
     private HttpProxyCacheServer proxy;
-    public IWXAPI api;
+    //public IWXAPI api;
+
+    public static SharedPreferences sharedPreferences;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        Context = this;
+        sharedPreferences = getSharedPreferences("LzEnglish", MODE_PRIVATE);
 
         initWeChat();
 
@@ -45,11 +52,13 @@ public class App extends Application {
         FileDownloader.init(getApplicationContext());
 
         DownloadManager.getInstance().readVideoSharedPreferences();
+
+        SearchHistoryManager.getInstance().readHistory();
     }
 
     private void initWeChat() {
-        api = WXAPIFactory.createWXAPI(this, "wx88888888", true);
-        api.registerApp("wx88888888");
+        //api = WXAPIFactory.createWXAPI(this, "wx88888888", true);
+        //api.registerApp("wx88888888");
     }
 
     private void initImageLoader() {

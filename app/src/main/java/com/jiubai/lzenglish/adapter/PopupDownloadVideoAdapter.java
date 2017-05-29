@@ -12,12 +12,13 @@ import android.widget.Toast;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Video;
 import com.jiubai.lzenglish.config.Config;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.manager.DownloadManager;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.techery.properratingbar.ProperRatingBar;
 
 /**
@@ -65,7 +66,8 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (video.isAllowWatch()) {
+                if (video.isAllowWatch()
+                        && DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) == -1) {
                     DownloadManager.getInstance().downloadVideo(video.getId(), video.getName(),
                             Config.ResourceUrl + video.getVideo(),
                             Config.ResourceUrl + video.getHeadImg());
@@ -105,7 +107,7 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
         @Bind(R.id.rating)
         ProperRatingBar ratingBar;
 
-        @Bind(R.id.imageView_progress)
+        @Bind(R.id.circleImageView_progress)
         ImageView progressImageView;
 
         @Bind(R.id.imageView_lock)

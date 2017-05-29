@@ -3,7 +3,10 @@ package com.jiubai.lzenglish.ui.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,11 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.adapter.GuessRecommendAdapter;
 import com.jiubai.lzenglish.adapter.RecommendAdapter;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.ui.activity.DownloadActivity;
 import com.jiubai.lzenglish.ui.activity.HistoryActivity;
 import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
@@ -38,11 +44,20 @@ public class RecommendFragment extends Fragment {
     @Bind(R.id.textView_search)
     TextView mSearchTextView;
 
+    @Bind(R.id.layout_toolbar)
+    LinearLayout mToolbarLayout;
+
+    @Bind(R.id.viewPager_guess)
+    ViewPager mGuessViewPager;
+
     protected boolean status_progress = false;
 
     private boolean loading = false;
     private RecommendAdapter mAdapter;
     private ArrayList<String> list = new ArrayList<>();
+
+    private ArrayList<Fragment> fragments;
+    private GuessRecommendAdapter mGuessAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,6 +72,27 @@ public class RecommendFragment extends Fragment {
 
     private void initView() {
         setupRecyclerView();
+
+        CoordinatorLayout.LayoutParams params = new CoordinatorLayout.LayoutParams(
+                CoordinatorLayout.LayoutParams.MATCH_PARENT, Config.AppbarHeight);
+        params.setMargins(0, Config.StatusbarHeight, 0, 0);
+        mToolbarLayout.setLayoutParams(params);
+
+        CollapsingToolbarLayout.LayoutParams layoutParams = new CollapsingToolbarLayout.LayoutParams(
+                CollapsingToolbarLayout.LayoutParams.MATCH_PARENT, Config.AppbarHeight);
+        layoutParams.setMargins(0, Config.StatusbarHeight, 0, 0);
+        mToolbar.setLayoutParams(layoutParams);
+
+        fragments = new ArrayList<>();
+        fragments.add(new GuessRecommendFragment());
+        fragments.add(new GuessRecommendFragment());
+        fragments.add(new GuessRecommendFragment());
+        fragments.add(new GuessRecommendFragment());
+        fragments.add(new GuessRecommendFragment());
+
+        mGuessAdapter = new GuessRecommendAdapter(getActivity(), getChildFragmentManager(), fragments);
+        //mGuessViewPager.setPageMargin(UtilBox.dip2px(getActivity(), 16));
+        mGuessViewPager.setAdapter(mGuessAdapter);
     }
 
     @OnClick({R.id.textView_search, R.id.imageView_history, R.id.imageView_downloaded})

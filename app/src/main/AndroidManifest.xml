@@ -67,5 +67,9 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity android:name=".ui.activity.SeasonListActivity"/>
+
+        <meta-data android:value="592ac65ff43e4805000013f6" android:name="UMENG_APPKEY"/>
+        <meta-data android:value="Developer" android:name="UMENG_CHANNEL"/>
+
     </application>
 </manifest>

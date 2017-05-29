@@ -3,6 +3,7 @@ package com.jiubai.lzenglish.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +48,7 @@ public class SeasonAdapter extends RecyclerView.Adapter {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
         ViewGroup.LayoutParams itemParams = viewHolder.itemView.getLayoutParams();
-        itemParams.height = width + UtilBox.dip2px(context, 32);
+        itemParams.height = width + UtilBox.dip2px(context, 24);
         viewHolder.itemView.setLayoutParams(itemParams);
 
         ImageLoader.getInstance().displayImage(

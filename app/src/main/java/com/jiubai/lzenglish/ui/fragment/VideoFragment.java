@@ -3,6 +3,7 @@ package com.jiubai.lzenglish.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -40,6 +41,9 @@ public class VideoFragment extends Fragment {
     @Bind(R.id.container)
     ViewPager mViewPager;
 
+    @Bind(R.id.appbar)
+    AppBarLayout mAppBarLayout;
+
     private MyFragmentPagerAdapter mFragmentPagerAdapter;
 
     @Override
@@ -71,6 +75,8 @@ public class VideoFragment extends Fragment {
         mViewPager.setAdapter(mFragmentPagerAdapter);
 
         mTabLayout.setupWithViewPager(mViewPager);
+
+        mAppBarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
     }
 
     @OnClick({R.id.imageView_search})

@@ -3,12 +3,15 @@ package com.jiubai.lzenglish.common;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -17,6 +20,7 @@ import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
@@ -617,5 +621,30 @@ public class UtilBox {
                 promptDialog.dismiss();
             }
         }
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        int result = 0;
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
+    public static void alert(Context context, String message,
+                             String positiveText, DialogInterface.OnClickListener positiveListener,
+                             String negativeText, DialogInterface.OnClickListener negativeListener) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                .setMessage(message)
+                .setCancelable(true)
+                .setPositiveButton(positiveText, positiveListener)
+                .setNegativeButton(negativeText, negativeListener);
+
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 }

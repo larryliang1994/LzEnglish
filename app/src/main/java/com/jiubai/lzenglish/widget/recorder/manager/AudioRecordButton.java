@@ -7,9 +7,12 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
+import com.badoo.mobile.util.WeakHandler;
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.widget.recorder.AudioPlayer;
 import com.jiubai.lzenglish.widget.recorder.utils.FileUtils;
 
 //录音按钮核心类，包括点击、响应、与弹出对话框交互等操作。
@@ -50,7 +53,7 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
     //设置是否允许录音,这个是是否有录音权限
     private boolean mHasRecordPromission = true;
     //是否允许短时间内再次点击录音，主要是防止故意多次连续点击。
-    private boolean canRecord=true;
+    private boolean canRecord = true;
 
     private String content = "";
 
@@ -206,6 +209,12 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
         mStateHandler.sendEmptyMessage(MSG_AUDIO_PREPARED);
     }
 
+    private WeakHandler handler;
+
+    public void setHandler(WeakHandler handler) {
+        this.handler = handler;
+    }
+
     //手指滑动监听
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -215,9 +224,24 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                try {
+                    if (AudioPlayer.getInstance().mediaPlayer != null
+                            && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                        AudioPlayer.getInstance().pause();
+                        AudioPlayer.getInstance().stop();
+                    }
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+
+                if (handler != null) {
+                    handler.removeMessages(0);
+                    handler.sendEmptyMessage(1);
+                }
+
                 //响应DOWN事件进行录音准备。放到这里会有问题，比如用户故意连续点击多次，就会出现各种问题。
                 // 所以和录制视频处理的思路一样，我们在短时间内只允许点击一次即可。
-                if (isHasRecordPromission()&&isCanRecord()) {
+                if (isHasRecordPromission() && isCanRecord()) {
                     setCanRecord(false);
                     mReady = true;
                     mAudioManager.prepareAudio();

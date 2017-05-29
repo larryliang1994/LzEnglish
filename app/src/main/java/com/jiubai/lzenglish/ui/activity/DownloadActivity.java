@@ -1,5 +1,6 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -7,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,7 +18,8 @@ import com.jiubai.lzenglish.adapter.DownloadAdapter;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.manager.DownloadManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +48,11 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
     @Bind(R.id.button_delete)
     Button mDeleteButton;
 
+    @Bind(R.id.layout_toolbar)
+    LinearLayout mToolbarLayout;
+
     private DownloadAdapter mAdapter;
+    private DownloadManager mDownloadManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +63,8 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
         StatusBarUtil.StatusBarLightMode(this);
 
         ButterKnife.bind(this);
+
+        mDownloadManager = DownloadManager.getInstance();
 
         initView();
     }
@@ -69,12 +78,24 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
         mRecyclerView.setAdapter(mAdapter);
 
         setMemoryInfo();
+
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mToolbarLayout.getLayoutParams();
+        params.height = Config.AppbarHeight + Config.StatusbarHeight;
+        mToolbarLayout.setLayoutParams(params);
+        mToolbarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
+
+        if (mDownloadManager.getPrefetchVideos().size() == 0) {
+            mEditTextView.setTextColor(ContextCompat.getColor(this, R.color.lightText));
+            mEditTextView.setClickable(false);
+        } else {
+            mEditTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+            mEditTextView.setClickable(true);
+        }
     }
 
     private void setMemoryInfo() {
         double prefetchSize = 0;
-        for (PrefetchVideo prefetchVideo :
-                DownloadManager.getInstance().getPrefetchVideos()) {
+        for (PrefetchVideo prefetchVideo : mDownloadManager.getPrefetchVideos()) {
             prefetchSize += prefetchVideo.getTotalSize();
         }
 
@@ -95,9 +116,9 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
                 String url3 = "http://180.153.105.144/dd.myapp.com/16891/E2F3DEBB12A049ED921C6257C5E9FB11.apk";
                 String image = "http://images5.fanpop.com/image/photos/25800000/Miku-hatsune-miku-25858641-1280-1024.jpg";
 
-                DownloadManager.getInstance().downloadVideo(8870, "小笨熊1", url1, image);
-                DownloadManager.getInstance().downloadVideo(8871, "小笨熊2", url2, image);
-                DownloadManager.getInstance().downloadVideo(8872, "小笨熊3", url3, image);
+                mDownloadManager.downloadVideo(8870, "小笨熊1", url1, image);
+                mDownloadManager.downloadVideo(8871, "小笨熊2", url2, image);
+                mDownloadManager.downloadVideo(8872, "小笨熊3", url3, image);
                 break;
 
             case R.id.textView_edit:
@@ -112,11 +133,11 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
                 } else {
                     mAdapter.editing = false;
 
-                    for (int i = 0; i < DownloadManager.getInstance().getPrefetchVideos().size(); i++) {
-                        PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(i);
+                    for (int i = 0; i < mDownloadManager.getPrefetchVideos().size(); i++) {
+                        PrefetchVideo prefetchVideo = mDownloadManager.getPrefetchVideos().get(i);
                         prefetchVideo.setChecked(false);
 
-                        DownloadManager.getInstance().getPrefetchVideos().set(i, prefetchVideo);
+                        mDownloadManager.getPrefetchVideos().set(i, prefetchVideo);
                     }
 
                     mAdapter.notifyDataSetChanged();
@@ -130,19 +151,19 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
             case R.id.button_check_all:
                 boolean allChecked = false;
 
-                for (int i = 0; i < DownloadManager.getInstance().getPrefetchVideos().size(); i++) {
+                for (int i = 0; i < mDownloadManager.getPrefetchVideos().size(); i++) {
                     allChecked = true;
-                    if (!DownloadManager.getInstance().getPrefetchVideos().get(i).isChecked()) {
+                    if (!mDownloadManager.getPrefetchVideos().get(i).isChecked()) {
                         allChecked = false;
                         break;
                     }
                 }
 
-                for (int i = 0; i < DownloadManager.getInstance().getPrefetchVideos().size(); i++) {
-                    PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(i);
+                for (int i = 0; i < mDownloadManager.getPrefetchVideos().size(); i++) {
+                    PrefetchVideo prefetchVideo = mDownloadManager.getPrefetchVideos().get(i);
                     prefetchVideo.setChecked(!allChecked);
 
-                    DownloadManager.getInstance().getPrefetchVideos().set(i, prefetchVideo);
+                    mDownloadManager.getPrefetchVideos().set(i, prefetchVideo);
                 }
 
                 mDeleteButton.setEnabled(true);
@@ -157,12 +178,21 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
 
             case R.id.button_delete:
                 if (mDeleteButton.isEnabled()) {
-                    DownloadManager.getInstance().deleteCheckedVideo();
-                    mAdapter.editing = false;
-                    mAdapter.notifyDataSetChanged();
-                    mBottomLayout.setVisibility(View.GONE);
-                    mEditTextView.setText("编辑");
-                    setMemoryInfo();
+                    UtilBox.alert(this, "确定要删除所有视频？",
+                            "删除", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    mDownloadManager.deleteCheckedVideo();
+                                    mAdapter.editing = false;
+                                    mAdapter.notifyDataSetChanged();
+                                    mBottomLayout.setVisibility(View.GONE);
+                                    mEditTextView.setText("编辑");
+                                    mEditTextView.setTextColor(ContextCompat.getColor(DownloadActivity.this, R.color.lightText));
+                                    mEditTextView.setClickable(false);
+                                    setMemoryInfo();
+                                }
+                            },
+                            "取消", null);
                 }
                 break;
         }
@@ -170,7 +200,7 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
 
     @Override
     public void onCheckChanged() {
-        for (PrefetchVideo prefetchVideo : DownloadManager.getInstance().getPrefetchVideos()) {
+        for (PrefetchVideo prefetchVideo : mDownloadManager.getPrefetchVideos()) {
             if (prefetchVideo.isChecked()) {
                 mDeleteButton.setEnabled(true);
                 mDeleteButton.setTextColor(ContextCompat.getColor(this, R.color.mainText));
@@ -196,11 +226,11 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
         if (mAdapter.editing) {
             mAdapter.editing = false;
 
-            for (int i = 0; i < DownloadManager.getInstance().getPrefetchVideos().size(); i++) {
-                PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(i);
+            for (int i = 0; i < mDownloadManager.getPrefetchVideos().size(); i++) {
+                PrefetchVideo prefetchVideo = mDownloadManager.getPrefetchVideos().get(i);
                 prefetchVideo.setChecked(false);
 
-                DownloadManager.getInstance().getPrefetchVideos().set(i, prefetchVideo);
+                mDownloadManager.getPrefetchVideos().set(i, prefetchVideo);
             }
 
             mAdapter.notifyDataSetChanged();

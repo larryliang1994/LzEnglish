@@ -15,11 +15,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
     @Override
     public void onReq(BaseReq baseReq) {
-        ((App)getApplication()).api.handleIntent(getIntent(), this);
+        //((App)getApplication()).api.handleIntent(getIntent(), this);
     }
 
     @Override
     public void onResp(BaseResp baseResp) {
-        ((App)getApplication()).api.handleIntent(getIntent(), this);
+        //((App)getApplication()).api.handleIntent(getIntent(), this);
     }
 }

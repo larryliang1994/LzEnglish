@@ -6,6 +6,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,7 +86,12 @@ public class SeasonListActivity extends AppCompatActivity implements IGetCartoon
         if (result) {
             Cartoon cartoon = (Cartoon) extras;
 
-            mAbstractTextView.setText(cartoon.getBriefInfo());
+            if (TextUtils.isEmpty(cartoon.getBriefInfo())) {
+                mAbstractTextView.setVisibility(View.GONE);
+            } else {
+                mAbstractTextView.setVisibility(View.VISIBLE);
+                mAbstractTextView.setText(cartoon.getBriefInfo());
+            }
             mTitleTextView.setText(cartoon.getName());
 
             mAdapter = new SeasonAdapter(this, (ArrayList<Season>) cartoon.getSeasonList());

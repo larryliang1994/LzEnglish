@@ -17,8 +17,11 @@ import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
-import com.jiubai.lzenglish.net.DownloadManager;
+import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.manager.DownloadManager;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -89,7 +92,13 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
             viewHolder.mRadioButton.setVisibility(View.GONE);
         }
 
-        ImageLoader.getInstance().displayImage(prefetchVideo.getImage(), viewHolder.imageView);
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .displayer(new RoundedBitmapDisplayer(UtilBox.dip2px(context, 2)))
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .build();
+
+        ImageLoader.getInstance().displayImage(prefetchVideo.getImage(), viewHolder.imageView, displayImageOptions);
 
         viewHolder.nameTextView.setText(prefetchVideo.getName());
 
@@ -113,7 +122,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.statusLayout.setVisibility(View.VISIBLE);
                 viewHolder.statusImageView.setImageResource(R.drawable.downloaded);
-                viewHolder.statusTextView.setText("点此暂停");
+                viewHolder.statusTextView.setText("缓存中");
 
                 viewHolder.statusLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -141,7 +150,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.statusLayout.setVisibility(View.VISIBLE);
                 viewHolder.statusImageView.setImageResource(R.drawable.pause);
-                viewHolder.statusTextView.setText("点此继续");
+                viewHolder.statusTextView.setText("暂停");
 
                 viewHolder.statusLayout.setOnClickListener(new View.OnClickListener() {
                     @Override

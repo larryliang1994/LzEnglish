@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.config;
 
 import com.jiubai.lzenglish.bean.Cartoon;
+import com.jiubai.lzenglish.bean.SearchHistory;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,9 @@ public class Config {
 
     public static String[] AgeGroups;
     public static ArrayList<Cartoon> CartoonList;
+
+    public static int AppbarHeight = 0;
+    public static int StatusbarHeight = 0;
 
     public static boolean IS_CONNECTED = false;
     public static int DeviceType;

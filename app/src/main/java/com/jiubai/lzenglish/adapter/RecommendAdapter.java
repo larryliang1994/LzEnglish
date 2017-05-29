@@ -34,16 +34,16 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == Constants.ListHeader) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_header, null);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_header, parent, false);
             return new HeaderViewHolder(view);
         } else if (viewType == Constants.ListItem) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_video, null);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_video, parent, false);
             return new ItemViewHolder(view);
         } else if (viewType == Constants.ListFooter) {
-            View view = LayoutInflater.from(context).inflate(R.layout.bottom_progressbar, null);
+            View view = LayoutInflater.from(context).inflate(R.layout.bottom_progressbar, parent, false);
             return new PresentViewHolder(view);
         } else if (viewType == Constants.ListNoMore) {
-            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_footer, null);
+            View view = LayoutInflater.from(context).inflate(R.layout.item_recommend_footer, parent, false);
             return new PresentViewHolder(view);
         } else {
             return null;

@@ -259,7 +259,6 @@
         android:id="@+id/ripple_next"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:elevation="4dp"
         app:rv_color="#ffffff"
         app:rv_rippleDuration="200"
         app:rv_type="rectangle">

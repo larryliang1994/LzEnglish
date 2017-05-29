@@ -10,6 +10,10 @@ import java.io.IOException;
 public class AudioPlayer implements OnCompletionListener, MediaPlayer.OnPreparedListener{
     public MediaPlayer mediaPlayer;
 
+    public int currentId = -99;
+
+    private onAudioStateChangedListener listener;
+
     private static AudioPlayer instance = null;
 
     public static AudioPlayer getInstance() {
@@ -34,8 +38,27 @@ public class AudioPlayer implements OnCompletionListener, MediaPlayer.OnPrepared
         mediaPlayer.start();
     }
 
-    public void playUrl(String videoUrl) {
+    public void playUrl(String videoUrl, int currentId) {
+        if (this.currentId == currentId) {
+            this.currentId = -99;
+            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                pause();
+                stop();
+            }
+            return;
+        }
+
+        this.currentId = currentId;
+
         try {
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setOnPreparedListener(this);
+            mediaPlayer.setOnCompletionListener(this);
+
+            if (videoUrl.contains("http")) {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            }
+
             mediaPlayer.reset();
             mediaPlayer.setDataSource(videoUrl);
             mediaPlayer.prepare();
@@ -57,6 +80,14 @@ public class AudioPlayer implements OnCompletionListener, MediaPlayer.OnPrepared
         }
     }
 
+    public onAudioStateChangedListener getListener() {
+        return listener;
+    }
+
+    public void setListener(onAudioStateChangedListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     /**
      * 通过onPrepared播放
@@ -69,5 +100,15 @@ public class AudioPlayer implements OnCompletionListener, MediaPlayer.OnPrepared
     @Override
     public void onCompletion(MediaPlayer arg0) {
         Log.e("mediaPlayer", "onCompletion");
+
+        this.currentId = -99;
+
+        if (listener != null) {
+            listener.onCompleted();
+        }
+    }
+
+    public interface onAudioStateChangedListener {
+        void onCompleted();
     }
 }
