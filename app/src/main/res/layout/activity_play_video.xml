@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     android:background="@color/background"
     tools:context="com.jiubai.lzenglish.ui.activity.PlayVideoActivity">
 
@@ -112,18 +111,17 @@
                         android:id="@+id/textView_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
                         android:text="被嫌弃的飞镖黄"
-                        android:textColor="@color/primaryText"
+                        android:textColor="#161616"
                         android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textView_keywords"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginTop="2dp"
                         android:text="当羊和熊打开猫的盒子 有一个“O”滚到远处"
-                        android:textColor="@color/lightText"
+                        android:textColor="#909090"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -139,7 +137,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="简介"
-                    android:textColor="@color/lightText"
+                    android:textColor="#989898"
                     android:textSize="14sp" />
 
                 <ImageView
@@ -150,7 +148,7 @@
                     android:layout_marginRight="16dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/to_right"
-                    android:tint="@color/lightText" />
+                    android:tint="#C3C3C3" />
 
             </LinearLayout>
 
@@ -186,7 +184,7 @@
                 android:background="#ffffff"
                 android:padding="16dp"
                 android:text="这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长\n这是简介，可能会很长"
-                android:textColor="@color/mainText"
+                android:textColor="#909090"
                 android:textSize="14sp"
                 android:visibility="gone" />
 
@@ -230,7 +228,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="选集"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#161616"
                     android:textSize="16sp" />
 
                 <View
@@ -243,17 +241,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="第2集/共20集"
-                    android:textColor="@color/lightText"
+                    android:textColor="#989898"
                     android:textSize="14sp" />
 
                 <ImageView
                     android:id="@+id/imageView_ep"
-                    android:layout_width="14dp"
+                    android:layout_width="0dp"
                     android:layout_height="14dp"
                     android:layout_gravity="center_vertical"
                     android:scaleType="fitCenter"
                     android:src="@drawable/to_down"
-                    android:tint="@color/lightText" />
+                    android:tint="#909090" />
 
             </LinearLayout>
 
@@ -291,7 +289,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="视频下载"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#161616"
                     android:textSize="16sp" />
 
                 <View
@@ -304,7 +302,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="缓存观看"
-                    android:textColor="@color/lightText"
+                    android:textColor="#989898"
                     android:textSize="14sp" />
 
                 <ImageView
@@ -313,7 +311,7 @@
                     android:layout_gravity="center_vertical"
                     android:scaleType="fitCenter"
                     android:src="@drawable/to_right"
-                    android:tint="@color/lightText" />
+                    android:tint="#C3C3C3" />
 
             </LinearLayout>
 
@@ -344,7 +342,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:text="猜您喜欢"
-                android:textColor="@color/primaryText"
+                android:textColor="#161616"
                 android:textSize="16sp"
                 android:visibility="gone" />
 

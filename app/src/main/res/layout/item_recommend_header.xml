@@ -19,8 +19,8 @@
         android:layout_height="30dp"
         android:layout_below="@id/textView_title"
         android:gravity="center"
-        android:text="猜您喜欢"
-        android:textColor="#AAAAAA"
+        android:text="您可能喜欢"
+        android:textColor="#8D8D8D"
         android:textSize="12sp" />
 
     <ImageView

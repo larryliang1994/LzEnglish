@@ -5,6 +5,7 @@
     android:orientation="horizontal">
 
     <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/imageView_dot"
         android:layout_width="5dp"
         android:layout_height="5dp"
         android:layout_gravity="center_vertical"
@@ -12,12 +13,13 @@
         android:src="#FA8919"/>
 
     <TextView
+        android:id="@+id/textView_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="今天"
         android:layout_marginLeft="8dp"
-        android:textColor="@color/mainText"
+        android:textColor="#333333"
         android:textSize="14sp"/>
 
 </LinearLayout>

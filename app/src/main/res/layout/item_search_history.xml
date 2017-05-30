@@ -24,7 +24,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="小猪佩奇的故事"
-            android:textColor="@color/primaryText"
+            android:textColor="#484848"
             android:textSize="16sp" />
 
         <View
@@ -46,7 +46,7 @@
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:text="小黄人动画片"
-            android:textColor="@color/primaryText"
+            android:textColor="#484848"
             android:textSize="16sp" />
     </LinearLayout>
 

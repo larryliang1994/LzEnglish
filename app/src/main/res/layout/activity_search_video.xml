@@ -42,6 +42,7 @@
                 android:paddingBottom="8dp"
                 android:visibility="visible"
                 android:scaleType="fitCenter"
+                android:transitionName="searchIcon"
                 android:layout_centerVertical="true"
                 android:src="@drawable/search"
                 android:tint="@color/colorPrimary" />
@@ -59,8 +60,8 @@
                 android:imeActionLabel="搜索"
                 android:inputType="text"
                 android:hint="搜索动画视频"
-                android:textColor="@color/mainText"
-                android:textColorHint="@color/lightText"
+                android:textColor="#333333"
+                android:textColorHint="#999999"
                 android:textSize="14sp" />
 
         </RelativeLayout>
@@ -73,7 +74,7 @@
             android:layout_alignParentRight="true"
             android:gravity="center"
             android:text="取消"
-            android:textColor="@color/primaryText"
+            android:textColor="#151515"
             android:textSize="14sp" />
 
     </RelativeLayout>

@@ -15,7 +15,7 @@
         android:textSize="24sp"
         android:layout_marginTop="150dp"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/mainText"/>
+        android:textColor="#5B6565"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="发现精彩视频"
             android:textSize="16sp"
-            android:textColor="@color/lightText"/>
+            android:textColor="#666868"/>
 
         <View
             android:layout_width="0dp"
@@ -66,7 +66,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="32dp"
         android:textSize="12sp"
-        android:textColor="@color/mainText"
+        android:textColor="#484848"
         android:layout_alignParentBottom="true"/>
 
     <ImageView

@@ -21,7 +21,8 @@
             android:id="@+id/imageView_back"
             android:layout_width="@dimen/appbar_height"
             android:layout_height="@dimen/appbar_height"
-            android:src="@drawable/back_black"
+            android:src="@drawable/back"
+            android:tint="#151515"
             android:padding="12dp"/>
 
         <View
@@ -35,15 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="观看历史"
-            android:textColor="@color/highlightText"
+            android:textColor="#151515"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:text="编辑"
+            android:text=""
             android:textSize="16sp"
-            android:textColor="@color/primaryText"
+            android:textColor="#151515"
             android:paddingRight="12dp"
             android:gravity="center_vertical|right"/>
 

@@ -5,7 +5,6 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="10dp"
-    android:animateLayoutChanges="true"
     android:orientation="horizontal">
 
     <RadioButton
@@ -26,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/recommend_video_example" />
+            android:src="@drawable/round_searchbox_gray_2" />
 
         <LinearLayout
             android:id="@+id/layout_status"
@@ -40,6 +39,7 @@
                 android:id="@+id/imageView_status"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/downloaded" />
 
             <TextView
@@ -69,7 +69,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="小猪佩奇(第一集)"
-            android:textColor="@color/mainText"
+            android:textColor="#151515"
             android:textSize="16sp" />
 
         <ProgressBar
@@ -89,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="正在缓存 1MB/s"
-                android:textColor="@color/lightText"
-                android:textSize="12sp" />
+                android:textColor="#909090"
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="0dp"
@@ -102,7 +102,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="14M/97.4M"
-                android:textColor="@color/lightText"
+                android:textColor="#909090"
                 android:textSize="12sp" />
 
         </LinearLayout>

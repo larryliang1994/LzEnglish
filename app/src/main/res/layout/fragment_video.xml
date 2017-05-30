@@ -33,7 +33,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="视频中心"
-                android:textColor="@color/highlightText"
+                android:textColor="#151515"
                 android:textSize="18sp" />
 
             <ImageView
@@ -41,10 +41,11 @@
                 android:layout_width="@dimen/appbar_height"
                 android:layout_height="@dimen/appbar_height"
                 android:layout_gravity="right"
+                android:transitionName="searchIcon"
                 android:layout_marginRight="5dp"
                 android:padding="15dp"
                 android:src="@drawable/search"
-                android:tint="@color/highlightText" />
+                android:tint="#333333" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -57,6 +58,8 @@
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:tabTextColor="#484848"
+            app:tabSelectedTextColor="@color/colorPrimary"
             app:tabIndicatorColor="@color/colorPrimary" />
 
     </android.support.design.widget.AppBarLayout>

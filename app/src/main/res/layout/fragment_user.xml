@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="我的"
-                android:textColor="@color/highlightText"
+                android:textColor="#151515"
                 android:textSize="18sp" />
 
             <ImageView
@@ -38,7 +38,7 @@
                 android:layout_marginRight="5dp"
                 android:padding="15dp"
                 android:src="@drawable/search"
-                android:tint="@color/highlightText" />
+                android:tint="#333333" />
 
         </android.support.v7.widget.Toolbar>
 
@@ -78,7 +78,7 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/imageView_portrait"
             android:text="自然卷的王小二"
-            android:textColor="@color/primaryText"
+            android:textColor="#333333"
             android:textSize="16sp" />
 
         <TextView
@@ -88,7 +88,7 @@
             android:layout_marginLeft="16dp"
             android:layout_toRightOf="@id/imageView_portrait"
             android:text="坚持每天学英语"
-            android:textColor="@color/lightText"
+            android:textColor="#989898"
             android:textSize="12sp" />
 
     </RelativeLayout>
@@ -115,7 +115,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="我的下载"
-            android:textColor="@color/mainText"
+            android:textColor="#2C2C2C"
             android:textSize="16sp" />
 
         <View
@@ -128,7 +128,7 @@
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/to_right"
-            android:tint="@color/lightText" />
+            android:tint="#CBCBCB" />
 
     </LinearLayout>
 
@@ -171,7 +171,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="观看历史"
-            android:textColor="@color/mainText"
+            android:textColor="#2C2C2C"
             android:textSize="16sp" />
 
         <View
@@ -185,7 +185,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginRight="5dp"
             android:text="疯狂动物城"
-            android:textColor="@color/lightText"
+            android:textColor="#909090"
             android:textSize="12sp" />
 
         <ImageView
@@ -193,7 +193,7 @@
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/to_right"
-            android:tint="@color/lightText" />
+            android:tint="#CBCBCB" />
 
     </LinearLayout>
 
@@ -218,7 +218,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="16dp"
             android:text="设置"
-            android:textColor="@color/mainText"
+            android:textColor="#2C2C2C"
             android:textSize="16sp" />
 
         <View
@@ -231,7 +231,7 @@
             android:layout_height="16dp"
             android:layout_gravity="center_vertical"
             android:src="@drawable/to_right"
-            android:tint="@color/lightText" />
+            android:tint="#CBCBCB" />
 
     </LinearLayout>
 

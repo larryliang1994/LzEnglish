@@ -24,7 +24,6 @@ import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.ui.activity.DownloadActivity;
 import com.jiubai.lzenglish.ui.activity.HistoryActivity;
-import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 import com.jiubai.lzenglish.ui.activity.SearchVideoActivity;
 
 import java.util.ArrayList;
@@ -49,8 +48,6 @@ public class RecommendFragment extends Fragment {
 
     @Bind(R.id.viewPager_guess)
     ViewPager mGuessViewPager;
-
-    protected boolean status_progress = false;
 
     private boolean loading = false;
     private RecommendAdapter mAdapter;

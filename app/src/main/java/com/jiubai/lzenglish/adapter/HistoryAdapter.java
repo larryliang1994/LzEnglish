@@ -1,17 +1,23 @@
 package com.jiubai.lzenglish.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Constants;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Larry Liang on 15/05/2017.
@@ -41,15 +47,28 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (position == 0 || position == 3 || position == 7) {
-            return;
+
+            HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
+
+            if (position == 0) {
+                viewHolder.mDataTextView.setText("今天");
+                viewHolder.mDotImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FA8919")));
+            } else if (position == 3) {
+                viewHolder.mDataTextView.setText("昨天");
+                viewHolder.mDotImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#1B95B5")));
+            } else {
+                viewHolder.mDataTextView.setText("更早");
+                viewHolder.mDotImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#CACACA")));
+            }
+
         } else {
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
-            if (position == 1) {
+            if (position == 1 || position == 4 || position == 8) {
                 viewHolder.itemView.setPadding(
                         UtilBox.dip2px(context, 16), UtilBox.dip2px(context, 24),
                         UtilBox.dip2px(context, 16), UtilBox.dip2px(context, 8));
-            } else if (position == 2) {
+            } else if (position == 2 || position == 6 || position == 11) {
                 viewHolder.itemView.setPadding(
                         UtilBox.dip2px(context, 16), UtilBox.dip2px(context, 8),
                         UtilBox.dip2px(context, 16), UtilBox.dip2px(context, 24));
@@ -78,8 +97,16 @@ public class HistoryAdapter extends RecyclerView.Adapter {
     }
 
     class HeaderViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.textView_date)
+        TextView mDataTextView;
+
+        @Bind(R.id.imageView_dot)
+        CircleImageView mDotImageView;
+
         public HeaderViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 

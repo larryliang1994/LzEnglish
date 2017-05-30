@@ -8,21 +8,16 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import com.jiubai.lzenglish.EntryActivity;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
-import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
-import com.jiubai.lzenglish.ui.activity.HomeActivity;
 import com.jiubai.lzenglish.ui.activity.SearchVideoActivity;
-import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
 
 import java.util.ArrayList;
 
@@ -43,6 +38,9 @@ public class VideoFragment extends Fragment {
 
     @Bind(R.id.appbar)
     AppBarLayout mAppBarLayout;
+
+    @Bind(R.id.imageView_search)
+    ImageView mSearchImageView;
 
     private MyFragmentPagerAdapter mFragmentPagerAdapter;
 
@@ -67,9 +65,6 @@ public class VideoFragment extends Fragment {
 
         //Todo 这里要考虑一下性能
         mViewPager.setOffscreenPageLimit(Config.AgeGroups.length);
-        mTabLayout.setTabTextColors(
-                ContextCompat.getColor(getActivity(), R.color.mainText),
-                ContextCompat.getColor(getActivity(), R.color.colorPrimary));
 
         mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager(), list);
         mViewPager.setAdapter(mFragmentPagerAdapter);
@@ -86,6 +81,7 @@ public class VideoFragment extends Fragment {
         switch (view.getId()) {
             case R.id.imageView_search:
                 intent = new Intent(getActivity(), SearchVideoActivity.class);
+                //UtilBox.startActivityWithTransition(getActivity(), intent, false, mSearchImageView, "searchIcon");
                 UtilBox.startActivity(getActivity(), intent, false);
                 break;
         }

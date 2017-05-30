@@ -1,13 +1,13 @@
 package com.jiubai.lzenglish.ui.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,8 +44,6 @@ import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,12 +51,9 @@ import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
-import io.hypertrack.smart_scheduler.Job;
-import io.hypertrack.smart_scheduler.SmartScheduler;
 import me.shaohui.bottomdialog.BottomDialog;
 
-import static io.hypertrack.smart_scheduler.Job.NetworkType.NETWORK_TYPE_ANY;
-import static io.hypertrack.smart_scheduler.Job.Type.JOB_TYPE_PERIODIC_TASK;
+import static android.view.View.FOCUS_UP;
 
 public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoView, PlayVideoAdapter.OnStateChangeListener {
 
@@ -106,6 +101,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
     @Bind(R.id.imageView_back)
     ImageView mBackImageView;
+
+    @Bind(R.id.scrollView)
+    NestedScrollView mScrollView;
 
     private ArrayList<String> list = new ArrayList<>();
     private PlayVideoAdapter mVideoAdapter;
@@ -199,6 +197,8 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
             } else {
                 mBottomLayout.setVisibility(View.GONE);
             }
+
+            mScrollView.fullScroll(FOCUS_UP);
 
             handler = new WeakHandler(new Handler.Callback() {
                 @Override
@@ -319,7 +319,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         }
     }
 
-    @OnClick({R.id.layout_ep})
+    //@OnClick({R.id.layout_ep})
     public void setEPHeight(View view) {
         if (mVideoRecyclerView.isNestedScrollingEnabled()) {
             UtilBox.setViewParams(mVideoRecyclerView, mVideoRecyclerView.getWidth(), UtilBox.dip2px(this, 68));
@@ -340,6 +340,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         final BottomDialog dialog = BottomDialog.create(getSupportFragmentManager());
 
         dialog.setLayoutRes(R.layout.popup_download_video)
+                .setDimAmount(0.5f)
                 .setHeight(UtilBox.getHeightPixels(this) - UtilBox.dip2px(this, 180 + 40))
                 .setViewListener(new BottomDialog.ViewListener() {
                     @Override
@@ -397,11 +398,11 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                         }
 
                         if (hasDownloadedAll) {
-                            downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.lightText));
+                            downloadAllButton.setTextColor(Color.parseColor("#999999"));
                             downloadAllButton.setEnabled(false);
                             downloadAllButton.setClickable(false);
                         } else {
-                            downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.mainText));
+                            downloadAllButton.setTextColor(Color.parseColor("#484848"));
                             downloadAllButton.setEnabled(true);
                             downloadAllButton.setClickable(true);
 
@@ -424,7 +425,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                                                         }
                                                     }
 
-                                                    downloadAllButton.setTextColor(ContextCompat.getColor(PlayVideoActivity.this, R.color.lightText));
+                                                    downloadAllButton.setTextColor(Color.parseColor("#484848"));
                                                     downloadAllButton.setEnabled(false);
                                                     downloadAllButton.setClickable(false);
 

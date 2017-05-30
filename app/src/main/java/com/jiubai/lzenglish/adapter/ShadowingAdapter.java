@@ -32,7 +32,6 @@ import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.presenter.ShadowingPresenterImpl;
-import com.jiubai.lzenglish.ui.activity.LoginActivity;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
 import com.jiubai.lzenglish.widget.CardPopup;
 import com.jiubai.lzenglish.widget.ChatImageView;
@@ -43,7 +42,6 @@ import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.ArrayList;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -127,7 +125,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 viewHolder.playImageView.setImageTintList(
                         ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
             } else {
-                viewHolder.engTextView.setTextColor(ContextCompat.getColor(context, R.color.mainText));
+                viewHolder.engTextView.setTextColor(Color.parseColor("#333333"));
                 viewHolder.playImageView.setImageTintList(
                         ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
             }

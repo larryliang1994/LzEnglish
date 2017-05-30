@@ -7,19 +7,15 @@
     <color name="divider">#55767676</color>
     <color name="rippleColor">#bdbdbd</color>
 
-    <color name="highlightText">#151515</color>
-    <color name="primaryText">#333333</color>
-    <color name="mainText">#666666</color>
-    <color name="lightText">#999999</color>
-    <color name="disabled">#BBBBBB</color>
+    <!--<color name="highlightText">#151515</color>-->
+    <!--<color name="primaryText">#333333</color>-->
+    <!--<color name="mainText">#666666</color>-->
+    <!--<color name="lightText">#999999</color>-->
+    <!--<color name="disabled">#BBBBBB</color>-->
     <color name="background">#EBEBEB</color>
-    <color name="background_dark">#dddddd</color>
 
-    <color name="buttonUnable">#cfcfcf</color>
-    
     <color name="lightBlue">#23AFD4</color>
 
     <color name="transparent">#00000000</color>
 
-    <color name="colorRedBg">#fa5148</color>
 </resources>

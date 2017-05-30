@@ -1,6 +1,5 @@
 package com.jiubai.lzenglish.manager;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -103,6 +102,8 @@ public class DownloadManager {
                         if (listener != null) {
                             listener.onChanged(index);
                         }
+
+                        writeVideoSharedPreferences();
                     }
 
                     @Override

@@ -1,25 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
+    android:orientation="horizontal"
     android:paddingBottom="16dp"
     android:paddingTop="16dp">
 
-    <View
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="0dp"
         android:layout_height="0.5dp"
-        android:layout_centerVertical="true"
-        android:background="@color/divider" />
+        android:layout_gravity="center_vertical"
+        android:layout_marginRight="16dp"
+        android:layout_weight="1"
+        android:background="#AAAAAA" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
         android:text="到底啦 不要再滑了"
-        android:textColor="@color/lightText"
+        android:textColor="#8D8D8D"
         android:textSize="14sp" />
 
-</RelativeLayout>
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="16dp"
+        android:layout_weight="1"
+        android:background="#AAAAAA" />
+
+</LinearLayout>

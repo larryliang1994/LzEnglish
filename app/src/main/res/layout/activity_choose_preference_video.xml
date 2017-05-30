@@ -24,7 +24,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
             android:text="选择一些您喜欢的视频"
-            android:textColor="@color/primaryText"
+            android:textColor="#333333"
             android:textSize="18sp" />
 
         <LinearLayout
@@ -50,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="字母\n积木"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="数字虫"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="英文\n儿歌"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -123,7 +123,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="单词\n世界"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -147,7 +147,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:text="小猪\n佩奇"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="功夫\n熊猫"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -198,7 +198,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="驯龙\n高手"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -220,7 +220,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="疯狂\n动物城"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>
@@ -241,7 +241,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="美国\n之音"
-                    android:textColor="@color/primaryText"
+                    android:textColor="#333333"
                     android:textSize="18sp" />
 
             </com.jiubai.lzenglish.widget.RippleView>

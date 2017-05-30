@@ -1,11 +1,10 @@
 package com.jiubai.lzenglish.ui.activity;
 
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -91,7 +90,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 mUnder4TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
                     mPreviousRipple.setBackgroundResource(R.drawable.round_listview_white);
-                    mPreviousTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+                    mPreviousTextView.setTextColor(Color.parseColor("#333333"));
                 }
                 mPreviousRipple = mUnder4Ripple;
                 mPreviousTextView = mUnder4TextView;
@@ -102,7 +101,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 m5To9TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
                     mPreviousRipple.setBackgroundResource(R.drawable.round_listview_white);
-                    mPreviousTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+                    mPreviousTextView.setTextColor(Color.parseColor("#333333"));
                 }
                 mPreviousRipple = m5To9Ripple;
                 mPreviousTextView = m5To9TextView;
@@ -113,7 +112,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 mUp10TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
                     mPreviousRipple.setBackgroundResource(R.drawable.round_listview_white);
-                    mPreviousTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+                    mPreviousTextView.setTextColor(Color.parseColor("#333333"));
                 }
                 mPreviousRipple = mUp10Ripple;
                 mPreviousTextView = mUp10TextView;
@@ -124,7 +123,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 mOthersTextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
                     mPreviousRipple.setBackgroundResource(R.drawable.round_listview_white);
-                    mPreviousTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+                    mPreviousTextView.setTextColor(Color.parseColor("#333333"));
                 }
                 mPreviousRipple = mOthersRipple;
                 mPreviousTextView = mOthersTextView;

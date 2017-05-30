@@ -2,6 +2,7 @@ package com.jiubai.lzenglish.adapter;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -117,6 +118,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                 viewHolder.progressBar.setProgress(
                         (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
 
+                viewHolder.speedTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
                 viewHolder.speedTextView.setText("正在缓存" +
                         String.format("%.2f", prefetchVideo.getSpeed() * 1.0 / 1024) + "MB/s");
 
@@ -141,11 +143,12 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
                 viewHolder.progressBar.setProgressTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.disabled)
+                        Color.parseColor("#B6B6B6")
                 ));
                 viewHolder.progressBar.setProgress(
                         (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
 
+                viewHolder.speedTextView.setTextColor(Color.parseColor("#909090"));
                 viewHolder.speedTextView.setText("已暂停");
 
                 viewHolder.statusLayout.setVisibility(View.VISIBLE);
@@ -169,11 +172,12 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.progressBar.setVisibility(View.VISIBLE);
                 viewHolder.progressBar.setProgressTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(context, R.color.lightText)
+                        Color.parseColor("#B6B6B6")
                 ));
                 viewHolder.progressBar.setProgress(
                         (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
 
+                viewHolder.speedTextView.setTextColor(Color.parseColor("#909090"));
                 viewHolder.speedTextView.setText("任务出错");
 
                 viewHolder.statusLayout.setVisibility(View.VISIBLE);
@@ -193,6 +197,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.progressBar.setVisibility(View.GONE);
 
+                viewHolder.speedTextView.setTextColor(Color.parseColor("#909090"));
                 viewHolder.speedTextView.setText(
                         String.format("%.2f", (prefetchVideo.getTotalSize() / 1000000.0)) + "M");
 
@@ -210,7 +215,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
     @Override
     public void onChanged(int index) {
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, getItemCount());
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

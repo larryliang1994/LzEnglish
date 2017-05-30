@@ -1,11 +1,10 @@
 package com.jiubai.lzenglish.ui.activity;
 
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
@@ -84,7 +83,7 @@ public class ChoosePreferenceVideoActivity extends BaseActivity {
             int index = getRippleIndex(rippleView.getId());
             if (mSelected[index]) {
                 rippleView.setBackgroundResource(R.drawable.round_listview_white);
-                ((TextView)findViewById(mTextViews[index])).setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+                ((TextView)findViewById(mTextViews[index])).setTextColor(Color.parseColor("#333333"));
             } else {
                 rippleView.setBackgroundResource(R.drawable.round_listview_blue);
                 ((TextView)findViewById(mTextViews[index])).setTextColor(ContextCompat.getColor(this, R.color.lightBlue));

@@ -32,7 +32,7 @@
                 android:paddingRight="24dp"
                 android:paddingTop="8dp"
                 android:text=""
-                android:textColor="#9fffffff"
+                android:textColor="#7BC7DB"
                 android:textSize="14sp"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.5" />

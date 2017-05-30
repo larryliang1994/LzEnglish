@@ -10,7 +10,7 @@
         android:gravity="center_vertical"
         android:paddingLeft="16dp"
         android:text="历史搜索"
-        android:textColor="@color/primaryText"
+        android:textColor="#151515"
         android:textSize="16sp" />
 
     <View
@@ -26,7 +26,7 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:text="清空"
-        android:textColor="@color/lightText"
+        android:textColor="#909090"
         android:textSize="16sp" />
 
 </LinearLayout>

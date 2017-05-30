@@ -3,7 +3,6 @@ package com.jiubai.lzenglish.adapter;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.techery.properratingbar.ProperRatingBar;
 
 /**
@@ -66,7 +64,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
             viewHolder.progressImageView.setVisibility(View.VISIBLE);
             viewHolder.progressImageView.setImageResource(R.drawable.lock);
             viewHolder.progressImageView.setImageTintList(
-                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.background_dark)));
+                    ColorStateList.valueOf(Color.parseColor("#D7DADD")));
         } else {
             if (video.isHasFinishWatch()) { // 看完了
                 viewHolder.progressImageView.setVisibility(View.VISIBLE);

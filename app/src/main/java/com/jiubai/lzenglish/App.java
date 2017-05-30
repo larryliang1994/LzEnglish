@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
-import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.net.RequestUtil;
@@ -16,16 +15,8 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.utils.L;
-import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 
 /**
  * Created by Larry Liang on 12/05/2017.
@@ -65,13 +56,12 @@ public class App extends Application {
         DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
                 .cacheOnDisk(true).cacheInMemory(true).build();
 
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                getApplicationContext()).defaultDisplayImageOptions(defaultOptions)
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration
+                .Builder(this)
+                .defaultDisplayImageOptions(defaultOptions)
                 .threadPriority(Thread.NORM_PRIORITY)
-                .denyCacheImageMultipleSizesInMemory()
                 .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .tasksProcessingOrder(QueueProcessingType.FIFO).build();
-        L.writeLogs(false);
+                .build();
         ImageLoader.getInstance().init(config);
     }
 

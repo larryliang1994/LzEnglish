@@ -17,10 +17,8 @@ import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Cartoon;
 import com.jiubai.lzenglish.bean.SearchHistory;
 import com.jiubai.lzenglish.common.UtilBox;
-import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
-import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 import com.jiubai.lzenglish.ui.activity.SeasonListActivity;
 
 import java.util.ArrayList;
@@ -96,14 +94,19 @@ public class SearchVideoAdapter extends RecyclerView.Adapter {
             } else {
                 HeaderViewHolder viewHolder = (HeaderViewHolder) holder;
 
-                viewHolder.mClearTextView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        searchHistoryManager.clearHistory();
+                if (searchHistoryManager.searchHistoryList.size() == 0) {
+                    viewHolder.mClearTextView.setVisibility(View.GONE);
+                } else {
+                    viewHolder.mClearTextView.setVisibility(View.VISIBLE);
+                    viewHolder.mClearTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            searchHistoryManager.clearHistory();
 
-                        notifyDataSetChanged();
-                    }
-                });
+                            notifyDataSetChanged();
+                        }
+                    });
+                }
             }
         } else {
             ItemViewHolder viewHolder = (ItemViewHolder)holder;

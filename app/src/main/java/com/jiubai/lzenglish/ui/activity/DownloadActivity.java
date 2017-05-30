@@ -1,14 +1,14 @@
 package com.jiubai.lzenglish.ui.activity;
 
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -76,6 +76,7 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
 
         mAdapter = new DownloadAdapter(this, this);
         mRecyclerView.setAdapter(mAdapter);
+        ((SimpleItemAnimator)mRecyclerView.getItemAnimator()).setSupportsChangeAnimations(false);
 
         setMemoryInfo();
 
@@ -85,10 +86,10 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
         mToolbarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
 
         if (mDownloadManager.getPrefetchVideos().size() == 0) {
-            mEditTextView.setTextColor(ContextCompat.getColor(this, R.color.lightText));
+            mEditTextView.setTextColor(Color.parseColor("#999999"));
             mEditTextView.setClickable(false);
         } else {
-            mEditTextView.setTextColor(ContextCompat.getColor(this, R.color.primaryText));
+            mEditTextView.setTextColor(Color.parseColor("#151515"));
             mEditTextView.setClickable(true);
         }
     }
@@ -167,7 +168,7 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
                 }
 
                 mDeleteButton.setEnabled(true);
-                mDeleteButton.setTextColor(ContextCompat.getColor(this, allChecked ? R.color.lightText : R.color.mainText));
+                mDeleteButton.setTextColor(Color.parseColor(allChecked ? "#999999" : "#484848"));
                 mAdapter.notifyDataSetChanged();
                 break;
 
@@ -178,7 +179,7 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
 
             case R.id.button_delete:
                 if (mDeleteButton.isEnabled()) {
-                    UtilBox.alert(this, "确定要删除所有视频？",
+                    UtilBox.alert(this, "确定要删除选中的视频？",
                             "删除", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -187,7 +188,7 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
                                     mAdapter.notifyDataSetChanged();
                                     mBottomLayout.setVisibility(View.GONE);
                                     mEditTextView.setText("编辑");
-                                    mEditTextView.setTextColor(ContextCompat.getColor(DownloadActivity.this, R.color.lightText));
+                                    mEditTextView.setTextColor(Color.parseColor("#151515"));
                                     mEditTextView.setClickable(false);
                                     setMemoryInfo();
                                 }
@@ -203,13 +204,13 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
         for (PrefetchVideo prefetchVideo : mDownloadManager.getPrefetchVideos()) {
             if (prefetchVideo.isChecked()) {
                 mDeleteButton.setEnabled(true);
-                mDeleteButton.setTextColor(ContextCompat.getColor(this, R.color.mainText));
+                mDeleteButton.setTextColor(Color.parseColor("#484848"));
                 return;
             }
         }
 
         mDeleteButton.setEnabled(false);
-        mDeleteButton.setTextColor(ContextCompat.getColor(this, R.color.lightText));
+        mDeleteButton.setTextColor(Color.parseColor("#999999"));
     }
 
     @Override
