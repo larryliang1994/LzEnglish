@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="226dp"
-    android:layout_height="250dp"
-    android:paddingLeft="16dp">
+    android:layout_width="210dp"
+    android:layout_height="250dp">
 
     <View
         android:layout_width="match_parent"
@@ -12,8 +11,8 @@
     
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="210dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:src="@drawable/bb"
         android:layout_alignParentTop="true" />
 
@@ -34,6 +33,7 @@
             android:textColor="#484848"/>
 
         <TextView
+            android:id="@+id/textView_eng"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Peppa Pig"
@@ -54,12 +54,13 @@
             android:layout_weight="0.9" />
 
         <TextView
+            android:id="@+id/textView_desc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="'' 最具教育意义情感动画 ''"
-            android:textSize="14sp"
             android:layout_gravity="center_horizontal"
-            android:textColor="#B4B4B4"/>
+            android:text="'' 最具教育意义情感动画 ''"
+            android:textColor="#B4B4B4"
+            android:textSize="14sp" />
 
         <View
             android:layout_width="match_parent"

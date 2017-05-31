@@ -3,17 +3,18 @@
 
     <item
         android:id="@+id/navigation_recommend"
-        android:icon="@drawable/circle"
+        android:icon="@drawable/selector_navigation_circle"
+        android:checked="true"
         android:title="精选" />
 
     <item
         android:id="@+id/navigation_video"
-        android:icon="@drawable/play_empty"
+        android:icon="@drawable/selector_navigation_video"
         android:title="视频" />
 
     <item
         android:id="@+id/navigation_person"
-        android:icon="@drawable/user"
+        android:icon="@drawable/selector_navigation_user"
         android:title="我的" />
 
 </menu>

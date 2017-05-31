@@ -46,20 +46,19 @@ public class StatusBarUtil {
     /**
      * 修改状态栏颜色，支持4.4以上版本
      * @param activity
-     * @param colorId
      */
-    public static void setStatusBarColor(Activity activity,int colorId) {
+    public static void setStatusBarColor(Activity activity, int color) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = activity.getWindow();
 //      window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(activity.getResources().getColor(colorId));
+            window.setStatusBarColor(color);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //使用SystemBarTint库使4.4版本状态栏变色，需要先将状态栏设置为透明
             transparencyBar(activity);
             SystemBarTintManager tintManager = new SystemBarTintManager(activity);
             tintManager.setStatusBarTintEnabled(true);
-            tintManager.setStatusBarTintResource(colorId);
+            tintManager.setStatusBarTintResource(color);
         }
     }
 

@@ -7,13 +7,15 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.badoo.mobile.util.WeakHandler;
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.widget.JCVideoPlayerStandard;
 import com.jiubai.lzenglish.widget.recorder.AudioPlayer;
 import com.jiubai.lzenglish.widget.recorder.utils.FileUtils;
+
+import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
 
 //录音按钮核心类，包括点击、响应、与弹出对话框交互等操作。
 public class AudioRecordButton extends android.support.v7.widget.AppCompatButton implements AudioManager.AudioStageListener {
@@ -54,6 +56,8 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
     private boolean mHasRecordPromission = true;
     //是否允许短时间内再次点击录音，主要是防止故意多次连续点击。
     private boolean canRecord = true;
+
+    public JCVideoPlayerStandard jcVideoPlayerStandard;
 
     private String content = "";
 
@@ -227,8 +231,14 @@ public class AudioRecordButton extends android.support.v7.widget.AppCompatButton
                 try {
                     if (AudioPlayer.getInstance().mediaPlayer != null
                             && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                        AudioPlayer.getInstance().currentId = -99;
                         AudioPlayer.getInstance().pause();
                         AudioPlayer.getInstance().stop();
+                    }
+
+                    if (jcVideoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
+                        jcVideoPlayerStandard.currentId = -99;
+                        jcVideoPlayerStandard.startButton.performClick();
                     }
                 } catch (IllegalStateException e) {
                     e.printStackTrace();

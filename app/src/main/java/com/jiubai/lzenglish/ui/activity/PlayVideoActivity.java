@@ -41,6 +41,7 @@ import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
+import com.jiubai.lzenglish.widget.JCVideoPlayerStandard;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -50,7 +51,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import me.shaohui.bottomdialog.BottomDialog;
 
 import static android.view.View.FOCUS_UP;
@@ -150,6 +150,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
         mRecommendAdapter = new PlayVideoRecommendAdapter(this, list);
         mRecommendRecyclerView.setAdapter(mRecommendAdapter);
+
+//        mJVideoPlayer.startButton.setImageResource(R.drawable.play);
+//        mJVideoPlayer.startButton.setBackgroundResource(R.drawable.round_play_background_white);
 
         mJVideoPlayer.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
 

@@ -33,7 +33,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="视频中心"
-                android:textStyle="bold"
                 android:textColor="#151515"
                 android:textSize="18sp" />
 

@@ -6,10 +6,8 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
-import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
-import com.tencent.mm.opensdk.modelmsg.SendAuth;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -48,10 +46,10 @@ public class LoginActivity extends BaseActivity {
     @OnClick({R.id.imageView_login, R.id.textView_login})
     public void login(View view) {
         // send oauth request
-        final com.tencent.mm.opensdk.modelmsg.SendAuth.Req req = new SendAuth.Req();
-        req.scope = "snsapi_userinfo";
-        req.state = "wechat_sdk_demo_test";
-        //((App)getApplication()).api.sendReq(req);
+//        final com.tencent.mm.opensdk.modelmsg.SendAuth.Req req = new SendAuth.Req();
+//        req.scope = "snsapi_userinfo";
+//        req.state = "wechat_sdk_demo_test";
+//        //((App)getApplication()).api.sendReq(req);
     }
 
     private void initAnimation() {

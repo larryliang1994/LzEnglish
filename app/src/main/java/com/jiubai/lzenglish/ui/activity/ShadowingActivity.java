@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +32,7 @@ import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.ShadowingPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
+import com.jiubai.lzenglish.widget.JCVideoPlayerStandard;
 import com.jiubai.lzenglish.widget.recorder.AudioPlayer;
 import com.jiubai.lzenglish.widget.recorder.manager.AudioRecordButton;
 import com.jiubai.lzenglish.widget.recorder.manager.MediaManager;
@@ -47,7 +47,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 
 public class ShadowingActivity extends AppCompatActivity implements IShadowingView {
 
@@ -126,6 +125,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         UtilBox.showLoading(this, false);
 
         mCoverView.setVisibility(View.VISIBLE);
+
+        jcVideoPlayerStandard.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
 
         initPlayer();
         mVideoCoverView.setOnTouchListener(trueTouchListener);
@@ -283,13 +284,16 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                     mRecordButton.setContent(shadowingList.get(position).getSentenceEng());
                     setPlayerProgress(position);
                     jcVideoPlayerStandard.startButton.performClick();
+
+                    mRecordButton.setHandler(mAdapter.leftHandler);
                 }
 
                 @Override
                 public void onRightItemClick(int position) {
-
+                    mRecordButton.setHandler(mAdapter.rightHandler);
                 }
             });
+            mAdapter.jcVideoPlayerStandard = jcVideoPlayerStandard;
             mRecyclerView.setAdapter(mAdapter);
 
             if (shadowingList.size() != 0) {
@@ -297,13 +301,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
             }
 
             mRecordButton.setContent(shadowingList.get(0).getSentenceEng());
-
-            mAdapter.setConstructHandlerListener(new ShadowingAdapter.OnConstructHandlerListener() {
-                @Override
-                public void onConstructed() {
-                    mRecordButton.setHandler(mAdapter.handler);
-                }
-            });
+            mRecordButton.jcVideoPlayerStandard = jcVideoPlayerStandard;
 
             mCoverView.setVisibility(View.GONE);
 
@@ -389,8 +387,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
             AudioPlayer.getInstance().stop();
         }
 
-        if (mAdapter.handler != null) {
-            mAdapter.handler.removeMessages(0);
+        if (mAdapter.rightHandler != null) {
+            mAdapter.rightHandler.removeMessages(0);
         }
 
         super.onDestroy();

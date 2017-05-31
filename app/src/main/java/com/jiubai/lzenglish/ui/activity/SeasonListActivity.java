@@ -1,5 +1,6 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -52,6 +53,8 @@ public class SeasonListActivity extends AppCompatActivity implements IGetCartoon
         setContentView(R.layout.activity_season_list);
 
         StatusBarUtil.StatusBarDarkMode(this, Config.DeviceType);
+
+        StatusBarUtil.setStatusBarColor(this, Color.parseColor("#1b89a6"));
 
         ButterKnife.bind(this);
 

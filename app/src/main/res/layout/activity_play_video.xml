@@ -7,7 +7,7 @@
     android:background="@color/background"
     tools:context="com.jiubai.lzenglish.ui.activity.PlayVideoActivity">
 
-    <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+    <com.jiubai.lzenglish.widget.JCVideoPlayerStandard
         android:id="@+id/videoplayer"
         android:layout_width="match_parent"
         android:layout_height="180dp"
@@ -115,7 +115,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="被嫌弃的飞镖黄"
-                        android:textStyle="bold"
                         android:textColor="#161616"
                         android:textSize="16sp" />
 
@@ -233,7 +232,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="选集"
-                    android:textStyle="bold"
                     android:textColor="#161616"
                     android:textSize="16sp" />
 

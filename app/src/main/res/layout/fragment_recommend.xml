@@ -27,7 +27,7 @@
             android:layout_height="@dimen/appbar_height"
             android:padding="12dp"
             android:src="@drawable/history"
-            android:tint="#ffffff" />
+            android:tint="#DBDBDB" />
 
         <TextView
             android:id="@+id/textView_search"
@@ -50,7 +50,8 @@
             android:layout_width="@dimen/appbar_height"
             android:layout_height="@dimen/appbar_height"
             android:padding="13dp"
-            android:src="@drawable/downloaded" />
+            android:src="@drawable/downloaded"
+            android:tint="#DBDBDB"/>
 
     </LinearLayout>
 
@@ -158,9 +159,9 @@
                     android:layout_gravity="bottom"
                     android:background="@color/background" />
 
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/viewPager_guess"
-                    android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_guess"
+                    android:layout_width="match_parent"
                     android:layout_height="250dp" />
 
             </FrameLayout>

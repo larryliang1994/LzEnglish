@@ -31,6 +31,7 @@
                 android:lineSpacingMultiplier="1.3"
                 android:paddingRight="24dp"
                 android:paddingTop="8dp"
+                android:background="#1b89a6"
                 android:text=""
                 android:textColor="#7BC7DB"
                 android:textSize="15sp"
@@ -42,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/appbar_height"
                 app:layout_collapseMode="pin"
+                android:background="#1b89a6"
                 app:navigationIcon="@drawable/arrow_back">
 
                 <TextView

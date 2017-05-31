@@ -1,12 +1,14 @@
 package com.jiubai.lzenglish.ui.fragment;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,6 +28,7 @@ import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.ui.activity.DownloadActivity;
 import com.jiubai.lzenglish.ui.activity.HistoryActivity;
 import com.jiubai.lzenglish.ui.activity.SearchVideoActivity;
+import com.jiubai.lzenglish.ui.iview.AppBarStateChangeListener;
 
 import java.util.ArrayList;
 
@@ -43,17 +47,28 @@ public class RecommendFragment extends Fragment {
     @Bind(R.id.textView_search)
     TextView mSearchTextView;
 
+    @Bind(R.id.imageView_downloaded)
+    ImageView mDownloadedImageView;
+
+    @Bind(R.id.imageView_history)
+    ImageView mHistoryImageView;
+
     @Bind(R.id.layout_toolbar)
     LinearLayout mToolbarLayout;
 
-    @Bind(R.id.viewPager_guess)
-    ViewPager mGuessViewPager;
+    @Bind(R.id.recyclerView_guess)
+    RecyclerView mGuessRecyclerView;
+
+    @Bind(R.id.appbar)
+    AppBarLayout mAppBarLayout;
+
+    @Bind(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
 
     private boolean loading = false;
     private RecommendAdapter mAdapter;
     private ArrayList<String> list = new ArrayList<>();
 
-    private ArrayList<Fragment> fragments;
     private GuessRecommendAdapter mGuessAdapter;
 
     @Override
@@ -80,16 +95,21 @@ public class RecommendFragment extends Fragment {
         layoutParams.setMargins(0, Config.StatusbarHeight, 0, 0);
         mToolbar.setLayoutParams(layoutParams);
 
-        fragments = new ArrayList<>();
-        fragments.add(new GuessRecommendFragment());
-        fragments.add(new GuessRecommendFragment());
-        fragments.add(new GuessRecommendFragment());
-        fragments.add(new GuessRecommendFragment());
-        fragments.add(new GuessRecommendFragment());
-
-        mGuessAdapter = new GuessRecommendAdapter(getActivity(), getChildFragmentManager(), fragments);
-        //mGuessViewPager.setPageMargin(UtilBox.dip2px(getActivity(), 16));
-        mGuessViewPager.setAdapter(mGuessAdapter);
+        mAppBarLayout.addOnOffsetChangedListener(new AppBarStateChangeListener() {
+            @Override
+            public void onStateChanged(AppBarLayout appBarLayout, State state, int offset) {
+                if (state == State.COLLAPSED) {
+                    // 折叠状态
+                    mHistoryImageView.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+                    mDownloadedImageView.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+                    mSearchTextView.setTextColor(Color.WHITE);
+                } else {
+                    mHistoryImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#DBDBDB")));
+                    mDownloadedImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#DBDBDB")));
+                    mSearchTextView.setTextColor(Color.parseColor("#999999"));
+                }
+            }
+        });
     }
 
     @OnClick({R.id.textView_search, R.id.imageView_history, R.id.imageView_downloaded})
@@ -138,6 +158,14 @@ public class RecommendFragment extends Fragment {
         initData(10);
         mAdapter = new RecommendAdapter(getActivity(), list);
         mRecyclerView.setAdapter(mAdapter);
+
+        final LinearLayoutManager guessLinearLayoutManager = new LinearLayoutManager(
+                getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        mGuessRecyclerView.setLayoutManager(guessLinearLayoutManager);
+        mGuessRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        mGuessAdapter = new GuessRecommendAdapter(getActivity(), list);
+        mGuessRecyclerView.setAdapter(mGuessAdapter);
     }
 
     private void loadMore() {

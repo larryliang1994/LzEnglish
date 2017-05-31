@@ -8,7 +8,7 @@
     android:background="@color/background"
     tools:context="com.jiubai.lzenglish.ui.activity.PlayVideoActivity">
 
-    <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+    <com.jiubai.lzenglish.widget.JCVideoPlayerStandard
         android:id="@+id/videoplayer"
         android:layout_width="match_parent"
         android:transitionName="player"

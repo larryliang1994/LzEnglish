@@ -1,6 +1,5 @@
 package com.jiubai.lzenglish.ui.activity;
 
-import android.app.ActivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +12,7 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
@@ -21,9 +21,9 @@ import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.ui.fragment.RecommendFragment;
 import com.jiubai.lzenglish.ui.fragment.UserFragment;
 import com.jiubai.lzenglish.ui.fragment.VideoFragment;
+import com.jiubai.lzenglish.widget.CustomViewPager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -31,10 +31,10 @@ import butterknife.ButterKnife;
 public class HomeActivity extends BaseActivity {
 
     @Bind(R.id.viewPager)
-    ViewPager mViewPager;
+    CustomViewPager mViewPager;
 
-    @Bind(R.id.navigation)
-    BottomNavigationView mNavigation;
+    @Bind(R.id.bottom_navigation)
+    BottomNavigationViewEx mBottomNavigation;
 
     private RecommendFragment mRecommendFragment = new RecommendFragment();
     private VideoFragment mVideoFragment = new VideoFragment();
@@ -51,8 +51,10 @@ public class HomeActivity extends BaseActivity {
 
         ButterKnife.bind(this);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBottomNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        mBottomNavigation.enableAnimation(false);
+        mBottomNavigation.enableItemShiftingMode(false);
+        mBottomNavigation.enableShiftingMode(false);
 
         initViewPager();
 
@@ -79,19 +81,19 @@ public class HomeActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        mNavigation.setSelectedItemId(R.id.navigation_recommend);
+                        mBottomNavigation.setSelectedItemId(R.id.navigation_recommend);
                         StatusBarUtil.StatusBarDarkMode(HomeActivity.this, Config.DeviceType);
                         break;
                     case 1:
-                        mNavigation.setSelectedItemId(R.id.navigation_video);
+                        mBottomNavigation.setSelectedItemId(R.id.navigation_video);
                         StatusBarUtil.StatusBarLightMode(HomeActivity.this);
                         break;
                     case 2:
-                        mNavigation.setSelectedItemId(R.id.navigation_person);
+                        mBottomNavigation.setSelectedItemId(R.id.navigation_person);
                         StatusBarUtil.StatusBarLightMode(HomeActivity.this);
                         break;
                 }
-                mNavigation.setSelectedItemId(position);
+                mBottomNavigation.setSelectedItemId(position);
             }
 
             @Override

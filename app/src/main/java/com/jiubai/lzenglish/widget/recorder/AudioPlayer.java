@@ -39,15 +39,6 @@ public class AudioPlayer implements OnCompletionListener, MediaPlayer.OnPrepared
     }
 
     public void playUrl(String videoUrl, int currentId) {
-        if (this.currentId == currentId) {
-            this.currentId = -99;
-            if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-                pause();
-                stop();
-            }
-            return;
-        }
-
         this.currentId = currentId;
 
         try {
