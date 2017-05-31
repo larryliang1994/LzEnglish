@@ -62,6 +62,16 @@ public class SeasonAdapter extends RecyclerView.Adapter {
             }
         });
 
+        if (position == 0) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(0, UtilBox.dip2px(context, 16), 0, 0);
+            viewHolder.itemView.setLayoutParams(params);
+        } else {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(0, UtilBox.dip2px(context, 8), 0, 0);
+            viewHolder.itemView.setLayoutParams(params);
+        }
+
         if (seasonList.size() % 2 == 1 && position == seasonList.size() / 2) {
             viewHolder.imageView2.setVisibility(View.INVISIBLE);
 

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Cartoon;
@@ -53,6 +54,16 @@ public class VideoListAdapter extends RecyclerView.Adapter {
                 UtilBox.startActivity((Activity) context, intent, false);
             }
         });
+
+        if (position == getItemCount() - 1) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(0, 0, 0, UtilBox.dip2px(context, 16));
+            viewHolder.itemView.setLayoutParams(params);
+        } else if (position == 0) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(0, UtilBox.dip2px(context, 8), 0, 0);
+            viewHolder.itemView.setLayoutParams(params);
+        }
     }
 
     @Override

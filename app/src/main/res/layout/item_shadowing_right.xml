@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="5dp"
-        android:color="@color/colorPrimary"
+        android:color="#89cfe3"
         android:radius="4dp"
         app:dd_animationDuration="500"
         app:dd_horizontalSpacing="4dp"
@@ -35,7 +35,7 @@
         app:prb_defaultRating="0"
         app:prb_tickNormalDrawable="@drawable/star_unchecked_big"
         app:prb_tickSelectedDrawable="@drawable/star_checked_big"
-        app:prb_tickSpacing="3dp"
+        app:prb_tickSpacing="2dp"
         app:prb_totalTicks="5" />
 
     <Button
@@ -56,7 +56,16 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_margin="2dp"
-        android:text="10''"
+        android:text="10"
+        android:textColor="#999999"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="2dp"
+        android:text="''"
         android:textColor="#999999"
         android:textSize="14sp"
         android:textStyle="bold" />

@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
@@ -14,6 +15,9 @@ import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Larry Liang on 15/05/2017.
@@ -61,6 +65,14 @@ public class RecommendAdapter extends RecyclerView.Adapter {
                     UtilBox.startActivity((Activity) context, intent, false);
                 }
             });
+
+            if (position == 1) {
+                viewHolder.videoImageView.setImageResource(R.drawable.recommend_video_example);
+            } else if (position == 2) {
+                viewHolder.videoImageView.setImageResource(R.drawable.a);
+            } else if (position == 3) {
+                viewHolder.videoImageView.setImageResource(R.drawable.b);
+            }
         }
     }
 
@@ -89,8 +101,13 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {
+        @Bind(R.id.imageView_video)
+        ImageView videoImageView;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -101,8 +118,12 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     }
 
     class PresentViewHolder extends RecyclerView.ViewHolder {
+
+
         public PresentViewHolder(View itemView) {
             super(itemView);
+
+            ButterKnife.bind(this, itemView);
         }
     }
 }

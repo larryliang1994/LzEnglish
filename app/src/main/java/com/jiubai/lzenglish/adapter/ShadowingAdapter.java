@@ -143,6 +143,16 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 }
             });
 
+            if (position == 0) {
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+                params.setMargins(0, UtilBox.dip2px(context, 16), 0, 0);
+                viewHolder.itemView.setLayoutParams(params);
+            } else {
+                RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+                params.setMargins(0, UtilBox.dip2px(context, 8), 0, 0);
+                viewHolder.itemView.setLayoutParams(params);
+            }
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -179,7 +189,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 viewHolder.layout.setVisibility(View.GONE);
             } else {
                 viewHolder.lengthTextView.setVisibility(View.VISIBLE);
-                viewHolder.lengthTextView.setText(voice.getSeconds() + "''");
+                viewHolder.lengthTextView.setText(voice.getSeconds());
 
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -359,7 +369,8 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                         if (voice.getWav().contains("http")) {
 
                             HttpProxyCacheServer proxy = App.getProxy(context);
-                            String proxyUrl = proxy.getProxyUrl("http://music.baidutt.com/up/kwcswaks/ksdkk.mp3");
+                            //String proxyUrl = proxy.getProxyUrl("http://music.baidutt.com/up/kwcswaks/ksdkk.mp3");
+                            String proxyUrl = proxy.getProxyUrl(voice.getWav());
 
                             AudioPlayer.getInstance().playUrl(proxyUrl, voice.getId());
                         } else {

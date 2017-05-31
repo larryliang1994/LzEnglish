@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp">
 
     <ImageView
         android:id="@+id/imageView_video"
+        android:layout_width="match_parent"
         android:layout_height="160dp"
         android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
         android:scaleType="centerCrop"
         android:src="@drawable/recommend_video_example" />
 
     <TextView
         android:id="@+id/textView_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/imageView_video"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:paddingLeft="16dp"
         android:text="马男波杰克 动画"
         android:textColor="#151515"
@@ -25,21 +25,21 @@
 
     <TextView
         android:id="@+id/textView_watched"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/imageView_video"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
         android:paddingRight="16dp"
         android:text="1000人观看"
         android:textColor="#909090"
         android:textSize="12sp" />
 
     <ImageView
-        android:background="@drawable/round_play_background"
-        android:layout_centerHorizontal="true"
-        android:layout_height="50dp"
-        android:layout_marginTop="55dp"
         android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="55dp"
+        android:background="@drawable/round_play_background"
         android:paddingBottom="15dp"
         android:paddingLeft="18dp"
         android:paddingRight="15dp"

@@ -44,8 +44,8 @@
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:background="@drawable/round_button_login"
             android:text=""
             android:textColor="#ffffff"
@@ -104,7 +104,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_margin="16dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -112,6 +115,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="被嫌弃的飞镖黄"
+                        android:textStyle="bold"
                         android:textColor="#161616"
                         android:textSize="16sp" />
 
@@ -200,7 +204,8 @@
                     android:background="#ffffff" />
 
                 <View
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="0.5dp"
                     android:background="@color/divider" />
 
@@ -228,6 +233,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="选集"
+                    android:textStyle="bold"
                     android:textColor="#161616"
                     android:textSize="16sp" />
 
@@ -317,7 +323,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="60dp" />
+                android:layout_height="120dp" />
 
             <View
                 android:layout_width="match_parent"

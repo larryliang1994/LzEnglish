@@ -2,24 +2,29 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="1024dp"
     android:height="1024dp"
-    android:viewportWidth="1024"
-    android:viewportHeight="1024">
+    android:viewportWidth="18"
+    android:viewportHeight="18">
 
-    <path
-        android:fillColor="#ffffff"
-        android:pathData="M949.333333 501.333333c-17.066667 0-32 14.933333-32 32l0 384L106.666667
-917.333333 106.666667 533.333333c0-17.066667-14.933333-32-32-32S42.666667
-516.266667 42.666667 533.333333l0 405.333333c0 10.666667 6.4 21.333333 14.933333
-27.733333C64 974.933333 74.666667 981.333333 85.333333 981.333333l853.333333
-0c10.666667 0 21.333333-6.4 27.733333-14.933333C974.933333 960 981.333333
-949.333333 981.333333 938.666667L981.333333 533.333333C981.333333 516.266667
-966.4 501.333333 949.333333 501.333333z" />
-    <path
-        android:fillColor="#ffffff"
-        android:pathData="M492.8 789.333333c8.533333 6.4 25.6 10.666667 36.266667-2.133333L746.666667
-573.866667c12.8-12.8 12.8-32 0-44.8-12.8-12.8-32-12.8-44.8 0L554.666667 672
-554.666667 85.333333c0-17.066667-19.2-32-42.666667-32S469.333333 68.266667
-469.333333 85.333333l0 588.8-162.133333-149.333333c-12.8-12.8-32-12.8-44.8 0-6.4
-6.4-8.533333 14.933333-8.533333 23.466667 0 8.533333 4.266667 17.066667
-10.666667 23.466667C264.533333 569.6 477.866667 778.666667 492.8 789.333333z" />
+    <group
+        android:translateX="-338.000000"
+        android:translateY="-34.000000">
+        <group
+            android:translateX="-23.000000">
+            <group
+                android:translateX="357.000000"
+                android:translateY="30.000000">
+                <path
+                    android:fillColor="#DBDBDB"
+                    android:strokeWidth="1"
+                    android:pathData="M8.6875,14.5 L12.25,14.5 L12.25,4 L13.75,4 L13.75,14.5 L17.3125,14.5 L13,19
+L8.6875,14.5 Z M22,13 L20.5,13 L20.5,20.5 L5.5,20.5 L5.5,13 L4,13 L4,22 L22,22
+L22,13 Z" />
+                <path
+                    android:fillAlpha="0"
+                    android:strokeAlpha="0"
+                    android:strokeWidth="1"
+                    android:pathData="M 0 0 H 25 V 25 H 0 V 0 Z" />
+            </group>
+        </group>
+    </group>
 </vector>

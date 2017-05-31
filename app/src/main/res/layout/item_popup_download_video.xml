@@ -8,8 +8,9 @@
     <RelativeLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/round_searchbox_gray_4">
+        android:background="@drawable/round_searchbox_gray_8"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true">
 
         <TextView
             android:id="@+id/textView_ep"

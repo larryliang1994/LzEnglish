@@ -11,7 +11,7 @@
     <RelativeLayout
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/round_searchbox_gray_4">
+        android:background="@drawable/round_searchbox_gray_8">
 
         <TextView
             android:id="@+id/textView_ep"
@@ -30,7 +30,7 @@
             android:visibility="gone"
             android:scaleType="fitCenter"
             android:src="@drawable/play"
-            android:tint="@color/colorPrimary" />
+            android:tint="#23afd4" />
 
         <io.techery.properratingbar.ProperRatingBar
             android:id="@+id/rating"

@@ -27,6 +27,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="我的"
+                android:textStyle="bold"
                 android:textColor="#151515"
                 android:textSize="18sp" />
 
@@ -57,8 +58,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageView_portrait"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
             android:src="@drawable/portrait_example"
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true" />
@@ -79,7 +80,7 @@
             android:layout_toRightOf="@id/imageView_portrait"
             android:text="自然卷的王小二"
             android:textColor="#333333"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -106,7 +107,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/downloaded"
+            android:src="@drawable/downloaded_user"
             android:tint="#EF6358" />
 
         <TextView
@@ -162,7 +163,7 @@
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/history"
+            android:src="@drawable/history_user"
             android:tint="#EF6358" />
 
         <TextView

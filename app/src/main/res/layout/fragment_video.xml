@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="#efeff4"
     tools:context="com.jiubai.lzenglish.ui.fragment.VideoFragment">
 
     <android.support.v4.view.ViewPager
@@ -17,8 +17,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#ffffff"
-        app:elevation="0dp"
-        android:paddingTop="20dp">
+        android:paddingTop="20dp"
+        app:elevation="0dp">
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
@@ -33,6 +33,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="视频中心"
+                android:textStyle="bold"
                 android:textColor="#151515"
                 android:textSize="18sp" />
 
@@ -41,26 +42,26 @@
                 android:layout_width="@dimen/appbar_height"
                 android:layout_height="@dimen/appbar_height"
                 android:layout_gravity="right"
-                android:transitionName="searchIcon"
                 android:layout_marginRight="5dp"
                 android:padding="15dp"
                 android:src="@drawable/search"
-                android:tint="#333333" />
+                android:tint="#333333"
+                android:transitionName="searchIcon" />
 
         </android.support.v7.widget.Toolbar>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:background="@color/divider"/>
+            android:background="@color/divider" />
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabTextColor="#484848"
+            android:layout_height="56dp"
+            app:tabIndicatorColor="@color/colorPrimary"
             app:tabSelectedTextColor="@color/colorPrimary"
-            app:tabIndicatorColor="@color/colorPrimary" />
+            app:tabTextColor="#484848" />
 
     </android.support.design.widget.AppBarLayout>
 

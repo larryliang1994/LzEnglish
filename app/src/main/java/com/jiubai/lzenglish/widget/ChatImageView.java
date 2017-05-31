@@ -84,7 +84,7 @@ public class ChatImageView extends android.support.v7.widget.AppCompatImageView 
             mPaintOutter.setColor(Color.parseColor("#74BE50"));
             mPaint.setColor(Color.parseColor("#A2E75A"));
         } else {
-            mPaintOutter.setColor(Color.parseColor("#B2B2B2"));
+            mPaintOutter.setColor(Color.parseColor("#CCCCCC"));
             mPaint.setColor(Color.WHITE);
         }
     }

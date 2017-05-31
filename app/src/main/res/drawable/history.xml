@@ -2,21 +2,35 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="1024dp"
     android:height="1024dp"
-    android:viewportWidth="1024"
-    android:viewportHeight="1024">
+    android:viewportWidth="21"
+    android:viewportHeight="21">
 
-    <path
-        android:fillColor="#ffffff"
-        android:pathData="M512 51.2C257.5104 51.2 51.2 257.5104 51.2 512c0 254.5152 206.3104 460.8 460.8
-460.8 254.5152 0 460.8-206.2848 460.8-460.8C972.8 257.5104 766.5152 51.2 512
-51.2L512 51.2zM512 916.096c-222.336 0-403.2-181.76-403.2-404.096 0-222.336
-180.864-403.2 403.2-403.2 222.336 0 403.2 180.864 403.2 403.2C915.2 734.336
-734.336 916.096 512 916.096L512 916.096zM512 916.096" />
-    <path
-        android:fillColor="#ffffff"
-        android:pathData="M540.8 512.1536 540.8 235.8528c0-15.8976-12.9024-28.8-28.8-28.8-15.8976 0-28.8
-12.9024-28.8 28.8l0 288c0 7.7824 3.0976 14.848 8.1152 20.0192 0.6656 0.8192
-1.3824 1.6384 2.1504 2.4064l142.5408 142.5408c11.2384 11.2384 29.4912 11.2384
-40.7296 0 11.2384-11.2384 11.2384-29.4912 0-40.7296L540.8 512.1536 540.8
-512.1536zM540.8 512.1536" />
+    <group
+        android:translateX="-14.000000"
+        android:translateY="-32.000000">
+        <group
+            android:translateX="-23.000000">
+            <group
+                android:translateX="35.000000"
+                android:translateY="31.000000">
+                <group
+                    android:translateY="-1.000000">
+                    <path
+                        android:fillAlpha="0"
+                        android:strokeAlpha="0"
+                        android:strokeWidth="1"
+                        android:pathData="M 0 0 H 25 V 25 H 0 V 0 Z" />
+                    <path
+                        android:fillColor="#DBDBDB"
+                        android:strokeWidth="1"
+                        android:pathData="M12.5,2 C6.70625,2 2,6.70625 2,12.5 C2,18.29375 6.70625,23 12.5,23 C18.29375,23
+23,18.29375 23,12.5 C23,6.70625 18.29375,2 12.5,2 Z M12.5,21.5 C7.53125,21.5
+3.5,17.46875 3.5,12.5 C3.5,7.53125 7.53125,3.5 12.5,3.5 C17.46875,3.5
+21.5,7.53125 21.5,12.5 C21.5,17.46875 17.46875,21.5 12.5,21.5 Z M13.25,12.275
+L17.73125,14.8625 L16.98125,16.15625 L11.95625,13.25 L11.75,13.25 L11.75,6.5
+L13.25,6.5 L13.25,12.275 Z" />
+                </group>
+            </group>
+        </group>
+    </group>
 </vector>

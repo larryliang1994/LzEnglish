@@ -69,6 +69,7 @@ public class VideoFragment extends Fragment {
         mFragmentPagerAdapter = new MyFragmentPagerAdapter(getChildFragmentManager(), list);
         mViewPager.setAdapter(mFragmentPagerAdapter);
 
+        mTabLayout.setSelectedTabIndicatorHeight(UtilBox.dip2px(getActivity(), 1));
         mTabLayout.setupWithViewPager(mViewPager);
 
         mAppBarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
