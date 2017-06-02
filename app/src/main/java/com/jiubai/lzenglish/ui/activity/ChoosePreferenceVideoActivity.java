@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.widget.RippleView;
 
 import butterknife.Bind;
@@ -67,10 +68,24 @@ public class ChoosePreferenceVideoActivity extends BaseActivity {
     }
 
     private void initView() {
+        for (int i = 0; i < Config.PreferenceVideos.length; i++) {
+            ((TextView)findViewById(mTextViews[i])).setText(Config.PreferenceVideos[i]);
+        }
+
         mNextRipple.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
             public void onComplete(RippleView rippleView) {
-                Intent intent = new Intent(ChoosePreferenceVideoActivity.this, HomeActivity.class);
+                StringBuilder builder = new StringBuilder();
+
+                for (int i = 0; i < mSelected.length; i++) {
+                    if (mSelected[i]) {
+                        builder.append(i + 1 + ",");
+                    }
+                }
+
+                Config.PreferenceVideoIndex = builder.toString();
+
+                Intent intent = new Intent(ChoosePreferenceVideoActivity.this, LoginActivity.class);
                 UtilBox.startActivity(ChoosePreferenceVideoActivity.this, intent, true);
             }
         });

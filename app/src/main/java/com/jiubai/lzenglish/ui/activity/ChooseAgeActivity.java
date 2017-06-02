@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.widget.RippleView;
 
 import butterknife.Bind;
@@ -52,6 +53,8 @@ public class ChooseAgeActivity extends BaseActivity {
     private RippleView mPreviousRipple;
     private TextView mPreviousTextView;
 
+    private int previousIndex = 0;
+
     private boolean mNextButtonEnable = false;
 
     @Override
@@ -68,10 +71,17 @@ public class ChooseAgeActivity extends BaseActivity {
     }
 
     private void initView() {
+        mUnder4TextView.setText(Config.Ages[0]);
+        m5To9TextView.setText(Config.Ages[1]);
+        mUp10TextView.setText(Config.Ages[2]);
+        mOthersTextView.setText(Config.Ages[3]);
+
         mNextRipple.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
             public void onComplete(RippleView rippleView) {
                 if (mNextButtonEnable) {
+                    Config.AgeIndex = previousIndex + "";
+
                     Intent intent = new Intent(ChooseAgeActivity.this, ChoosePreferenceVideoActivity.class);
                     UtilBox.startActivity(ChooseAgeActivity.this, intent, true);
                 }
@@ -86,6 +96,7 @@ public class ChooseAgeActivity extends BaseActivity {
 
         switch (view.getId()) {
             case R.id.ripple_under4:
+                previousIndex = 1;
                 mUnder4Ripple.setBackgroundResource(R.drawable.round_listview_blue);
                 mUnder4TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
@@ -97,6 +108,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 break;
 
             case R.id.ripple_5_9:
+                previousIndex = 2;
                 m5To9Ripple.setBackgroundResource(R.drawable.round_listview_blue);
                 m5To9TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
@@ -108,6 +120,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 break;
 
             case R.id.ripple_up10:
+                previousIndex = 3;
                 mUp10Ripple.setBackgroundResource(R.drawable.round_listview_blue);
                 mUp10TextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {
@@ -119,6 +132,7 @@ public class ChooseAgeActivity extends BaseActivity {
                 break;
 
             case R.id.ripple_others:
+                previousIndex = 4;
                 mOthersRipple.setBackgroundResource(R.drawable.round_listview_blue);
                 mOthersTextView.setTextColor(ContextCompat.getColor(this, R.color.lightBlue));
                 if (mPreviousRipple != null) {

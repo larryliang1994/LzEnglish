@@ -9,4 +9,5 @@ public interface IInitDataView {
     void onGetAgeGroupsResult(boolean result, String info, Object extras);
     void onGetAllCartoonResult(boolean result, String info, Object extras);
     void onGetUserInfoResult(boolean result, String info, Object extras);
+    void onGetAgeInterestConfigResult(boolean result, String info, Object extras);
 }

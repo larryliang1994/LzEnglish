@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.ui.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,15 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.HistoryAdapter;
-import com.jiubai.lzenglish.adapter.RecommendAdapter;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
-
-import java.util.ArrayList;
+import com.jiubai.lzenglish.manager.WatchHistoryManager;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -30,8 +30,11 @@ public class HistoryActivity extends BaseActivity {
     @Bind(R.id.layout_toolbar)
     LinearLayout mToolbarLayout;
 
+    @Bind(R.id.textView_edit)
+    TextView mEditTextView;
+
     private HistoryAdapter mAdapter;
-    private ArrayList<String> list = new ArrayList<>();
+    private WatchHistoryManager mWatchHistoryManager = WatchHistoryManager.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +53,52 @@ public class HistoryActivity extends BaseActivity {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        initData(10);
-        mAdapter = new HistoryAdapter(this, list);
+        mWatchHistoryManager.initTimeHeader();
+
+        mAdapter = new HistoryAdapter(this);
         mRecyclerView.setAdapter(mAdapter);
 
         ViewGroup.LayoutParams params = mToolbarLayout.getLayoutParams();
         params.height = Config.AppbarHeight + Config.StatusbarHeight;
         mToolbarLayout.setLayoutParams(params);
         mToolbarLayout.setPadding(0, Config.StatusbarHeight, 0, 0);
-    }
 
-    private void initData(int num) {
-        for(int i = 0; i < num; i++) {
-            list.add("");
+        if (mWatchHistoryManager.watchHistoryList.size() == 0) {
+            mEditTextView.setTextColor(Color.parseColor("#999999"));
+            mEditTextView.setClickable(false);
+        } else {
+            mEditTextView.setTextColor(Color.parseColor("#151515"));
+            mEditTextView.setClickable(true);
         }
     }
 
-    @OnClick({R.id.imageView_back})
+    @OnClick({R.id.imageView_back, R.id.textView_edit})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imageView_back:
                 onBackPressed();
+                break;
+
+            case R.id.textView_edit:
+                if (mWatchHistoryManager.watchHistoryList.size() != 0) {
+                    UtilBox.alert(this, "确定要清空观看历史？",
+                            "清空", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    mEditTextView.setTextColor(Color.parseColor("#999999"));
+                                    mEditTextView.setClickable(false);
+
+                                    mWatchHistoryManager.clearHistory();
+
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            },
+                            "取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+                }
                 break;
         }
     }

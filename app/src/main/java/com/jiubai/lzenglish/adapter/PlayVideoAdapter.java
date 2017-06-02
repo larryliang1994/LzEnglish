@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.Video;
+import com.jiubai.lzenglish.common.UtilBox;
 
 import java.util.ArrayList;
 
@@ -97,7 +97,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
                         listener.onItemClick(position);
                     }
                 } else {
-                    Toast.makeText(context, "您还未购买此视频", Toast.LENGTH_SHORT).show();
+                    UtilBox.purchaseAlert(context, "您还未购买此视频");
                 }
             }
         });

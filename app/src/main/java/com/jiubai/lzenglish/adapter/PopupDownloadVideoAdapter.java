@@ -10,7 +10,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.bean.Video;
+import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.manager.DownloadManager;
 
@@ -18,7 +20,6 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.techery.properratingbar.ProperRatingBar;
 
 /**
@@ -51,10 +52,26 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
         viewHolder.ePTextView.setText(position + 1 + "");
         viewHolder.ratingBar.setRating(video.getLogCartoonItemScore());
 
-        if (DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) == -1) {
+        int videoIndex = DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId());
+        if (videoIndex == -1) {
             viewHolder.progressImageView.setVisibility(View.GONE);
         } else {
             viewHolder.progressImageView.setVisibility(View.VISIBLE);
+
+            if (DownloadManager.getInstance().getPrefetchVideos().get(videoIndex).getVideoStatus()
+                    == PrefetchVideo.VideoStatus.Downloaded) {
+                viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_blue);
+                viewHolder.progressImageView.setImageResource(R.drawable.check);
+                viewHolder.progressImageView.setPadding(
+                        UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3),
+                        UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3));
+            } else {
+                viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_orange);
+                viewHolder.progressImageView.setImageResource(R.drawable.downward);
+                viewHolder.progressImageView.setPadding(
+                        UtilBox.dip2px(context, 4), UtilBox.dip2px(context, 4),
+                        UtilBox.dip2px(context, 4), UtilBox.dip2px(context, 4));
+            }
         }
 
         if (video.isAllowWatch()) {
@@ -77,8 +94,10 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                     if (listener != null) {
                         listener.onItemClick(position);
                     }
+                } else if (DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) != -1) {
+                    Toast.makeText(context, "该视频已缓存", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "您还未购买该视频", Toast.LENGTH_SHORT).show();
+                    UtilBox.purchaseAlert(context, "您还未购买此视频");
                 }
             }
         });

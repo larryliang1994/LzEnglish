@@ -9,4 +9,5 @@ public interface IInitDataPresenter {
     void getAgeGroups();
     void getAllCartoon();
     void getUserInfo();
+    void getAgeInterestConfig();
 }

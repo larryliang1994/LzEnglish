@@ -34,10 +34,12 @@ import com.jiubai.lzenglish.adapter.PopupDownloadVideoAdapter;
 import com.jiubai.lzenglish.bean.DetailedSeason;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.bean.Video;
+import com.jiubai.lzenglish.bean.WatchHistory;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.manager.DownloadManager;
+import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
@@ -45,6 +47,7 @@ import com.jiubai.lzenglish.widget.JCVideoPlayerStandard;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -151,9 +154,6 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         mRecommendAdapter = new PlayVideoRecommendAdapter(this, list);
         mRecommendRecyclerView.setAdapter(mRecommendAdapter);
 
-//        mJVideoPlayer.startButton.setImageResource(R.drawable.play);
-//        mJVideoPlayer.startButton.setBackgroundResource(R.drawable.round_play_background_white);
-
         mJVideoPlayer.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBackImageView.getLayoutParams();
@@ -169,6 +169,13 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
             mDetailedSeason = (DetailedSeason) extras;
 
             videoList = (ArrayList<Video>) mDetailedSeason.getVideoList();
+
+            for (int i = 0; i < videoList.size(); i++) {
+                if (videoList.get(i).getId() == seasonId) {
+                    currentVideoIndex = i;
+                    break;
+                }
+            }
 
             mTitleTextView.setText(videoList.get(currentVideoIndex).getName());
             mKeywordsTextView.setText(mDetailedSeason.getSeoKeywords());
@@ -215,6 +222,25 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                                 if (JCMediaManager.instance().mediaPlayer.isPlaying()) {
                                     Log.i("text", JCMediaManager.instance().mediaPlayer.getCurrentPosition() / 1000
                                             + " -- " + JCMediaManager.instance().mediaPlayer.getDuration() / 1000);
+
+                                    Video video = videoList.get(currentVideoIndex);
+
+                                    WatchHistory watchHistory = new WatchHistory(
+                                            video.getId(),
+                                            video.getName(),
+                                            JCMediaManager.instance().mediaPlayer.getDuration(),
+                                            JCMediaManager.instance().mediaPlayer.getCurrentPosition(),
+                                            -99,
+                                            new Date().getTime(),
+                                            video.getHeadImg()
+                                    );
+
+                                    if (currentVideoIndex + 1 < videoList.size()
+                                            && videoList.get(currentVideoIndex + 1).isAllowWatch()) {
+                                        watchHistory.setNextVideoId(videoList.get(currentVideoIndex + 1).getId());
+                                    }
+
+                                    WatchHistoryManager.getInstance().saveHistory(watchHistory);
 
                                     if (JCMediaManager.instance().mediaPlayer.getCurrentPosition() * 1.0
                                             / JCMediaManager.instance().mediaPlayer.getDuration() >= 0.8) {
@@ -466,7 +492,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                     startActivityForResult(intent, 99);
                     overridePendingTransition(R.anim.in_right_left, R.anim.out_right_left);
                 } else {
-                    Toast.makeText(this, "您还未购买跟读", Toast.LENGTH_SHORT).show();
+                    UtilBox.purchaseAlert(this, "您还未购买跟读功能");
                 }
                 break;
         }

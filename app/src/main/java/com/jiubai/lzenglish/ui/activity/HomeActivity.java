@@ -67,7 +67,7 @@ public class HomeActivity extends BaseActivity {
         mFragments.add(mRecommendFragment);
         mFragments.add(mVideoFragment);
         mFragments.add(mUserFragment);
-
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragments));
 
         mViewPager.setCurrentItem(0);
@@ -160,7 +160,11 @@ public class HomeActivity extends BaseActivity {
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if ((System.currentTimeMillis() - exitTime) > 2000) {
+            if (mViewPager.getCurrentItem() != 0) {
+                mViewPager.setCurrentItem(0, true);
+                mBottomNavigation.setSelectedItemId(R.id.navigation_recommend);
+                StatusBarUtil.StatusBarDarkMode(HomeActivity.this, Config.DeviceType);
+            } else if ((System.currentTimeMillis() - exitTime) > 2000) {
                 Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
                 exitTime = System.currentTimeMillis();
             } else {

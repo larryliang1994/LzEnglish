@@ -40,9 +40,10 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/textView_edit"
             android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:text=""
+            android:text="清空"
             android:textSize="16sp"
             android:textColor="#151515"
             android:paddingRight="12dp"
@@ -58,6 +59,6 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

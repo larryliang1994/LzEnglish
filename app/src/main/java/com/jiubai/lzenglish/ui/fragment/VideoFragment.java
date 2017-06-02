@@ -57,6 +57,10 @@ public class VideoFragment extends Fragment {
     }
 
     private void initView() {
+        if (Config.AgeGroups == null || Config.AgeGroups.length == 0) {
+            Config.AgeGroups = new String[]{"幼儿", "5-9岁", "10岁+", "电影", "高阶"};
+        }
+
         ArrayList<Fragment> list = new ArrayList<>();
 
         for (int i = 0; i < Config.AgeGroups.length; i++) {

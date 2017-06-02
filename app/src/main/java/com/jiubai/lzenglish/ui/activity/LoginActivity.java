@@ -1,13 +1,18 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.StatusBarUtil;
+import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,6 +50,13 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick({R.id.imageView_login, R.id.textView_login})
     public void login(View view) {
+        SharedPreferences.Editor editor = App.sharedPreferences.edit();
+        editor.putString("ageIndex", Config.AgeIndex);
+        editor.putString("preferenceVideoIndex", Config.PreferenceVideoIndex);
+        editor.apply();
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        UtilBox.startActivity(this, intent, true);
         // send oauth request
 //        final com.tencent.mm.opensdk.modelmsg.SendAuth.Req req = new SendAuth.Req();
 //        req.scope = "snsapi_userinfo";

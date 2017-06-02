@@ -1,11 +1,9 @@
 package com.jiubai.lzenglish.manager;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.bean.SearchHistory;
-import com.jiubai.lzenglish.config.Config;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +37,7 @@ public class SearchHistoryManager {
             if (history.getCartoonId() == searchHistory.getCartoonId()) {
                 searchHistoryList.add(0, searchHistoryList.get(searchHistoryList.size() - 1));
                 searchHistoryList.remove(searchHistoryList.size() - 1);
+                writeHistory();
                 return;
             }
         }
@@ -49,8 +48,11 @@ public class SearchHistoryManager {
             searchHistoryList.remove(8);
         }
 
-        SharedPreferences.Editor editor = App.sharedPreferences.edit();
+        writeHistory();
+    }
 
+    public void writeHistory() {
+        SharedPreferences.Editor editor = App.sharedPreferences.edit();
         JSONArray jsonArray = new JSONArray();
 
         try {

@@ -9,6 +9,7 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
 import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
+import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
@@ -45,6 +46,8 @@ public class App extends Application {
         DownloadManager.getInstance().readVideoSharedPreferences();
 
         SearchHistoryManager.getInstance().readHistory();
+
+        WatchHistoryManager.getInstance().readHistory();
     }
 
     private void initWeChat() {

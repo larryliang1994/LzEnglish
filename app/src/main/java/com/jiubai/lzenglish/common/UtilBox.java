@@ -11,21 +11,21 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 
@@ -37,6 +37,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -102,7 +103,8 @@ public class UtilBox {
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));;
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        ;
         //listView.getDividerHeight()获取子项间分隔符占用的高度
         // params.height最后得到整个ListView完整显示需要的高度
         listView.setLayoutParams(params);
@@ -393,6 +395,42 @@ public class UtilBox {
         return date.getTime();
     }
 
+    public static int getDataTodayYesterday(long time) {
+        Date date = new Date(time);
+
+        Calendar current = Calendar.getInstance();
+
+        Calendar today = Calendar.getInstance();    //今天
+
+        today.set(Calendar.YEAR, current.get(Calendar.YEAR));
+        today.set(Calendar.MONTH, current.get(Calendar.MONTH));
+        today.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH));
+        //  Calendar.HOUR——12小时制的小时数 Calendar.HOUR_OF_DAY——24小时制的小时数
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+
+        Calendar yesterday = Calendar.getInstance();    //昨天
+
+        yesterday.set(Calendar.YEAR, current.get(Calendar.YEAR));
+        yesterday.set(Calendar.MONTH, current.get(Calendar.MONTH));
+        yesterday.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH) - 1);
+        yesterday.set(Calendar.HOUR_OF_DAY, 0);
+        yesterday.set(Calendar.MINUTE, 0);
+        yesterday.set(Calendar.SECOND, 0);
+
+        current.setTime(date);
+
+        if (current.after(today)) {
+            return 1;
+        } else if (current.before(today) && current.after(yesterday)) {
+            return 2;
+        } else {
+            return -1;
+        }
+    }
+
+
     /**
      * Bitmap转Bytes
      *
@@ -549,7 +587,7 @@ public class UtilBox {
     }
 
     public static void showSnackbar(Context context, CharSequence text) {
-        Snackbar.make(((Activity)context).getWindow().getDecorView(), text, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(((Activity) context).getWindow().getDecorView(), text, Snackbar.LENGTH_SHORT).show();
     }
 
     public static void showSnackbar(Context context, @StringRes int resId) {
@@ -557,7 +595,7 @@ public class UtilBox {
     }
 
     /**
-     *判断当前应用程序处于前台还是后台
+     * 判断当前应用程序处于前台还是后台
      */
     public static boolean isApplicationBroughtToBackground(final Context context) {
         ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -596,6 +634,7 @@ public class UtilBox {
 
     /**
      * 获取手机内部剩余存储空间
+     *
      * @return
      */
     public static double getAvailableInternalMemorySize() {
@@ -607,6 +646,7 @@ public class UtilBox {
     }
 
     private static PromptDialog promptDialog;
+
     public static void showLoading(Activity activity, boolean withAnim) {
         promptDialog = new PromptDialog(activity);
 
@@ -637,14 +677,51 @@ public class UtilBox {
                              String negativeText, DialogInterface.OnClickListener negativeListener) {
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
-                .setMessage(message)
-                .setCancelable(true)
-                .setPositiveButton(positiveText, positiveListener)
-                .setNegativeButton(negativeText, negativeListener);
+                        .setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(positiveText, positiveListener)
+                        .setNegativeButton(negativeText, negativeListener);
 
         AlertDialog dialog = builder.create();
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+    }
+
+    public static void purchaseAlert(final Context context, String message) {
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_purchase, null);
+
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                        .setView(contentView)
+                        .setCancelable(true);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+
+        ((TextView)contentView.findViewById(R.id.textView_message)).setText(message);
+        contentView.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        contentView.findViewById(R.id.button_confirm).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+
+//                Intent intent = new Intent(Intent.ACTION_VIEW);
+//                intent.setData(Uri.parse("http://weixin.qq.com/r/o3W_sRvEMSVOhwrSnyCH"));
+//
+//                intent.setPackage("com.tencent.mm");
+//
+//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//
+//                context.startActivity(intent);
+            }
+        });
     }
 }

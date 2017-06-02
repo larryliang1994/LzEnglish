@@ -19,16 +19,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.GuessRecommendAdapter;
 import com.jiubai.lzenglish.adapter.RecommendAdapter;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.presenter.RecommendPresenterImpl;
 import com.jiubai.lzenglish.ui.activity.DownloadActivity;
 import com.jiubai.lzenglish.ui.activity.HistoryActivity;
 import com.jiubai.lzenglish.ui.activity.SearchVideoActivity;
 import com.jiubai.lzenglish.ui.iview.AppBarStateChangeListener;
+import com.jiubai.lzenglish.ui.iview.IRecommendView;
 
 import java.util.ArrayList;
 
@@ -36,7 +39,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RecommendFragment extends Fragment {
+public class RecommendFragment extends Fragment implements IRecommendView {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
@@ -110,6 +113,8 @@ public class RecommendFragment extends Fragment {
                 }
             }
         });
+
+        new RecommendPresenterImpl(this).getHomeInfo();
     }
 
     @OnClick({R.id.textView_search, R.id.imageView_history, R.id.imageView_downloaded})
@@ -166,6 +171,15 @@ public class RecommendFragment extends Fragment {
 
         mGuessAdapter = new GuessRecommendAdapter(getActivity(), list);
         mGuessRecyclerView.setAdapter(mGuessAdapter);
+    }
+
+    @Override
+    public void OnGetHomeInfoResult(boolean result, String info, Object extras) {
+        if (result) {
+
+        } else {
+            Toast.makeText(getActivity(), info, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void loadMore() {

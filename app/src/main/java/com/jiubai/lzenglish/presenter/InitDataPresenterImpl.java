@@ -189,4 +189,61 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     }
                 });
     }
+
+    @Override
+    public void getAgeInterestConfig() {
+        Map<String, String> params = new HashMap<>();
+        params.put("_url", "appSuggest/getAgeInterestConfig");
+        params.put("_ajax", "1");
+
+        RequestUtil.request(params,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            String result = jsonObject.getString("code");
+
+                            if (Constants.SUCCESS.equals(result)) {
+                                JSONObject dataObject = jsonObject.getJSONObject("data");
+
+                                JSONObject ageObject = dataObject.getJSONObject("age");
+                                JSONObject preferenceObject = dataObject.getJSONObject("interest");
+
+                                Config.Ages = new String[ageObject.length()];
+                                for (int i = 0; i < ageObject.length(); i++) {
+                                    Config.Ages[i] = ageObject.getString(i + 1 + "");
+                                }
+
+                                Config.PreferenceVideos = new String[preferenceObject.length()];
+                                for (int i = 0; i < preferenceObject.length(); i++) {
+                                    StringBuilder name = new StringBuilder(preferenceObject.getString(i + 1 + ""));
+
+                                    if (name.length() == 4 || name.length() == 5) {
+                                        name.insert(2, "\n");
+                                    } else if (name.length() == 6) {
+                                        name.insert(3, "\n");
+                                    }
+
+                                    Config.PreferenceVideos[i] = name.toString();
+                                }
+
+                                iInitDataView.onGetAgeInterestConfigResult(true, "", response);
+                            } else {
+                                iInitDataView.onGetAgeInterestConfigResult(false, jsonObject.getString("msg"), response);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            iInitDataView.onGetAgeInterestConfigResult(false, "年龄兴趣信息数据源出错", e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        iInitDataView.onGetAgeInterestConfigResult(false, "获取年龄兴趣信息失败", error);
+                    }
+                });
+    }
 }
