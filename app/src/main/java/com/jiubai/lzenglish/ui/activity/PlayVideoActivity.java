@@ -233,7 +233,8 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                                             JCMediaManager.instance().mediaPlayer.getCurrentPosition(),
                                             -99,
                                             new Date().getTime(),
-                                            video.getHeadImg()
+                                            video.getHeadImg(),
+                                            false
                                     );
 
                                     if (currentVideoIndex + 1 < videoList.size()

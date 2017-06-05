@@ -1,8 +1,11 @@
 package com.jiubai.lzenglish.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,6 +23,7 @@ import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.manager.DownloadManager;
+import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
@@ -60,6 +64,12 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
             viewHolder.mRadioButton.setVisibility(View.VISIBLE);
             viewHolder.mRadioButton.setChecked(prefetchVideo.isChecked());
 
+            if (viewHolder.mRadioButton.isChecked()) {
+                viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#23AFD4")));
+            } else {
+                viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D0D0D0")));
+            }
+
             final boolean[] touch = {prefetchVideo.isChecked()};
             final boolean[] check = {prefetchVideo.isChecked()};
 
@@ -83,6 +93,12 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                 @Override
                 public void onClick(View v) {
                     viewHolder.mRadioButton.setChecked(!(touch[0] && check[0]));
+
+                    if (viewHolder.mRadioButton.isChecked()) {
+                        viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#23AFD4")));
+                    } else {
+                        viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D0D0D0")));
+                    }
 
                     prefetchVideo.setChecked(viewHolder.mRadioButton.isChecked());
 
@@ -136,6 +152,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                 viewHolder.statusImageView.setImageResource(R.drawable.downloaded);
                 viewHolder.statusTextView.setText("缓存中");
 
+                viewHolder.itemView.setOnClickListener(null);
                 viewHolder.statusLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -165,6 +182,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                 viewHolder.statusImageView.setImageResource(R.drawable.pause);
                 viewHolder.statusTextView.setText("暂停");
 
+                viewHolder.itemView.setOnClickListener(null);
                 viewHolder.statusLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -192,8 +210,9 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
 
                 viewHolder.statusLayout.setVisibility(View.VISIBLE);
                 viewHolder.statusImageView.setImageResource(R.drawable.retry);
-                viewHolder.statusTextView.setText("点此重试");
+                viewHolder.statusTextView.setText("重试");
 
+                viewHolder.itemView.setOnClickListener(null);
                 viewHolder.statusLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,6 +231,19 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                         String.format("%.2f", (prefetchVideo.getTotalSize() / 1000000.0)) + "M");
 
                 viewHolder.statusLayout.setVisibility(View.GONE);
+
+                if (!editing) {
+                    viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context, PlayVideoActivity.class);
+                            intent.putExtra("seasonId", prefetchVideo.getVideoId());
+                            UtilBox.startActivity((Activity) context, intent, false);
+                        }
+                    });
+                } else {
+                    viewHolder.itemView.setOnClickListener(null);
+                }
                 break;
         }
 

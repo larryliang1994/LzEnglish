@@ -111,16 +111,6 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
     @OnClick({R.id.textView_edit, R.id.button_check_all, R.id.imageView_back, R.id.button_delete, R.id.textView_memory})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.textView_memory:
-                String url1 = "http://180.153.105.144/dd.myapp.com/16891/E2F3DEBB12A049ED921C6257C5E9FB11.apk";
-                String url2 = "http://180.153.105.144/dd.myapp.com/16891/E2F3DEBB12A049ED921C6257C5E9FB11.apk";
-                String url3 = "http://180.153.105.144/dd.myapp.com/16891/E2F3DEBB12A049ED921C6257C5E9FB11.apk";
-                String image = "http://images5.fanpop.com/image/photos/25800000/Miku-hatsune-miku-25858641-1280-1024.jpg";
-
-                mDownloadManager.downloadVideo(8870, "小笨熊1", url1, image);
-                mDownloadManager.downloadVideo(8871, "小笨熊2", url2, image);
-                mDownloadManager.downloadVideo(8872, "小笨熊3", url3, image);
-                break;
 
             case R.id.textView_edit:
 

@@ -3,18 +3,25 @@ package com.jiubai.lzenglish.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.bean.WatchHistory;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -32,6 +39,10 @@ public class HistoryAdapter extends RecyclerView.Adapter {
 
     private WatchHistoryManager watchHistoryManager;
     private Context context;
+
+    private OnCheckedListener listener;
+
+    public boolean editing = false;
 
     public HistoryAdapter(Context context) {
         this.context = context;
@@ -101,7 +112,56 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                 }
             }
         } else {
-            ItemViewHolder viewHolder = (ItemViewHolder) holder;
+            final ItemViewHolder viewHolder = (ItemViewHolder) holder;
+
+            if (editing) {
+                viewHolder.mRadioButton.setVisibility(View.VISIBLE);
+                viewHolder.mRadioButton.setChecked(watchHistory.isChecked());
+
+                if (viewHolder.mRadioButton.isChecked()) {
+                    viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#23AFD4")));
+                } else {
+                    viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D0D0D0")));
+                }
+
+                final boolean[] touch = {watchHistory.isChecked()};
+                final boolean[] check = {watchHistory.isChecked()};
+
+                viewHolder.mRadioButton.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        touch[0] = viewHolder.mRadioButton.isChecked();
+
+                        return false;
+                    }
+                });
+
+                viewHolder.mRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        check[0] = viewHolder.mRadioButton.isChecked();
+                    }
+                });
+
+                viewHolder.mRadioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        viewHolder.mRadioButton.setChecked(!(touch[0] && check[0]));
+
+                        if (viewHolder.mRadioButton.isChecked()) {
+                            viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#23AFD4")));
+                        } else {
+                            viewHolder.mRadioButton.setButtonTintList(ColorStateList.valueOf(Color.parseColor("#D0D0D0")));
+                        }
+
+                        watchHistory.setChecked(viewHolder.mRadioButton.isChecked());
+
+                        listener.onCheckChanged();
+                    }
+                });
+            } else {
+                viewHolder.mRadioButton.setVisibility(View.GONE);
+            }
 
             DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                     .displayer(new RoundedBitmapDisplayer(UtilBox.dip2px(context, 2)))
@@ -127,20 +187,24 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                 viewHolder.tipTextView.setText("回看");
             }
 
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (progress >= 80 && watchHistory.getNextVideoId() != -99) {
-                        Intent intent = new Intent(context, PlayVideoActivity.class);
-                        intent.putExtra("seasonId", watchHistory.getNextVideoId());
-                        UtilBox.startActivity((Activity) context, intent, false);
-                    } else {
-                        Intent intent = new Intent(context, PlayVideoActivity.class);
-                        intent.putExtra("seasonId", watchHistory.getVideoId());
-                        UtilBox.startActivity((Activity) context, intent, false);
+            if (!editing) {
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (progress >= 80 && watchHistory.getNextVideoId() != -99) {
+                            Intent intent = new Intent(context, PlayVideoActivity.class);
+                            intent.putExtra("seasonId", watchHistory.getNextVideoId());
+                            UtilBox.startActivity((Activity) context, intent, false);
+                        } else {
+                            Intent intent = new Intent(context, PlayVideoActivity.class);
+                            intent.putExtra("seasonId", watchHistory.getVideoId());
+                            UtilBox.startActivity((Activity) context, intent, false);
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                viewHolder.itemView.setOnClickListener(null);
+            }
         }
     }
 
@@ -165,6 +229,14 @@ public class HistoryAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public OnCheckedListener getListener() {
+        return listener;
+    }
+
+    public void setListener(OnCheckedListener listener) {
+        this.listener = listener;
+    }
+
     class ItemViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.imageView)
         ImageView imageView;
@@ -177,6 +249,9 @@ public class HistoryAdapter extends RecyclerView.Adapter {
 
         @Bind(R.id.textView_tip)
         TextView tipTextView;
+
+        @Bind(R.id.radio)
+        RadioButton mRadioButton;
 
         public ItemViewHolder(View itemView) {
             super(itemView);
@@ -212,5 +287,9 @@ public class HistoryAdapter extends RecyclerView.Adapter {
 
             ButterKnife.bind(this, itemView);
         }
+    }
+
+    public interface OnCheckedListener {
+        void onCheckChanged();
     }
 }

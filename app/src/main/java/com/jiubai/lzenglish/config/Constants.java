@@ -16,4 +16,6 @@ public class Constants {
     public static final int ListItem = 1;
     public static final int ListFooter = 2;
     public static final int ListNoMore = 3;
+
+    public static final String WX_APP_ID = "wxfd15544a4780ab14";
 }

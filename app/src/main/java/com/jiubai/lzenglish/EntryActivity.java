@@ -7,11 +7,15 @@ import android.widget.Toast;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.presenter.IInitDataPresenter;
 import com.jiubai.lzenglish.presenter.InitDataPresenterImpl;
 import com.jiubai.lzenglish.ui.activity.BaseActivity;
+import com.jiubai.lzenglish.ui.activity.ChooseAgeActivity;
 import com.jiubai.lzenglish.ui.activity.HomeActivity;
 import com.jiubai.lzenglish.ui.iview.IInitDataView;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import butterknife.ButterKnife;
 
@@ -20,7 +24,7 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
     private int requestNum = 0;
     private final int totalRequestNum = 5;
 
-    private Class entryActivity = HomeActivity.class;
+    private Class entryActivity = ChooseAgeActivity.class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

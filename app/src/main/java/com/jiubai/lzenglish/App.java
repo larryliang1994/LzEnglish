@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
+import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.manager.WatchHistoryManager;
@@ -16,6 +17,8 @@ import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.io.File;
 
@@ -25,7 +28,8 @@ import java.io.File;
 
 public class App extends Application {
     private HttpProxyCacheServer proxy;
-    //public IWXAPI api;
+
+    public static IWXAPI iwxapi;
 
     public static SharedPreferences sharedPreferences;
 
@@ -35,11 +39,11 @@ public class App extends Application {
 
         sharedPreferences = getSharedPreferences("LzEnglish", MODE_PRIVATE);
 
-        initWeChat();
-
         RequestUtil.initRequestQueue(getApplicationContext());
 
         initImageLoader();
+
+        initWechat();
 
         FileDownloader.init(getApplicationContext());
 
@@ -50,9 +54,10 @@ public class App extends Application {
         WatchHistoryManager.getInstance().readHistory();
     }
 
-    private void initWeChat() {
-        //api = WXAPIFactory.createWXAPI(this, "wx88888888", true);
-        //api.registerApp("wx88888888");
+    private void initWechat() {
+        iwxapi = WXAPIFactory.createWXAPI(this, Constants.WX_APP_ID, true);
+
+        iwxapi.registerApp(Constants.WX_APP_ID);
     }
 
     private void initImageLoader() {

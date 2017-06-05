@@ -3,16 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#ffffff"
-    android:paddingLeft="16dp"
+    android:paddingLeft="5dp"
     android:paddingRight="16dp"
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:orientation="horizontal">
 
+    <RadioButton
+        android:id="@+id/radio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:buttonTint="#D0D0D0"
+        android:visibility="visible" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="110dp"
         android:layout_height="60dp"
+        android:layout_marginLeft="5dp"
         android:scaleType="centerCrop"
         android:layout_gravity="center_vertical"
         android:src="@drawable/recommend_video_example"/>
@@ -33,6 +42,9 @@
             android:layout_height="wrap_content"
             android:text="马男波杰克(第9集)"
             android:textSize="16sp"
+            android:lines="1"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textColor="#151515" />
 
         <View

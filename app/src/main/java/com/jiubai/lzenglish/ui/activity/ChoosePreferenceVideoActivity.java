@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
@@ -49,11 +50,16 @@ public class ChoosePreferenceVideoActivity extends BaseActivity {
     @Bind(R.id.ripple_next)
     RippleView mNextRipple;
 
+    @Bind(R.id.button_next)
+    Button mNextButton;
+
     private int[] mRipples = {R.id.ripple_1, R.id.ripple_2, R.id.ripple_3, R.id.ripple_4,
             R.id.ripple_5, R.id.ripple_6, R.id.ripple_7, R.id.ripple_8, R.id.ripple_9};
     private int[] mTextViews = {R.id.textView_1, R.id.textView_2, R.id.textView_3, R.id.textView_4,
             R.id.textView_5, R.id.textView_6, R.id.textView_7, R.id.textView_8, R.id.textView_9};
     private boolean[] mSelected = {false, false, false, false, false, false, false, false, false};
+
+    private boolean mNextButtonEnable = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,18 +81,20 @@ public class ChoosePreferenceVideoActivity extends BaseActivity {
         mNextRipple.setOnRippleCompleteListener(new RippleView.OnRippleCompleteListener() {
             @Override
             public void onComplete(RippleView rippleView) {
-                StringBuilder builder = new StringBuilder();
+                if (mNextButtonEnable) {
+                    StringBuilder builder = new StringBuilder();
 
-                for (int i = 0; i < mSelected.length; i++) {
-                    if (mSelected[i]) {
-                        builder.append(i + 1 + ",");
+                    for (int i = 0; i < mSelected.length; i++) {
+                        if (mSelected[i]) {
+                            builder.append(i + 1 + ",");
+                        }
                     }
+
+                    Config.PreferenceVideoIndex = builder.toString();
+
+                    Intent intent = new Intent(ChoosePreferenceVideoActivity.this, LoginActivity.class);
+                    UtilBox.startActivity(ChoosePreferenceVideoActivity.this, intent, true);
                 }
-
-                Config.PreferenceVideoIndex = builder.toString();
-
-                Intent intent = new Intent(ChoosePreferenceVideoActivity.this, LoginActivity.class);
-                UtilBox.startActivity(ChoosePreferenceVideoActivity.this, intent, true);
             }
         });
     }
@@ -105,6 +113,27 @@ public class ChoosePreferenceVideoActivity extends BaseActivity {
             }
 
             mSelected[index] = !mSelected[index];
+
+            updateButton();
+        }
+    }
+
+    private void updateButton() {
+        boolean canClick = false;
+
+        for (boolean aMSelected : mSelected) {
+            if (aMSelected) {
+                canClick = true;
+                break;
+            }
+        }
+
+        if (canClick) {
+            mNextButtonEnable = true;
+            mNextButton.setBackgroundResource(R.color.lightBlue);
+        } else {
+            mNextButtonEnable = false;
+            mNextButton.setBackgroundColor(Color.parseColor("#CFCFCF"));
         }
     }
 

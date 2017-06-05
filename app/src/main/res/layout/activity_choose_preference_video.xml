@@ -267,7 +267,7 @@
             android:id="@+id/button_next"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="@color/lightBlue"
+            android:background="#CFCFCF"
             android:text="进入量子英语"
             android:textColor="#ffffff"
             android:textSize="20sp" />

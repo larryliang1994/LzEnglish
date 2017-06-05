@@ -12,11 +12,12 @@ public class WatchHistory {
     private int nextVideoId;
     private long time;
     private String image;
+    private boolean checked;
 
     public WatchHistory() {
     }
 
-    public WatchHistory(int videoId, String name, long totalTime, long watchedTime, int nextVideoId, long time, String image) {
+    public WatchHistory(int videoId, String name, long totalTime, long watchedTime, int nextVideoId, long time, String image, boolean checked) {
         this.videoId = videoId;
         this.name = name;
         this.totalTime = totalTime;
@@ -24,6 +25,7 @@ public class WatchHistory {
         this.nextVideoId = nextVideoId;
         this.time = time;
         this.image = image;
+        this.checked = checked;
     }
 
     public int getVideoId() {
@@ -80,5 +82,13 @@ public class WatchHistory {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 }

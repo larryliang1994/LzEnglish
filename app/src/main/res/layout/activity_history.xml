@@ -21,9 +21,9 @@
             android:id="@+id/imageView_back"
             android:layout_width="@dimen/appbar_height"
             android:layout_height="@dimen/appbar_height"
+            android:padding="12dp"
             android:src="@drawable/back"
-            android:tint="#151515"
-            android:padding="12dp"/>
+            android:tint="#151515" />
 
         <View
             android:layout_width="22dp"
@@ -31,10 +31,10 @@
 
         <TextView
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
             android:text="观看历史"
             android:textColor="#151515"
             android:textSize="18sp" />
@@ -43,11 +43,11 @@
             android:id="@+id/textView_edit"
             android:layout_width="70dp"
             android:layout_height="match_parent"
-            android:text="清空"
-            android:textSize="16sp"
-            android:textColor="#151515"
+            android:gravity="center_vertical|right"
             android:paddingRight="12dp"
-            android:gravity="center_vertical|right"/>
+            android:text="编辑"
+            android:textColor="#151515"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
@@ -59,6 +59,54 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+    <LinearLayout
+        android:id="@+id/layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:orientation="horizontal"
+            android:background="#ffffff">
+
+            <Button
+                android:id="@+id/button_check_all"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ripple"
+                android:textColor="#484848"
+                android:text="全选"
+                android:textSize="16sp"/>
+
+            <View
+                android:layout_width="0.5dp"
+                android:layout_height="match_parent"
+                android:background="@color/divider" />
+
+            <Button
+                android:id="@+id/button_delete"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/ripple"
+                android:textColor="#484848"
+                android:text="删除"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

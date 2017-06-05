@@ -6,11 +6,13 @@ import android.util.Log;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.bean.WatchHistory;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.net.DownloadUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -72,6 +74,7 @@ public class WatchHistoryManager {
                 jsonObject.put("nextVideoId", history.getNextVideoId());
                 jsonObject.put("time", history.getTime() + "");
                 jsonObject.put("image", history.getImage());
+                jsonObject.put("checked", history.isChecked());
 
                 jsonArray.put(jsonObject);
             }
@@ -101,7 +104,8 @@ public class WatchHistoryManager {
                         Long.valueOf(jsonObject.getString("watchedTime")),
                         jsonObject.getInt("nextVideoId"),
                         Long.valueOf(jsonObject.getString("time")),
-                        jsonObject.getString("image")
+                        jsonObject.getString("image"),
+                        jsonObject.getBoolean("checked")
                 );
 
                 watchHistoryList.add(watchHistory);
@@ -109,6 +113,21 @@ public class WatchHistoryManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    public void deleteCheckedHistory() {
+        int index = 0;
+        while (!watchHistoryList.isEmpty()
+                && watchHistoryList.size() != 0
+                && index < watchHistoryList.size()) {
+            if (watchHistoryList.get(index).isChecked()) {
+                watchHistoryList.remove(index);
+            } else {
+                index ++;
+            }
+        }
+
+        writeHistory();
     }
 
     public void clearHistory() {
