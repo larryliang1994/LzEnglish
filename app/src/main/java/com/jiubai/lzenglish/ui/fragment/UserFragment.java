@@ -71,6 +71,18 @@ public class UserFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mWatchHistoryManager.watchHistoryList.size() == 0) {
+            mHistoryTextView.setText("");
+        } else {
+            mWatchHistoryManager.initTimeHeader();
+            mHistoryTextView.setText(mWatchHistoryManager.watchHistoryList.get(1).getName());
+        }
+    }
+
     @OnClick({R.id.layout_history, R.id.layout_downloaded, R.id.imageView_search})
     public void onClick(View view) {
         Intent intent;

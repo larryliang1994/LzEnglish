@@ -68,8 +68,8 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
             params.put("_ajax", "1");
 
             Map<String, String> postParams = new HashMap<>();
-            params.put("age", Config.AgeIndex);
-            params.put("interest", Config.PreferenceVideoIndex);
+            postParams.put("age", Config.AgeIndex);
+            postParams.put("interest", Config.PreferenceVideoIndex);
 
             RequestUtil.request(params, postParams,
                     new Response.Listener<String>() {

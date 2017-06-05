@@ -93,6 +93,16 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
             viewHolder.mRadioButton.setVisibility(View.GONE);
         }
 
+        if (position == getItemCount() - 1) {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(UtilBox.dip2px(context, 5), UtilBox.dip2px(context, 10),
+                    UtilBox.dip2px(context, 5), UtilBox.dip2px(context, 10));
+        } else {
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) viewHolder.itemView.getLayoutParams();
+            params.setMargins(UtilBox.dip2px(context, 5), UtilBox.dip2px(context, 10),
+                    UtilBox.dip2px(context, 5), UtilBox.dip2px(context, 0));
+        }
+
         DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
                 .displayer(new RoundedBitmapDisplayer(UtilBox.dip2px(context, 2)))
                 .cacheInMemory(true)

@@ -115,6 +115,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     private DownloadManager mDownloadManager;
 
     private WeakHandler handler;
+    private WeakHandler popupHandler;
 
     private DetailedSeason mDetailedSeason;
     private ArrayList<Video> videoList;
@@ -392,6 +393,25 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                         });
                         recyclerView.setAdapter(adapter);
 
+                        popupHandler = new WeakHandler(new Handler.Callback() {
+                            @Override
+                            public boolean handleMessage(Message msg) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (adapter != null) {
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    }
+                                });
+
+                                popupHandler.sendEmptyMessageDelayed(0, 1000);
+                                return false;
+                            }
+                        });
+
+                        popupHandler.sendEmptyMessage(0);
+
                         v.findViewById(R.id.imageView_close).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -530,6 +550,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         if (handler != null) {
             handler.sendEmptyMessage(0);
         }
+        if (popupHandler != null) {
+            popupHandler.sendEmptyMessage(0);
+        }
     }
 
     @Override
@@ -539,12 +562,18 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         if (handler != null) {
             handler.removeMessages(0);
         }
+        if (popupHandler != null) {
+            popupHandler.removeMessages(0);
+        }
     }
 
     @Override
     protected void onDestroy() {
         if (handler != null) {
             handler.removeMessages(0);
+        }
+        if (popupHandler != null) {
+            popupHandler.removeMessages(0);
         }
         super.onDestroy();
     }

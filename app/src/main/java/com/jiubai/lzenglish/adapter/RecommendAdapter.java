@@ -66,11 +66,11 @@ public class RecommendAdapter extends RecyclerView.Adapter {
                 }
             });
 
-            if (position == 1) {
+            if (position % 3 == 1) {
                 viewHolder.videoImageView.setImageResource(R.drawable.recommend_video_example);
-            } else if (position == 2) {
+            } else if (position % 3 == 2) {
                 viewHolder.videoImageView.setImageResource(R.drawable.a);
-            } else if (position == 3) {
+            } else if (position % 3 == 0) {
                 viewHolder.videoImageView.setImageResource(R.drawable.b);
             }
         }

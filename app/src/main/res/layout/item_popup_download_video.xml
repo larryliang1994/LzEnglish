@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="76dp"
     android:layout_height="76dp"
+    xmlns:custom="http://schemas.android.com/tools"
     android:layout_gravity="center">
 
     <RelativeLayout
@@ -70,8 +71,50 @@
         android:layout_alignParentTop="true"
         android:layout_marginRight="2dp"
         android:layout_marginTop="2dp"
+        android:visibility="gone"
         android:background="@drawable/circle_orange"
         android:padding="4dp"
         android:src="@drawable/downward"/>
+
+    <RelativeLayout
+        android:id="@+id/layout_progress"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:src="#F5F7F9"/>
+
+        <View
+            android:layout_width="5dp"
+            android:layout_height="5dp"
+            android:background="#FA8919"
+            android:layout_centerInParent="true"/>
+
+        <io.netopen.hotbitmapgg.library.view.RingProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="0.5dp"
+            app:max="100"
+            android:background="@null"
+            app:ringColor="#F5F7F9"
+            app:ringProgressColor="#FA8919"
+            app:ringWidth="1dp"
+            app:style="STROKE"
+            app:textIsShow="false" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/circle_orange_outer" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

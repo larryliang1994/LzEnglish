@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.netopen.hotbitmapgg.library.view.RingProgressBar;
 import io.techery.properratingbar.ProperRatingBar;
 
 /**
@@ -55,22 +57,30 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
         int videoIndex = DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId());
         if (videoIndex == -1) {
             viewHolder.progressImageView.setVisibility(View.GONE);
+            viewHolder.progressLayout.setVisibility(View.GONE);
         } else {
-            viewHolder.progressImageView.setVisibility(View.VISIBLE);
+            PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(videoIndex);
 
-            if (DownloadManager.getInstance().getPrefetchVideos().get(videoIndex).getVideoStatus()
-                    == PrefetchVideo.VideoStatus.Downloaded) {
+            if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Downloaded) {
+                viewHolder.progressImageView.setVisibility(View.VISIBLE);
                 viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_blue);
                 viewHolder.progressImageView.setImageResource(R.drawable.check);
                 viewHolder.progressImageView.setPadding(
                         UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3),
                         UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3));
-            } else {
+            } else if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Paused
+                    || prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Error) {
+                viewHolder.progressImageView.setVisibility(View.VISIBLE);
                 viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_orange);
                 viewHolder.progressImageView.setImageResource(R.drawable.downward);
                 viewHolder.progressImageView.setPadding(
                         UtilBox.dip2px(context, 4), UtilBox.dip2px(context, 4),
                         UtilBox.dip2px(context, 4), UtilBox.dip2px(context, 4));
+            } else {
+                viewHolder.progressLayout.setVisibility(View.VISIBLE);
+                viewHolder.progressBar.setMax(100);
+                viewHolder.progressBar.setProgress(
+                        (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
             }
         }
 
@@ -83,8 +93,8 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (video.isAllowWatch()
-                        && DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) == -1) {
+                int index = DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId());
+                if (video.isAllowWatch() && index == -1) {
                     DownloadManager.getInstance().downloadVideo(video.getId(), video.getName(),
                             Config.ResourceUrl + video.getVideo(),
                             Config.ResourceUrl + video.getHeadImg());
@@ -94,8 +104,18 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                     if (listener != null) {
                         listener.onItemClick(position);
                     }
-                } else if (DownloadManager.getInstance().getPrefetchVideoByVideoId(video.getId()) != -1) {
-                    Toast.makeText(context, "该视频已缓存", Toast.LENGTH_SHORT).show();
+                } else if (index != -1) {
+                    PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(index);
+
+                    if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Paused) {
+                        DownloadManager.getInstance().changeVideoStatus(prefetchVideo, PrefetchVideo.VideoStatus.Downloading);
+                        notifyDataSetChanged();
+                    } else if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Downloading) {
+                        DownloadManager.getInstance().changeVideoStatus(prefetchVideo, PrefetchVideo.VideoStatus.Paused);
+                        notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(context, "该视频已缓存", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     UtilBox.purchaseAlert(context, "您还未购买此视频");
                 }
@@ -131,6 +151,12 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
 
         @Bind(R.id.imageView_lock)
         ImageView lockImageView;
+
+        @Bind(R.id.progressBar)
+        RingProgressBar progressBar;
+
+        @Bind(R.id.layout_progress)
+        RelativeLayout progressLayout;
 
         public ItemViewHolder(View itemView) {
             super(itemView);

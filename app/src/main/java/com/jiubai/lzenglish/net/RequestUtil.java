@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.net;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
@@ -38,6 +39,8 @@ public class RequestUtil {
             url += key + "=" + params.get(key) + "&";
         }
 
+        Log.i("url", url);
+
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 successCallback, errorCallback) {
@@ -65,6 +68,8 @@ public class RequestUtil {
         for (String key : params.keySet()) {
             url += key + "=" + params.get(key) + "&";
         }
+
+        Log.i("url", url);
 
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
