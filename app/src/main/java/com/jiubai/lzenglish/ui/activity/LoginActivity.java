@@ -64,8 +64,10 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
 
     private ProgressDialog progressDialog;
 
+    private boolean logining = false;
+
     private int requestNum = 0;
-    private final int totalRequestNum = 5;
+    private final int totalRequestNum = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,8 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("加载中...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
 
         ButterKnife.bind(this);
 
@@ -88,6 +92,8 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
 
     @OnClick({R.id.imageView_login, R.id.textView_login})
     public void login(View view) {
+        logining = true;
+
         if (progressDialog != null) {
             progressDialog.show();
         }
@@ -113,11 +119,12 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
             initDataPresenter.getAgeGroups();
             initDataPresenter.getAllCartoon();
             initDataPresenter.getUserInfo();
-            initDataPresenter.getAgeInterestConfig();
         } else {
             if (progressDialog != null) {
                 progressDialog.dismiss();
             }
+
+            logining = false;
         }
     }
 
@@ -153,7 +160,7 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
                 public void run() {
                     progressDialog.dismiss();
                 }
-            }, 500);
+            }, 0);
         }
 
         if (result) {
@@ -170,9 +177,10 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         UtilBox.startActivity(LoginActivity.this, intent, true);
                     }
-                }, 500);
+                }, 0);
             }
         } else {
+            logining = false;
             Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
         }
     }
@@ -197,19 +205,21 @@ public class LoginActivity extends BaseActivity implements IInitDataView {
                 view.getLocationOnScreen(location);
 
                 while (true) {
-                    final Animation translateAnimation = new TranslateAnimation(
-                            location[0], location[0] + (float)Math.random() * 100 - (float)Math.random() * 100,
-                            location[1], location[1]+ (float)Math.random() * 100 - (float)Math.random() * 100);
-                    translateAnimation.setDuration(3000);
-                    translateAnimation.setRepeatCount(1);
-                    translateAnimation.setRepeatMode(Animation.REVERSE);
+                    if (!logining) {
+                        final Animation translateAnimation = new TranslateAnimation(
+                                location[0], location[0] + (float) Math.random() * 100 - (float) Math.random() * 100,
+                                location[1], location[1] + (float) Math.random() * 100 - (float) Math.random() * 100);
+                        translateAnimation.setDuration(3000);
+                        translateAnimation.setRepeatCount(1);
+                        translateAnimation.setRepeatMode(Animation.REVERSE);
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.startAnimation(translateAnimation);
-                        }
-                    });
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                view.startAnimation(translateAnimation);
+                            }
+                        });
+                    }
 
                     try {
                         Thread.sleep(6000);

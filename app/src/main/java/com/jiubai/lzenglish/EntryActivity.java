@@ -1,10 +1,13 @@
 package com.jiubai.lzenglish;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.jiubai.lzenglish.common.StatusBarUtil;
@@ -20,9 +23,16 @@ import com.jiubai.lzenglish.ui.iview.IInitDataView;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class EntryActivity extends BaseActivity implements IInitDataView {
+
+    @Bind(R.id.ll_no_network)
+    LinearLayout mNoNetworkLinearLayout;
+
+    private ProgressDialog progressDialog;
 
     private int requestNum = 0;
     private int totalRequestNum = 5;
@@ -41,31 +51,49 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
 
         ButterKnife.bind(this);
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("加载中...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         SharedPreferences sp = App.sharedPreferences;
         Config.ThirdSession = sp.getString("third_session", "");
 
         if (!TextUtils.isEmpty(Config.ThirdSession)) {
-            totalRequestNum = 5;
+            totalRequestNum = 4;
             entryActivity = HomeActivity.class;
             IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
             initDataPresenter.getResourceUrl();
             initDataPresenter.getAgeGroups();
             initDataPresenter.getAllCartoon();
             initDataPresenter.getUserInfo();
-            initDataPresenter.getAgeInterestConfig();
         } else {
             totalRequestNum = 1;
             entryActivity = ChooseAgeActivity.class;
-            Config.ThirdSession = "12ddEr1gCR6Am7ZagRJDLbPAf1ZizreDqZXMPeWzvxk0lONb7OyFTWc/PY0t3OEln8/nCbyM9H53HPAtFI246A3KULYov404fsTmKDvD7pVppqU";
+
             IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
             initDataPresenter.getAgeInterestConfig();
+        }
+    }
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Config.ThirdSession = "";
-                }
-            }, 100);
+    @OnClick(R.id.btn_reconnect)
+    public void onClick(View v) {
+        progressDialog.show();
+
+        if (!TextUtils.isEmpty(Config.ThirdSession)) {
+            totalRequestNum = 4;
+            entryActivity = HomeActivity.class;
+            IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
+            initDataPresenter.getResourceUrl();
+            initDataPresenter.getAgeGroups();
+            initDataPresenter.getAllCartoon();
+            initDataPresenter.getUserInfo();
+        } else {
+            totalRequestNum = 1;
+            entryActivity = ChooseAgeActivity.class;
+
+            IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
+            initDataPresenter.getAgeInterestConfig();
         }
     }
 
@@ -95,6 +123,10 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
     }
 
     private void handleResult(boolean result, String info) {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+
         if (result) {
             requestNum ++;
             if (requestNum == totalRequestNum) {
@@ -103,6 +135,8 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
                 overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
             }
         } else {
+            mNoNetworkLinearLayout.setVisibility(View.VISIBLE);
+
             Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
         }
     }

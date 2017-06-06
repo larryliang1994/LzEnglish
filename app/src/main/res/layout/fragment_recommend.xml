@@ -79,13 +79,14 @@
                 app:layout_collapseParallaxMultiplier="0.7">
 
                 <ImageView
+                    android:id="@+id/imageView_banner"
                     android:layout_width="match_parent"
                     android:layout_height="290dp"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:background="@color/colorPrimary"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/banner" />
+                    android:src="@null" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

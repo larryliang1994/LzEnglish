@@ -5,14 +5,18 @@ import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.jiubai.lzenglish.bean.AgeRecommend;
+import com.jiubai.lzenglish.bean.InterestRecommend;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IRecommendView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,7 +50,7 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                                 String result = jsonObject.getString("code");
 
                                 if (Constants.SUCCESS.equals(result)) {
-                                    iRecommendView.OnGetHomeInfoResult(true, "", response);
+                                    decodeRecommendInfo(jsonObject.getJSONObject("data"));
                                 } else {
                                     iRecommendView.OnGetHomeInfoResult(false, jsonObject.getString("msg"), response);
                                 }
@@ -83,7 +87,7 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                                 String result = jsonObject.getString("code");
 
                                 if (Constants.SUCCESS.equals(result)) {
-                                    iRecommendView.OnGetHomeInfoResult(true, "", response);
+                                    decodeRecommendInfo(jsonObject.getJSONObject("data"));
                                 } else {
                                     iRecommendView.OnGetHomeInfoResult(false, jsonObject.getString("msg"), response);
                                 }
@@ -100,5 +104,44 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                         }
                     });
         }
+    }
+
+    private void decodeRecommendInfo(JSONObject dataObject) throws JSONException {
+        JSONArray ageArray = dataObject.getJSONArray("age");
+        ArrayList<AgeRecommend> ageRecommends = new ArrayList<>();
+
+        for (int i = 0; i < ageArray.length(); i++) {
+            JSONObject ageObject = ageArray.getJSONObject(i);
+
+            AgeRecommend ageRecommend = new AgeRecommend(
+                    ageObject.getInt("id_cartoon"),
+                    ageObject.getString("image"),
+                    ageObject.getString("main_title"),
+                    ageObject.getString("sub_title"),
+                    ageObject.getString("footer_text")
+            );
+
+            ageRecommends.add(ageRecommend);
+        }
+
+        JSONArray interestArray = dataObject.getJSONArray("interest");
+        ArrayList<InterestRecommend> interestRecommends = new ArrayList<>();
+
+        for (int i = 0; i < interestArray.length(); i++) {
+            JSONObject interestObject = interestArray.getJSONObject(i);
+
+            InterestRecommend interestRecommend = new InterestRecommend(
+                    interestObject.getInt("id_cartoon"),
+                    interestObject.getString("image"),
+                    interestObject.getString("title"),
+                    interestObject.getString("text")
+            );
+
+            interestRecommends.add(interestRecommend);
+        }
+
+        Object[] objects = {ageRecommends, interestRecommends};
+
+        iRecommendView.OnGetHomeInfoResult(true, "", objects);
     }
 }

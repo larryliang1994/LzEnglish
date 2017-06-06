@@ -200,7 +200,10 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
         params.put("_url", "appSuggest/getAgeInterestConfig");
         params.put("_ajax", "1");
 
-        RequestUtil.request(params,
+        Map<String, String> postParams = new HashMap<>();
+        postParams.put("no_check_user", "1");
+
+        RequestUtil.request(params, postParams,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

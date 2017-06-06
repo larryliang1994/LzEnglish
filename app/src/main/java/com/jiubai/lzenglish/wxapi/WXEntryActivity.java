@@ -42,7 +42,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, ILo
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_entry);
+        setContentView(R.layout.activity_login);
 
         StatusBarUtil.StatusBarLightMode(this);
 
@@ -73,7 +73,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler, ILo
             case BaseResp.ErrCode.ERR_OK:
                 Log.i("text", "ERR_OK");
                 if (progressDialog != null) {
-                    //progressDialog.show();
+                    progressDialog.show();
                 }
                 new LoginPresenterImpl(this).login(resp);
 

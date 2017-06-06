@@ -2,11 +2,19 @@ apply plugin: 'com.android.application'
 
 android {
     signingConfigs {
-        config {
-            keyAlias 'larryliang'
-            keyPassword 'fen3363816'
-            storeFile file('/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore')
-            storePassword 'fen3363816'
+        debug {
+            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storePassword "fen3363816"
+            keyAlias "larryliang"
+            keyPassword "fen3363816"
+            v2SigningEnabled false
+        }
+        release {
+            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storePassword "fen3363816"
+            keyAlias "larryliang"
+            keyPassword "fen3363816"
+            v2SigningEnabled false
         }
     }
     compileSdkVersion 25
@@ -19,6 +27,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false

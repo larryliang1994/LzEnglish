@@ -68,6 +68,9 @@ public class RecommendFragment extends Fragment implements IRecommendView {
     @Bind(R.id.collapsingToolbarLayout)
     CollapsingToolbarLayout mCollapsingToolbarLayout;
 
+    @Bind(R.id.imageView_banner)
+    ImageView mBannerImageView;
+
     private boolean loading = false;
     private RecommendAdapter mAdapter;
     private ArrayList<String> list = new ArrayList<>();
@@ -113,6 +116,8 @@ public class RecommendFragment extends Fragment implements IRecommendView {
                 }
             }
         });
+
+        mBannerImageView.setImageBitmap(UtilBox.readBitMap(getActivity(), R.drawable.banner));
 
         new RecommendPresenterImpl(this).getHomeInfo();
     }

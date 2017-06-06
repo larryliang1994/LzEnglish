@@ -51,12 +51,12 @@ public class GuessRecommendAdapter extends RecyclerView.Adapter {
         }
 
         if (position % 2 == 0) {
-            viewHolder.imageView.setImageResource(R.drawable.bb);
+            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.bb));
             viewHolder.titleTextView.setText("小猪佩奇的故事");
             viewHolder.engTextView.setText("Peppa Pig");
             viewHolder.descTextView.setText("'' 最具教育意义情感动画 ''");
         } else {
-            viewHolder.imageView.setImageResource(R.drawable.cc);
+            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.cc));
             viewHolder.titleTextView.setText("疯狂动物城动画");
             viewHolder.engTextView.setText("Crazy animals");
             viewHolder.descTextView.setText("'' 最具情感意义情感动画 ''");
