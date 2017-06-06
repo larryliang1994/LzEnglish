@@ -1,8 +1,11 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -16,6 +19,10 @@ import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.presenter.IInitDataPresenter;
+import com.jiubai.lzenglish.presenter.InitDataPresenterImpl;
+import com.jiubai.lzenglish.ui.iview.IInitDataView;
+import com.nostra13.universalimageloader.utils.L;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelmsg.SendAuth;
@@ -26,7 +33,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends BaseActivity implements IWXAPIEventHandler {
+public class LoginActivity extends BaseActivity implements IInitDataView {
 
     @Bind(R.id.imageView1)
     ImageView mImageView1;
@@ -55,12 +62,20 @@ public class LoginActivity extends BaseActivity implements IWXAPIEventHandler {
     @Bind(R.id.imageView9)
     ImageView mImageView9;
 
+    private ProgressDialog progressDialog;
+
+    private int requestNum = 0;
+    private final int totalRequestNum = 5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         StatusBarUtil.StatusBarLightMode(this);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("加载中...");
 
         ButterKnife.bind(this);
 
@@ -73,51 +88,93 @@ public class LoginActivity extends BaseActivity implements IWXAPIEventHandler {
 
     @OnClick({R.id.imageView_login, R.id.textView_login})
     public void login(View view) {
+        if (progressDialog != null) {
+            progressDialog.show();
+        }
+
         SharedPreferences.Editor editor = App.sharedPreferences.edit();
         editor.putString("ageIndex", Config.AgeIndex);
         editor.putString("preferenceVideoIndex", Config.PreferenceVideoIndex);
         editor.apply();
 
-        // send oauth request
         final SendAuth.Req req = new SendAuth.Req();
         req.scope = "snsapi_userinfo";
         req.state = "lzenglish";
         App.iwxapi.sendReq(req);
-
-//        Intent intent = new Intent(this, HomeActivity.class);
-//        UtilBox.startActivity(this, intent, true);
-        // send oauth request
-//        final com.tencent.mm.opensdk.modelmsg.SendAuth.Req req = new SendAuth.Req();
-//        req.scope = "snsapi_userinfo";
-//        req.state = "wechat_sdk_demo_test";
-//        //((App)getApplication()).api.sendReq(req);
     }
 
     @Override
-    public void onResp(BaseResp resp) {
-        int result = 0;
+    public void onResume() {
+        super.onResume();
 
-        Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(Config.ThirdSession)) {
+            IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
+            initDataPresenter.getResourceUrl();
+            initDataPresenter.getAgeGroups();
+            initDataPresenter.getAllCartoon();
+            initDataPresenter.getUserInfo();
+            initDataPresenter.getAgeInterestConfig();
+        } else {
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+        }
+    }
 
-        switch (resp.errCode) {
-            case BaseResp.ErrCode.ERR_OK:
-                Log.i("text", "ERR_OK");
-                break;
-            case BaseResp.ErrCode.ERR_USER_CANCEL:
-                Log.i("text", "ERR_USER_CANCEL");
-                break;
-            case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                Log.i("text", "ERR_AUTH_DENIED");
-                break;
-            case BaseResp.ErrCode.ERR_UNSUPPORT:
-                Log.i("text", "ERR_UNSUPPORT");
-                break;
-            default:
-                Log.i("text", "unknown");
-                break;
+    @Override
+    public void onGetResourceUrlResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    @Override
+    public void onGetAgeGroupsResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    @Override
+    public void onGetAllCartoonResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    @Override
+    public void onGetUserInfoResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    @Override
+    public void onGetAgeInterestConfigResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    private void handleResult(boolean result, String info) {
+        if (progressDialog != null) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                }
+            }, 500);
         }
 
-        Toast.makeText(this, resp.errCode, Toast.LENGTH_LONG).show();
+        if (result) {
+            requestNum ++;
+            if (requestNum == totalRequestNum) {
+                SharedPreferences sp = App.sharedPreferences;
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("third_session", Config.ThirdSession);
+                editor.apply();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        UtilBox.startActivity(LoginActivity.this, intent, true);
+                    }
+                }, 500);
+            }
+        } else {
+            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void initAnimation() {
@@ -162,10 +219,5 @@ public class LoginActivity extends BaseActivity implements IWXAPIEventHandler {
                 }
             }
         });
-    }
-
-    @Override
-    public void onReq(BaseReq baseReq) {
-
     }
 }

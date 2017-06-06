@@ -1,6 +1,8 @@
 package com.jiubai.lzenglish.ui.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -10,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jiubai.lzenglish.App;
+import com.jiubai.lzenglish.EntryActivity;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
@@ -83,7 +87,7 @@ public class UserFragment extends Fragment {
         }
     }
 
-    @OnClick({R.id.layout_history, R.id.layout_downloaded, R.id.imageView_search})
+    @OnClick({R.id.layout_history, R.id.layout_downloaded, R.id.imageView_search, R.id.layout_preference})
     public void onClick(View view) {
         Intent intent;
 
@@ -101,6 +105,30 @@ public class UserFragment extends Fragment {
             case R.id.imageView_search:
                 intent = new Intent(getActivity(), SearchVideoActivity.class);
                 UtilBox.startActivity(getActivity(), intent, false);
+                break;
+
+            case R.id.layout_preference:
+                UtilBox.alert(getActivity(), "确定要退出登录吗？",
+                        "退出登录", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                SharedPreferences sp = App.sharedPreferences;
+                                SharedPreferences.Editor editor = sp.edit();
+                                editor.putString("third_session", "");
+                                editor.apply();
+
+                                Config.ThirdSession = "";
+
+                                Intent myIntent = new Intent(getActivity(), EntryActivity.class);
+                                UtilBox.startActivity(getActivity(), myIntent, true);
+                            }
+                        },
+                        "取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        });
                 break;
         }
     }

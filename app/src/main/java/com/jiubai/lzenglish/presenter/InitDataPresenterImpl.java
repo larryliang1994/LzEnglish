@@ -1,5 +1,7 @@
 package com.jiubai.lzenglish.presenter;
 
+import android.util.Log;
+
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.bean.Cartoon;
@@ -163,6 +165,8 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            Log.i("text", response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");

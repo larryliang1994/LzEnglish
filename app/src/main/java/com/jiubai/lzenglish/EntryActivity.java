@@ -1,7 +1,10 @@
 package com.jiubai.lzenglish;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.jiubai.lzenglish.common.StatusBarUtil;
@@ -22,9 +25,9 @@ import butterknife.ButterKnife;
 public class EntryActivity extends BaseActivity implements IInitDataView {
 
     private int requestNum = 0;
-    private final int totalRequestNum = 5;
+    private int totalRequestNum = 5;
 
-    private Class entryActivity = ChooseAgeActivity.class;
+    private Class entryActivity = HomeActivity.class;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,72 +41,60 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
 
         ButterKnife.bind(this);
 
-        IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
-        initDataPresenter.getResourceUrl();
-        initDataPresenter.getAgeGroups();
-        initDataPresenter.getAllCartoon();
-        initDataPresenter.getUserInfo();
-        initDataPresenter.getAgeInterestConfig();
+        SharedPreferences sp = App.sharedPreferences;
+        Config.ThirdSession = sp.getString("third_session", "");
+
+        if (!TextUtils.isEmpty(Config.ThirdSession)) {
+            totalRequestNum = 5;
+            entryActivity = HomeActivity.class;
+            IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
+            initDataPresenter.getResourceUrl();
+            initDataPresenter.getAgeGroups();
+            initDataPresenter.getAllCartoon();
+            initDataPresenter.getUserInfo();
+            initDataPresenter.getAgeInterestConfig();
+        } else {
+            totalRequestNum = 1;
+            entryActivity = ChooseAgeActivity.class;
+            Config.ThirdSession = "12ddEr1gCR6Am7ZagRJDLbPAf1ZizreDqZXMPeWzvxk0lONb7OyFTWc/PY0t3OEln8/nCbyM9H53HPAtFI246A3KULYov404fsTmKDvD7pVppqU";
+            IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
+            initDataPresenter.getAgeInterestConfig();
+
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Config.ThirdSession = "";
+                }
+            }, 100);
+        }
     }
 
     @Override
     public void onGetResourceUrlResult(boolean result, String info, Object extras) {
-        if (result) {
-            requestNum ++;
-            if (requestNum == totalRequestNum) {
-                Intent intent = new Intent(this, entryActivity);
-                UtilBox.startActivity(this, intent, true);
-                overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
-            }
-        } else {
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
-        }
+        handleResult(result, info);
     }
 
     @Override
     public void onGetAgeGroupsResult(boolean result, String info, Object extras) {
-        if (result) {
-            requestNum ++;
-            if (requestNum == totalRequestNum) {
-                Intent intent = new Intent(this, entryActivity);
-                UtilBox.startActivity(this, intent, true);
-                overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
-            }
-        } else {
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
-        }
+        handleResult(result, info);
     }
 
     @Override
     public void onGetAllCartoonResult(boolean result, String info, Object extras) {
-        if (result) {
-            requestNum ++;
-            if (requestNum == totalRequestNum) {
-                Intent intent = new Intent(this, entryActivity);
-                UtilBox.startActivity(this, intent, true);
-                overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
-            }
-        } else {
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
-        }
+        handleResult(result, info);
     }
 
     @Override
     public void onGetUserInfoResult(boolean result, String info, Object extras) {
-        if (result) {
-            requestNum ++;
-            if (requestNum == totalRequestNum) {
-                Intent intent = new Intent(this, entryActivity);
-                UtilBox.startActivity(this, intent, true);
-                overridePendingTransition(R.anim.zoom_in_scale, R.anim.zoom_out_scale);
-            }
-        } else {
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
-        }
+        handleResult(result, info);
     }
 
     @Override
     public void onGetAgeInterestConfigResult(boolean result, String info, Object extras) {
+        handleResult(result, info);
+    }
+
+    private void handleResult(boolean result, String info) {
         if (result) {
             requestNum ++;
             if (requestNum == totalRequestNum) {

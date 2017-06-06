@@ -18,4 +18,5 @@ public class Constants {
     public static final int ListNoMore = 3;
 
     public static final String WX_APP_ID = "wxfd15544a4780ab14";
+    public static final String WX_APP_SECRET = "c30f3e4e1a8d1bb68e6e0699d03cc5b3";
 }
