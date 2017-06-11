@@ -178,8 +178,13 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
                                     mAdapter.notifyDataSetChanged();
                                     mBottomLayout.setVisibility(View.GONE);
                                     mEditTextView.setText("编辑");
-                                    mEditTextView.setTextColor(Color.parseColor("#151515"));
-                                    mEditTextView.setClickable(false);
+                                    if (mDownloadManager.getPrefetchVideos().size() == 0) {
+                                        mEditTextView.setTextColor(Color.parseColor("#999999"));
+                                        mEditTextView.setClickable(false);
+                                    } else {
+                                        mEditTextView.setTextColor(Color.parseColor("#151515"));
+                                        mEditTextView.setClickable(true);
+                                    }
                                     setMemoryInfo();
                                 }
                             },

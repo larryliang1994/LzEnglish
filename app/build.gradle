@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
             v2SigningEnabled false
         }
         release {
-            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
@@ -24,7 +24,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
-        versionName "1.0"
+        versionName "0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 

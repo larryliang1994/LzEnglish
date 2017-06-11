@@ -1,6 +1,8 @@
 package com.jiubai.lzenglish.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.bean.AgeRecommend;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.ui.activity.SeasonListActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -22,12 +27,12 @@ import butterknife.ButterKnife;
 
 public class GuessRecommendAdapter extends RecyclerView.Adapter {
 
-    private ArrayList<String> list;
+    private ArrayList<AgeRecommend> ageRecommends;
     private Context context;
 
-    public GuessRecommendAdapter(Context context, ArrayList<String> list) {
+    public GuessRecommendAdapter(Context context, ArrayList<AgeRecommend> list) {
         this.context = context;
-        this.list = list;
+        this.ageRecommends = list;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class GuessRecommendAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ItemViewHolder viewHolder = (ItemViewHolder) holder;
 
         if (position == getItemCount() - 1) {
@@ -50,22 +55,32 @@ public class GuessRecommendAdapter extends RecyclerView.Adapter {
             viewHolder.itemView.setLayoutParams(params);
         }
 
-        if (position % 2 == 0) {
-            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.bb));
-            viewHolder.titleTextView.setText("小猪佩奇的故事");
-            viewHolder.engTextView.setText("Peppa Pig");
-            viewHolder.descTextView.setText("'' 最具教育意义情感动画 ''");
-        } else {
-            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.cc));
-            viewHolder.titleTextView.setText("疯狂动物城动画");
-            viewHolder.engTextView.setText("Crazy animals");
-            viewHolder.descTextView.setText("'' 最具情感意义情感动画 ''");
-        }
+//        if (position % 2 == 0) {
+//            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.bb));
+//        } else {
+//            viewHolder.imageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.cc));
+//        }
+
+        final AgeRecommend ageRecommend = ageRecommends.get(position);
+
+        ImageLoader.getInstance().displayImage(ageRecommend.getImage(), viewHolder.imageView);
+        viewHolder.titleTextView.setText(ageRecommend.getMainTitle());
+        viewHolder.engTextView.setText(ageRecommend.getSubTitle());
+        viewHolder.descTextView.setText("'' " +  ageRecommend.getFooterText() + " ''");
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, SeasonListActivity.class);
+                intent.putExtra("cartoonId", ageRecommend.getId());
+                UtilBox.startActivity((Activity) context, intent, false);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return ageRecommends.size();
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.HistoryAdapter;
-import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.bean.WatchHistory;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
@@ -169,8 +168,13 @@ public class HistoryActivity extends BaseActivity implements HistoryAdapter.OnCh
                                     mAdapter.notifyDataSetChanged();
                                     mBottomLayout.setVisibility(View.GONE);
                                     mEditTextView.setText("编辑");
-                                    mEditTextView.setTextColor(Color.parseColor("#151515"));
-                                    mEditTextView.setClickable(false);
+                                    if (mWatchHistoryManager.watchHistoryList.size() == 0) {
+                                        mEditTextView.setTextColor(Color.parseColor("#999999"));
+                                        mEditTextView.setClickable(false);
+                                    } else {
+                                        mEditTextView.setTextColor(Color.parseColor("#151515"));
+                                        mEditTextView.setClickable(true);
+                                    }
                                 }
                             },
                             "取消", null);

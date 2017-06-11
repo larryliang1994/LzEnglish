@@ -25,7 +25,6 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 
@@ -669,6 +668,9 @@ public class UtilBox {
         if (resourceId > 0) {
             result = context.getResources().getDimensionPixelSize(resourceId);
         }
+        if (result < dip2px(context, 10)) {
+            result = dip2px(context, 25);
+        }
         return result;
     }
 
@@ -701,13 +703,6 @@ public class UtilBox {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
 
-        ((TextView)contentView.findViewById(R.id.textView_message)).setText(message);
-        contentView.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
         contentView.findViewById(R.id.button_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -280,9 +280,19 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         } else {
             UtilBox.dismissLoading(false);
 
-            UtilBox.returnActivity(this);
-
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+            UtilBox.alert(this, info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new GetCartoonInfoPresenterImpl(PlayVideoActivity.this).getVideoList(seasonId);
+                        }
+                    },
+                    "返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UtilBox.returnActivity(PlayVideoActivity.this);
+                        }
+                    });
         }
     }
 

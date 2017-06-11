@@ -9,9 +9,9 @@
         android:id="@+id/textView_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="您还未购买跟读功能"
-        android:textColor="#333333"
         android:layout_marginTop="24dp"
+        android:text="请关注量子英语微信购买"
+        android:textColor="#333333"
         android:textSize="18sp" />
 
     <ImageView
@@ -19,44 +19,21 @@
         android:layout_height="100dp"
         android:layout_marginBottom="32dp"
         android:layout_marginTop="32dp"
-        android:tint="#EFEFEF"
-        android:src="@drawable/box" />
+        android:src="@drawable/box"
+        android:tint="#EFEFEF" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/divider" />
 
-    <LinearLayout
+    <Button
+        android:id="@+id/button_confirm"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_confirm"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/ripple"
-            android:text="立即购买"
-            android:textSize="18sp"
-            android:textColor="#23AFD4" />
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@color/divider" />
-
-        <Button
-            android:id="@+id/button_cancel"
-            android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:background="@drawable/ripple"
-            android:text="我知道了"
-            android:textSize="18sp"
-            android:textColor="#909090" />
-
-    </LinearLayout>
+        android:layout_height="50dp"
+        android:background="@drawable/ripple"
+        android:text="我知道了"
+        android:textColor="#23AFD4"
+        android:textSize="18sp" />
 
 </LinearLayout>

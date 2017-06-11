@@ -1,8 +1,9 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.SeasonAdapter;
@@ -106,9 +106,19 @@ public class SeasonListActivity extends AppCompatActivity implements IGetCartoon
         } else {
             UtilBox.dismissLoading(false);
 
-            UtilBox.returnActivity(this);
-
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+            UtilBox.alert(this, info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new GetCartoonInfoPresenterImpl(SeasonListActivity.this).getCartoonSeason(cartoonId);
+                        }
+                    },
+                    "返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UtilBox.returnActivity(SeasonListActivity.this);
+                        }
+                    });
         }
     }
 

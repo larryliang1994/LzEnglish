@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.ui.activity;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -309,9 +310,19 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         } else {
             UtilBox.dismissLoading(false);
 
-            UtilBox.returnActivity(this);
-
-            Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
+            UtilBox.alert(this, info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new ShadowingPresenterImpl(ShadowingActivity.this).getShadowingList(videoId);
+                        }
+                    },
+                    "返回", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            UtilBox.returnActivity(ShadowingActivity.this);
+                        }
+                    });
         }
     }
 

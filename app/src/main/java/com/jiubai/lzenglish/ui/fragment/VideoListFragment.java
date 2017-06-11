@@ -1,23 +1,21 @@
 package com.jiubai.lzenglish.ui.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.ContentFrameLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.VideoListAdapter;
 import com.jiubai.lzenglish.bean.Cartoon;
-import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
 
@@ -73,7 +71,18 @@ public class VideoListFragment extends Fragment implements IGetCartoonInfoView {
             mAdapter = new VideoListAdapter(getActivity(), (ArrayList<Cartoon>) extras);
             mRecyclerView.setAdapter(mAdapter);
         } else {
-            Toast.makeText(getActivity(), info, Toast.LENGTH_SHORT).show();
+            UtilBox.alert(getActivity(), info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new GetCartoonInfoPresenterImpl(VideoListFragment.this).getCartoonList(ageGroupsIndex);
+                        }
+                    },
+                    "", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
         }
     }
 

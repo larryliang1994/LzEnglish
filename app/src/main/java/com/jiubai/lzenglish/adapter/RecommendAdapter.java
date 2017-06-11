@@ -8,11 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.bean.InterestRecommend;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Constants;
-import com.jiubai.lzenglish.ui.activity.PlayVideoActivity;
+import com.jiubai.lzenglish.ui.activity.SeasonListActivity;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -25,14 +28,14 @@ import butterknife.ButterKnife;
 
 public class RecommendAdapter extends RecyclerView.Adapter {
 
-    private ArrayList<String> list;
+    private ArrayList<InterestRecommend> interestRecommends;
     private Context context;
 
-    private boolean noMore = false;
+    private boolean noMore = true;
 
-    public RecommendAdapter(Context context, ArrayList<String> list) {
+    public RecommendAdapter(Context context, ArrayList<InterestRecommend> list) {
         this.context = context;
-        this.list = list;
+        this.interestRecommends = list;
     }
 
     @Override
@@ -56,36 +59,45 @@ public class RecommendAdapter extends RecyclerView.Adapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (position != 0 && position != list.size() + 1) {
+        if (position != 0 && position != interestRecommends.size() + 1) {
             ItemViewHolder viewHolder = (ItemViewHolder) holder;
+
+            final InterestRecommend interestRecommend = interestRecommends.get(position - 1);
+
+//            if (position % 3 == 1) {
+//                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.recommend_video_example));
+//            } else if (position % 3 == 2) {
+//                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.a));
+//            } else if (position % 3 == 0) {
+//                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.b));
+//            }
+
+            ImageLoader.getInstance().displayImage(interestRecommend.getImage(), viewHolder.videoImageView);
+
+            viewHolder.titleTextView.setText(interestRecommend.getTitle());
+            viewHolder.watchedTextView.setText(interestRecommend.getText());
+
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, PlayVideoActivity.class);
+                    Intent intent = new Intent(context, SeasonListActivity.class);
+                    intent.putExtra("cartoonId", interestRecommend.getId());
                     UtilBox.startActivity((Activity) context, intent, false);
                 }
             });
-
-            if (position % 3 == 1) {
-                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.recommend_video_example));
-            } else if (position % 3 == 2) {
-                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.a));
-            } else if (position % 3 == 0) {
-                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.b));
-            }
         }
     }
 
     @Override
     public int getItemCount() {
-        return list.size() + 2;
+        return interestRecommends.size() + 2;
     }
 
     @Override
     public int getItemViewType(int position) {
         if (position == 0) {
             return Constants.ListHeader;
-        } else if (position == list.size() + 1) {
+        } else if (position == interestRecommends.size() + 1) {
             return noMore ? Constants.ListNoMore : Constants.ListFooter;
         } else {
             return Constants.ListItem;
@@ -104,6 +116,12 @@ public class RecommendAdapter extends RecyclerView.Adapter {
         @Bind(R.id.imageView_video)
         ImageView videoImageView;
 
+        @Bind(R.id.textView_title)
+        TextView titleTextView;
+
+        @Bind(R.id.textView_watched)
+        TextView watchedTextView;
+
         public ItemViewHolder(View itemView) {
             super(itemView);
 
@@ -118,7 +136,6 @@ public class RecommendAdapter extends RecyclerView.Adapter {
     }
 
     class PresentViewHolder extends RecyclerView.ViewHolder {
-
 
         public PresentViewHolder(View itemView) {
             super(itemView);

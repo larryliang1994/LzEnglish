@@ -1,10 +1,10 @@
 package com.jiubai.lzenglish.ui.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,14 +16,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.GuessRecommendAdapter;
 import com.jiubai.lzenglish.adapter.RecommendAdapter;
+import com.jiubai.lzenglish.bean.AgeRecommend;
+import com.jiubai.lzenglish.bean.InterestRecommend;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.presenter.RecommendPresenterImpl;
@@ -71,10 +73,10 @@ public class RecommendFragment extends Fragment implements IRecommendView {
     @Bind(R.id.imageView_banner)
     ImageView mBannerImageView;
 
-    private boolean loading = false;
-    private RecommendAdapter mAdapter;
-    private ArrayList<String> list = new ArrayList<>();
+    @Bind(R.id.layout_guess)
+    FrameLayout mGuessLayout;
 
+    private RecommendAdapter mAdapter;
     private GuessRecommendAdapter mGuessAdapter;
 
     @Override
@@ -149,63 +151,43 @@ public class RecommendFragment extends Fragment implements IRecommendView {
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView,
-                                   int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                int totalItemCount = linearLayoutManager.getItemCount();
-                int lastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                if (!mAdapter.getNoMore() && !loading && totalItemCount <= lastVisibleItem + 1) {
-                    loading = true;
-                    loadMore();
-                }
-            }
-        });
-
-        initData(10);
-        mAdapter = new RecommendAdapter(getActivity(), list);
-        mRecyclerView.setAdapter(mAdapter);
-
         final LinearLayoutManager guessLinearLayoutManager = new LinearLayoutManager(
                 getActivity(), LinearLayoutManager.HORIZONTAL, false);
         mGuessRecyclerView.setLayoutManager(guessLinearLayoutManager);
         mGuessRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        mGuessAdapter = new GuessRecommendAdapter(getActivity(), list);
-        mGuessRecyclerView.setAdapter(mGuessAdapter);
     }
 
     @Override
     public void OnGetHomeInfoResult(boolean result, String info, Object extras) {
         if (result) {
+            Object[] objects = (Object[]) extras;
 
-        } else {
-            Toast.makeText(getActivity(), info, Toast.LENGTH_SHORT).show();
-        }
-    }
+            ArrayList<AgeRecommend> ageRecommends = (ArrayList<AgeRecommend>) objects[0];
+            ArrayList<InterestRecommend> interestRecommends = (ArrayList<InterestRecommend>) objects[1];
 
-    private void loadMore() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                initData(5);
-                mAdapter.notifyDataSetChanged();
-                loading = false;
+            mAdapter = new RecommendAdapter(getActivity(), interestRecommends);
+            mRecyclerView.setAdapter(mAdapter);
+
+            if (ageRecommends.size() == 0) {
+                mGuessLayout.setVisibility(View.GONE);
+            } else {
+                mGuessLayout.setVisibility(View.VISIBLE);
+                mGuessAdapter = new GuessRecommendAdapter(getActivity(), ageRecommends);
+                mGuessRecyclerView.setAdapter(mGuessAdapter);
             }
-        }, 2000);
-    }
-
-    private void initData(int num) {
-        if (list.size() >= 20) {
-            mAdapter.setNoMore();
-            return;
-        }
-
-        for(int i = 0; i < num; i++) {
-            list.add("");
+        } else {
+            UtilBox.alert(getActivity(), info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            new RecommendPresenterImpl(RecommendFragment.this).getHomeInfo();
+                        }
+                    },
+                    "", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
         }
     }
 }
