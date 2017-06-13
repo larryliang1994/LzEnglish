@@ -59,6 +59,8 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
         SharedPreferences sp = App.sharedPreferences;
         Config.ThirdSession = sp.getString("third_session", "");
 
+        //Config.ThirdSession = "d01fZMGeq1z5ZIJc441rjadHaq75Ajjp8VNg3ikDWNTiUcZjZFdLk+GPQjV+dhBVaUi/9y/xi14Rh46Iti5iqvYZk+xgRsx0g8DHzraoOjZFPA";
+
         if (!TextUtils.isEmpty(Config.ThirdSession)) {
             totalRequestNum = 4;
             entryActivity = HomeActivity.class;

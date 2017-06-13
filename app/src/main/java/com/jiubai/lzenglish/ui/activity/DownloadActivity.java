@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -235,7 +236,16 @@ public class DownloadActivity extends BaseActivity implements DownloadAdapter.On
 
             mEditTextView.setText("编辑");
         } else {
-            super.onBackPressed();
+            UtilBox.returnActivity(this);
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
+        super.onResume();
     }
 }

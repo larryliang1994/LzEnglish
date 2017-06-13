@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -215,7 +216,16 @@ public class HistoryActivity extends BaseActivity implements HistoryAdapter.OnCh
 
             mEditTextView.setText("编辑");
         } else {
-            super.onBackPressed();
+            UtilBox.returnActivity(this);
         }
+    }
+
+    @Override
+    public void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
+        super.onResume();
     }
 }

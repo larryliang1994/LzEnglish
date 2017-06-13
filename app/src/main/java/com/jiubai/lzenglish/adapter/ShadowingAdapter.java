@@ -10,6 +10,7 @@ import android.os.Vibrator;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -121,7 +122,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
             final LeftItemViewHolder viewHolder = (LeftItemViewHolder) holder;
 
             ImageLoader.getInstance().displayImage(shadowing.getHeaderImg(), viewHolder.portraitImageView);
-            viewHolder.engTextView.setText(position + 1 + "." + shadowing.getSentenceEng());
+            viewHolder.engTextView.setText(arrangeIndex.get(position) + 1 + "." + shadowing.getSentenceEng());
             viewHolder.chTextView.setText(shadowing.getSentenceCh());
 
             if (currentIndex == position) {
@@ -134,16 +135,23 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                         ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
             }
 
-            viewHolder.chTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            viewHolder.engTextView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    viewHolder.chTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    if (TextUtils.isEmpty(shadowing.getSentenceCh())) {
+                        ViewGroup.LayoutParams params = viewHolder.chatImageView.getLayoutParams();
+                        params.height = viewHolder.engTextView.getHeight()
+                                + UtilBox.dip2px(context, 12 + 10 + 12);
+                        viewHolder.chatImageView.setLayoutParams(params);
+                    } else {
+                        ViewGroup.LayoutParams params = viewHolder.chatImageView.getLayoutParams();
+                        params.height = viewHolder.engTextView.getHeight()
+                                + viewHolder.chTextView.getHeight()
+                                + UtilBox.dip2px(context, 12 + 10 + 12);
+                        viewHolder.chatImageView.setLayoutParams(params);
+                    }
 
-                    ViewGroup.LayoutParams params = viewHolder.chatImageView.getLayoutParams();
-                    params.height = viewHolder.engTextView.getHeight()
-                            + viewHolder.chTextView.getHeight()
-                            + UtilBox.dip2px(context, 12 + 10 + 12);
-                    viewHolder.chatImageView.setLayoutParams(params);
+                    viewHolder.engTextView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });
 
@@ -233,14 +241,16 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
                         // 通知外部
                         if (listener != null) {
-                            listener.onLeftItemClick(position);
+                            listener.onLeftItemClick(arrangeIndex.get(position));
                         }
                     }
                 }
             });
         } else {
-            final Voice voice = shadowingList.get(arrangeIndex.get(position))
-                    .getVoiceList().get(position - arrangeIndex.get(position) - 1);
+            final Voice voice = shadowingList
+                    .get(arrangeIndex.get(position))
+                    .getVoiceList()
+                    .get(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
 
             final RightItemViewHolder viewHolder = (RightItemViewHolder) holder;
 
@@ -303,7 +313,8 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                                         viewHolder.ratingBar.setRating((Integer) extras);
 
                                         shadowingList.get(arrangeIndex.get(position))
-                                                .getVoiceList().get(position - arrangeIndex.get(position) - 1)
+                                                .getVoiceList()
+                                                .get(position - shadowIndex.get(arrangeIndex.get(position)) - 1)
                                                 .setScore((Integer) extras);
                                     } else {
                                         viewHolder.button.setVisibility(View.VISIBLE);
@@ -361,8 +372,9 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
                                 if (v.getId() == R.id.textView_delete) {
                                     new ShadowingPresenterImpl(null).deleteVoice(voice.getId());
-                                    shadowingList.get(arrangeIndex.get(position))
-                                            .getVoiceList().remove(position - arrangeIndex.get(position) - 1);
+                                    shadowingList
+                                            .get(arrangeIndex.get(position))
+                                            .getVoiceList().remove(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
                                     initIndex();
                                     notifyDataSetChanged();
                                 } else {
@@ -453,7 +465,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
                             // 通知外部
                             if (listener != null) {
-                                listener.onRightItemClick(position);
+                                listener.onRightItemClick(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
                             }
 
                             Log.i("text", voice.getWav());

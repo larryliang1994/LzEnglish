@@ -27,6 +27,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.jiubai.lzenglish.R;
+import com.jiubai.lzenglish.config.Config;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -629,6 +630,13 @@ public class UtilBox {
     public static void returnActivity(Activity activity) {
         activity.finish();
         activity.overridePendingTransition(R.anim.in_left_right, R.anim.out_left_right);
+    }
+
+    public static void restartApplication(Context context) {
+        //System.exit(0);
+        final Intent intent = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
     /**

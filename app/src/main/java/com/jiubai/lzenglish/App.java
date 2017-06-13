@@ -2,7 +2,9 @@ package com.jiubai.lzenglish;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
@@ -12,6 +14,7 @@ import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.net.RequestUtil;
+import com.jiubai.lzenglish.ui.activity.MainActivity;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;

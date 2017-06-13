@@ -21,7 +21,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".EntryActivity"
-            android:theme="@style/AppTheme.NoActionBarOverlay">
+            android:theme="@style/AppTheme.NoActionBarOverlay"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,23 +36,29 @@
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.ChooseAgeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.ChoosePreferenceVideoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.HomeActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBarOverlay"/>
         <activity
             android:name=".ui.activity.SearchVideoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.PlayVideoActivity"
@@ -59,9 +66,11 @@
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.DownloadActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.HistoryActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
         <activity
             android:name=".ui.activity.ShadowingActivity"

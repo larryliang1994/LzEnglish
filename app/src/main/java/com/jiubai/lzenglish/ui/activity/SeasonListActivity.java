@@ -131,4 +131,18 @@ public class SeasonListActivity extends AppCompatActivity implements IGetCartoon
     public void onGetCartoonListResult(boolean result, String info, Object extras) {
 
     }
+
+    @Override
+    protected void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        UtilBox.returnActivity(this);
+    }
 }

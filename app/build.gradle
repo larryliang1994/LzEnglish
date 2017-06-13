@@ -3,28 +3,28 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
+            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
             v2SigningEnabled false
         }
         release {
-            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
+            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
             v2SigningEnabled false
         }
     }
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.0'
     defaultConfig {
         applicationId "com.jiubai.lzenglish"
-        minSdkVersion 23
-        targetSdkVersion 25
-        versionCode 1
-        versionName "0.8"
+        minSdkVersion 21
+        targetSdkVersion 26
+        versionCode 2
+        versionName "0.8.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -60,11 +60,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.danikula:videocache:2.7.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
-    compile 'com.android.support:design:25.3.1'
-    compile 'com.android.support:support-vector-drawable:25.3.1'
+    compile 'com.android.support:design:26.0.0-alpha1'
+    compile 'com.android.support:support-vector-drawable:26.0.0-alpha1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'fm.jiecao:jiecaovideoplayer:5.5.4'

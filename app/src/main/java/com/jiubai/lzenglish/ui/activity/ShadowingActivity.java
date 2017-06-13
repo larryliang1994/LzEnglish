@@ -5,10 +5,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -134,6 +136,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBackImageView.getLayoutParams();
@@ -285,6 +288,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                     mRecordButton.setContent(shadowingList.get(position).getSentenceEng());
                     setPlayerProgress(position);
                     jcVideoPlayerStandard.startButton.performClick();
+                    //setPlayerProgress(position);
 
                     mRecordButton.setHandler(mAdapter.leftHandler);
                 }
@@ -295,6 +299,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                 }
             });
             mAdapter.jcVideoPlayerStandard = jcVideoPlayerStandard;
+            mRecyclerView.setItemViewCacheSize(10000);
             mRecyclerView.setAdapter(mAdapter);
 
             if (shadowingList.size() != 0) {
@@ -398,10 +403,19 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
             AudioPlayer.getInstance().stop();
         }
 
-        if (mAdapter.rightHandler != null) {
+        if (mAdapter != null && mAdapter.rightHandler != null) {
             mAdapter.rightHandler.removeMessages(0);
         }
 
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
+        super.onResume();
     }
 }

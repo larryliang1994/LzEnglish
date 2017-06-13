@@ -47,7 +47,7 @@ public class DialogManager {
         mDialog = new Dialog(mContext, R.style.Theme_audioDialog);
         // 用layoutinflater来引用布局
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        View view = inflater.inflate(R.layout.dialog_manager, null);
+        View view = inflater.inflate(R.layout.dialog_record, null);
         mDialog.setContentView(view);
 
         ButterKnife.bind(this, view);

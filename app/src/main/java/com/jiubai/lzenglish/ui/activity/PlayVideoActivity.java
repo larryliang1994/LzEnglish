@@ -552,11 +552,16 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         if (JCVideoPlayer.backPress()) {
             return;
         }
-        super.onBackPressed();
+
+        UtilBox.returnActivity(this);
     }
 
     @Override
     public void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
         super.onResume();
         if (handler != null) {
             handler.sendEmptyMessage(0);

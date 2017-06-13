@@ -1,6 +1,7 @@
 package com.jiubai.lzenglish.presenter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -54,6 +55,8 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
                             String result = jsonObject.getString("code");
 
                             if (Constants.SUCCESS.equals(result)) {
+                                Log.i("text", response);
+
                                 JSONObject dataObject = jsonObject.getJSONObject("data");
 
                                 JSONArray shadowArray = dataObject.getJSONArray("results");

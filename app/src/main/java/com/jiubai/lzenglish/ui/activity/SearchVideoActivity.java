@@ -138,4 +138,13 @@ public class SearchVideoActivity extends BaseActivity {
             return super.onKeyDown(keyCode, event);
         }
     }
+
+    @Override
+    public void onResume() {
+        if (TextUtils.isEmpty(Config.ThirdSession)) {
+            finish();
+        }
+
+        super.onResume();
+    }
 }
