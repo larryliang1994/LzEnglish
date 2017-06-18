@@ -120,7 +120,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     private DetailedSeason mDetailedSeason;
     private ArrayList<Video> videoList;
 
-    private int seasonId;
+    private int videoId;
     private int currentVideoIndex = 0;
 
     @Override
@@ -134,7 +134,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
         mDownloadManager = DownloadManager.getInstance();
 
-        seasonId = getIntent().getIntExtra("seasonId", 0);
+        videoId = getIntent().getIntExtra("videoId", 0);
 
         initView();
     }
@@ -161,7 +161,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         params.setMargins(0, Config.StatusbarHeight, 0, 0);
         mBackImageView.setLayoutParams(params);
 
-        new GetCartoonInfoPresenterImpl(this).getVideoList(seasonId);
+        new GetCartoonInfoPresenterImpl(this).getVideoList(videoId);
     }
 
     @Override
@@ -172,7 +172,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
             videoList = (ArrayList<Video>) mDetailedSeason.getVideoList();
 
             for (int i = 0; i < videoList.size(); i++) {
-                if (videoList.get(i).getId() == seasonId) {
+                if (videoList.get(i).getId() == videoId) {
                     currentVideoIndex = i;
                     break;
                 }
@@ -284,7 +284,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                     "重试", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            new GetCartoonInfoPresenterImpl(PlayVideoActivity.this).getVideoList(seasonId);
+                            new GetCartoonInfoPresenterImpl(PlayVideoActivity.this).getVideoList(videoId);
                         }
                     },
                     "返回", new DialogInterface.OnClickListener() {
@@ -523,7 +523,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                     startActivityForResult(intent, 99);
                     overridePendingTransition(R.anim.in_right_left, R.anim.out_right_left);
                 } else {
-                    UtilBox.purchaseAlert(this, "您还未购买跟读功能");
+                    UtilBox.purchaseAlert(this, "您还未购买跟读功能", videoList.get(0).getIdCartoon());
                 }
                 break;
         }
@@ -538,7 +538,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                 if (resultCode == RESULT_OK) {
                     UtilBox.showLoading(this, false);
 
-                    new GetCartoonInfoPresenterImpl(this).getVideoList(seasonId);
+                    new GetCartoonInfoPresenterImpl(this).getVideoList(videoId);
                 }
                 break;
 

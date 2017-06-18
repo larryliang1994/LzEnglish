@@ -97,7 +97,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
                         listener.onItemClick(position);
                     }
                 } else {
-                    UtilBox.purchaseAlert(context, "您还未购买此视频");
+                    UtilBox.purchaseAlert(context, "您还未购买此视频", video.getIdCartoon());
                 }
             }
         });

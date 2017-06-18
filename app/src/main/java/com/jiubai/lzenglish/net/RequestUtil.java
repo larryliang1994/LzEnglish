@@ -136,4 +136,27 @@ public class RequestUtil {
         // 加入请求队列
         requestQueue.add(stringRequest);
     }
+
+    public static void getRequest(final Map<String, String> params,
+                               Response.Listener<String> successCallback,
+                               Response.ErrorListener errorCallback) {
+
+        String url = Urls.SERVER_URL + "?";
+        for (String key : params.keySet()) {
+            url += key + "=" + params.get(key) + "&";
+        }
+
+        url += "third_session" + "=" + Config.ThirdSession;
+
+        Log.i("url", url);
+
+        // 构建Post请求对象
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                successCallback, errorCallback);
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.REQUEST_TIMEOUT, 1, 1.0f));
+
+        // 加入请求队列
+        requestQueue.add(stringRequest);
+    }
 }

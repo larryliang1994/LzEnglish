@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -50,6 +49,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
+
+import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
+import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START;
 
 public class ShadowingActivity extends AppCompatActivity implements IShadowingView {
 
@@ -287,8 +289,15 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                     currentShadowingIndex = position;
                     mRecordButton.setContent(shadowingList.get(position).getSentenceEng());
                     setPlayerProgress(position);
-                    jcVideoPlayerStandard.startButton.performClick();
-                    //setPlayerProgress(position);
+
+                    if (shadowingList.get(position).getEndSecond() - shadowingList.get(position).getStartSecond() < 1) {
+                        Toast.makeText(ShadowingActivity.this, "跟读内容时间过短", Toast.LENGTH_SHORT).show();
+                    }
+
+                    if (jcVideoPlayerStandard.currentState != CURRENT_STATE_PLAYING
+                            && jcVideoPlayerStandard.currentState != CURRENT_STATE_PLAYING_BUFFERING_START) {
+                        jcVideoPlayerStandard.startButton.performClick();
+                    }
 
                     mRecordButton.setHandler(mAdapter.leftHandler);
                 }

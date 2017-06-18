@@ -3,7 +3,6 @@ package com.jiubai.lzenglish.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,7 +56,8 @@ public class SeasonAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PlayVideoActivity.class);
-                intent.putExtra("seasonId", seasonList.get(position * 2).get_itemId());
+                intent.putExtra("videoId", seasonList.get(position * 2).get_itemId());
+                intent.putExtra("seasonId", seasonList.get(position * 2).getId());
                 UtilBox.startActivity((Activity) context, intent, false);
             }
         });
@@ -85,7 +85,8 @@ public class SeasonAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PlayVideoActivity.class);
-                    intent.putExtra("seasonId", seasonList.get(position * 2 + 1).get_itemId());
+                    intent.putExtra("videoId", seasonList.get(position * 2 + 1).get_itemId());
+                    intent.putExtra("seasonId", seasonList.get(position * 2 + 1).getId());
                     UtilBox.startActivity((Activity) context, intent, false);
                 }
             });

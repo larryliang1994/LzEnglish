@@ -117,7 +117,7 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                         Toast.makeText(context, "该视频已缓存", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    UtilBox.purchaseAlert(context, "您还未购买此视频");
+                    UtilBox.purchaseAlert(context, "您还未购买此视频", video.getIdCartoon());
                 }
             }
         });

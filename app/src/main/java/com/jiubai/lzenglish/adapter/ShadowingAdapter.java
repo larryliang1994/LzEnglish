@@ -209,6 +209,8 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
                                             int resId = context.getResources().getIdentifier("read_left_" + (count[0] % 3 + 1),
                                                     "drawable", context.getPackageName());
+                                            viewHolder.readImageView.setImageTintList(
+                                                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
                                             viewHolder.readImageView.setImageResource(resId);
 
                                             count[0]++;
@@ -226,8 +228,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                                 } else if (message.what == 1) {
                                     count[0] = 0;
                                     jcVideoPlayerStandard.currentId = -99;
-                                    viewHolder.readImageView.setImageTintList(
-                                            ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
+                                    viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
                                     viewHolder.readImageView.setImageResource(R.drawable.read_left_3);
                                 }
 

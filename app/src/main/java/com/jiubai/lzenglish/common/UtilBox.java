@@ -27,7 +27,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.jiubai.lzenglish.R;
-import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.ui.activity.PurchaseActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -698,7 +698,7 @@ public class UtilBox {
         dialog.show();
     }
 
-    public static void purchaseAlert(final Context context, String message) {
+    public static void purchaseAlert(final Context context, String message, final int seasonId) {
         View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_purchase, null);
 
         final AlertDialog.Builder builder =
@@ -715,6 +715,10 @@ public class UtilBox {
             @Override
             public void onClick(View v) {
                 dialog.dismiss();
+
+                Intent intent = new Intent(context, PurchaseActivity.class);
+                intent.putExtra("seasonId", seasonId);
+                startActivity((Activity) context, intent, false);
 
 //                Intent intent = new Intent(Intent.ACTION_VIEW);
 //                intent.setData(Uri.parse("http://weixin.qq.com/r/o3W_sRvEMSVOhwrSnyCH"));
