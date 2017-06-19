@@ -7,8 +7,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,10 +26,13 @@ import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.presenter.LoggerPresenterImpl;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
+import fm.jiecao.jcvideoplayer_lib.JCUserAction;
 import fm.jiecao.jcvideoplayer_lib.JCUserActionStandard;
 import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
@@ -49,6 +54,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public int currentId = -99;
 
     private Context context;
+
+    public boolean writeLog = false;
 
 
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
@@ -164,6 +171,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         if (id == fm.jiecao.jcvideoplayer_lib.R.id.surface_container) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
+                    if (writeLog) {
+                        new LoggerPresenterImpl().writeLog(context, "Player", "onTouchDown");
+                    }
                     break;
                 case MotionEvent.ACTION_MOVE:
                     break;
@@ -177,6 +187,9 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                     if (!mChangePosition && !mChangeVolume) {
                         onEvent(JCUserActionStandard.ON_CLICK_BLANK);
                         onClickUiToggle();
+                    }
+                    if (writeLog) {
+                        new LoggerPresenterImpl().writeLog(context, "Player", "onTouchUp");
                     }
                     break;
             }
@@ -218,6 +231,14 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
             backPress();
         } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.back_tiny) {
             backPress();
+        } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.start) {
+            if (writeLog) {
+                new LoggerPresenterImpl().writeLog(context, "Player", "onClickStart");
+
+                if (currentState == CURRENT_STATE_PLAYING) {
+                    new LoggerPresenterImpl().writeLog(context, "Player", "pauseVideo");
+                }
+            }
         }
     }
 
@@ -420,6 +441,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         setAllControlsVisible(View.VISIBLE, View.INVISIBLE, View.INVISIBLE,
                 View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
         startDismissControlViewTimer();
+
+        if (writeLog) {
+            new LoggerPresenterImpl().writeLog(context, "Player", "onPrepared");
+        }
     }
 
     public void changeUiToPlayingShow() {
@@ -808,12 +833,38 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
     public void onAutoCompletion() {
         super.onAutoCompletion();
         cancelDismissControlViewTimer();
+
+        if (writeLog) {
+            new LoggerPresenterImpl().writeLog(context, "Player", "onAutoCompletion");
+        }
     }
 
     @Override
     public void onCompletion() {
         super.onCompletion();
         cancelDismissControlViewTimer();
+
+        if (writeLog) {
+            new LoggerPresenterImpl().writeLog(context, "Player", "onCompletion");
+        }
+    }
+
+    @Override
+    public void onError(int what, int extra) {
+        super.onError(what, extra);
+
+        if (writeLog) {
+            new LoggerPresenterImpl().writeLog(context, "Player", "onError" + what + " - " + extra);
+        }
+    }
+
+    @Override
+    public void prepareMediaPlayer() {
+        super.prepareMediaPlayer();
+
+        if (writeLog) {
+            new LoggerPresenterImpl().writeLog(context, "Player", "prepareMediaPlayer");
+        }
     }
 }
 

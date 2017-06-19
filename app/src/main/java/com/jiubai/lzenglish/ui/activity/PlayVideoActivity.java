@@ -386,12 +386,12 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                 .setViewListener(new BottomDialog.ViewListener() {
                     @Override
                     public void bindView(View v) {
-                        RecyclerView recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView_popup);
+                        RecyclerView recyclerView = v.findViewById(R.id.recyclerView_popup);
                         GridLayoutManager gridLayoutManager = new GridLayoutManager(PlayVideoActivity.this, 5);
                         recyclerView.setLayoutManager(gridLayoutManager);
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-                        final Button checkDownloadButton = (Button) v.findViewById(R.id.button_check_downloaded);
+                        final Button checkDownloadButton = v.findViewById(R.id.button_check_downloaded);
 
                         final PopupDownloadVideoAdapter adapter = new PopupDownloadVideoAdapter(
                                 PlayVideoActivity.this, (ArrayList<Video>) mDetailedSeason.getVideoList());
@@ -445,7 +445,7 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
                             }
                         });
 
-                        final Button downloadAllButton = (Button) v.findViewById(R.id.button_download_all);
+                        final Button downloadAllButton = v.findViewById(R.id.button_download_all);
 
                         boolean hasDownloadedAll = true;
 

@@ -8,6 +8,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -363,6 +365,7 @@ public class UtilBox {
     public static String DATE = "MM-dd";
     public static String TIME = "HH:mm";
     public static String DATE_TIME = "MM-dd HH:mm";
+    public static String DATE_TIME_SECOND = "MM-dd HH:mm:ss";
 
     /**
      * 时间戳转换成字符串
@@ -730,5 +733,23 @@ public class UtilBox {
 //                context.startActivity(intent);
             }
         });
+    }
+
+    public static PackageInfo getPackageInfo(Context context) {
+        // 获取PackageManager的实例
+        PackageManager packageManager = context.getPackageManager();
+
+        try {
+            // getPackageName()是当前类的包名，0代表是获取版本信息
+            return packageManager.getPackageInfo(context.getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static long getCurrentTime() {
+        return Calendar.getInstance().getTimeInMillis();
     }
 }

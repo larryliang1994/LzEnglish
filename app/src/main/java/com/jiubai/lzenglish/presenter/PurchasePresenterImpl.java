@@ -6,6 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.bean.Coupon;
 import com.jiubai.lzenglish.bean.PurchaseInfo;
+import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IPurchaseView;
@@ -138,5 +139,15 @@ public class PurchasePresenterImpl implements IPurchasePresenter {
                     }
                 }
         );
+    }
+
+    public void initOrder() {
+        Map<String, String> params = new HashMap<>();
+        params.put("appid", Constants.WX_APP_ID);
+        params.put("mch_id", Constants.WX_MCH_ID);
+        params.put("device_info", "WEB");
+        params.put("nonce_str", UtilBox.getMD5Str(UtilBox.getCurrentTime() + ""));
+        params.put("sign", "");
+
     }
 }

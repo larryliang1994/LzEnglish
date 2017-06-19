@@ -81,6 +81,15 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                 viewHolder.progressBar.setMax(100);
                 viewHolder.progressBar.setProgress(
                         (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
+
+                if ((int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100) == 100) {
+                    viewHolder.progressImageView.setVisibility(View.VISIBLE);
+                    viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_blue);
+                    viewHolder.progressImageView.setImageResource(R.drawable.check);
+                    viewHolder.progressImageView.setPadding(
+                            UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3),
+                            UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3));
+                }
             }
         }
 

@@ -237,7 +237,7 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
                         @Override
                         public void onClick(View view) {
                             Intent intent = new Intent(context, PlayVideoActivity.class);
-                            intent.putExtra("seasonId", prefetchVideo.getVideoId());
+                            intent.putExtra("videoId", prefetchVideo.getVideoId());
                             UtilBox.startActivity((Activity) context, intent, false);
                         }
                     });

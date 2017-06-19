@@ -40,6 +40,8 @@ public class RequestUtil {
             url += key + "=" + params.get(key) + "&";
         }
 
+        url += "app=android";
+
         Log.i("url", url);
 
         // 构建Post请求对象
@@ -72,6 +74,8 @@ public class RequestUtil {
         for (String key : params.keySet()) {
             url += key + "=" + params.get(key) + "&";
         }
+
+        url += "app=android";
 
         Log.i("url", url);
 
@@ -108,6 +112,8 @@ public class RequestUtil {
         for (String key : params.keySet()) {
             url += key + "=" + params.get(key) + "&";
         }
+
+        url += "app=android";
 
         Log.i("url", url);
 
@@ -147,6 +153,8 @@ public class RequestUtil {
         }
 
         url += "third_session" + "=" + Config.ThirdSession;
+
+        url += "&app=android";
 
         Log.i("url", url);
 

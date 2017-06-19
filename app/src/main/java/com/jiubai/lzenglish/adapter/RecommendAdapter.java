@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.bean.InterestRecommend;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.ui.activity.SeasonListActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -72,7 +73,7 @@ public class RecommendAdapter extends RecyclerView.Adapter {
 //                viewHolder.videoImageView.setImageBitmap(UtilBox.readBitMap(context, R.drawable.b));
 //            }
 
-            ImageLoader.getInstance().displayImage(interestRecommend.getImage(), viewHolder.videoImageView);
+            ImageLoader.getInstance().displayImage(Config.ResourceUrl + interestRecommend.getImage(), viewHolder.videoImageView);
 
             viewHolder.titleTextView.setText(interestRecommend.getTitle());
             viewHolder.watchedTextView.setText(interestRecommend.getText());

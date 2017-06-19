@@ -64,7 +64,12 @@ public class CouponAdapter extends RecyclerView.Adapter {
         viewHolder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                currentIndex = position;
+                if (currentIndex == position) {
+                    currentIndex = -1;
+                } else {
+                    currentIndex = position;
+                }
+
                 notifyDataSetChanged();
 
                 if (itemClickListener != null) {

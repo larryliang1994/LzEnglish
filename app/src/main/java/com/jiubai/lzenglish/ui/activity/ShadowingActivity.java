@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -73,6 +74,9 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     @Bind(R.id.imageView_back)
     ImageView mBackImageView;
 
+    @Bind(R.id.scrollView)
+    NestedScrollView mScrollView;
+
     private ArrayList<String> list = new ArrayList<>();
     private ShadowingAdapter mAdapter;
 
@@ -132,6 +136,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         mCoverView.setVisibility(View.VISIBLE);
 
         jcVideoPlayerStandard.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+        jcVideoPlayerStandard.writeLog = true;
 
         initPlayer();
         mVideoCoverView.setOnTouchListener(trueTouchListener);
@@ -214,9 +219,15 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
                                 mAdapter.notifyDataSetChanged();
 
-                                mRecyclerView.smoothScrollToPosition(
-                                        mAdapter.arrangeIndex.lastIndexOf(currentShadowingIndex)
-                                );
+                                //mRecyclerView.setNestedScrollingEnabled(true);
+//                                mRecyclerView.scrollToPosition(
+//                                        mAdapter.arrangeIndex.lastIndexOf(currentShadowingIndex)
+//                                );
+                                //mRecyclerView.setNestedScrollingEnabled(false);
+
+                                
+
+                                mScrollView.smoothScrollTo(100, 200);
 
                                 new ShadowingPresenterImpl(ShadowingActivity.this)
                                         .saveVoice(ShadowingActivity.this, voice);

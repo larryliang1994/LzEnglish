@@ -193,11 +193,11 @@ public class HistoryAdapter extends RecyclerView.Adapter {
                     public void onClick(View v) {
                         if (progress >= 80 && watchHistory.getNextVideoId() != -99) {
                             Intent intent = new Intent(context, PlayVideoActivity.class);
-                            intent.putExtra("seasonId", watchHistory.getNextVideoId());
+                            intent.putExtra("videoId", watchHistory.getNextVideoId());
                             UtilBox.startActivity((Activity) context, intent, false);
                         } else {
                             Intent intent = new Intent(context, PlayVideoActivity.class);
-                            intent.putExtra("seasonId", watchHistory.getVideoId());
+                            intent.putExtra("videoId", watchHistory.getVideoId());
                             UtilBox.startActivity((Activity) context, intent, false);
                         }
                     }

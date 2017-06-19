@@ -19,6 +19,7 @@ import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.manager.DownloadManager;
+import com.jiubai.lzenglish.presenter.LoggerPresenterImpl;
 import com.jiubai.lzenglish.ui.fragment.RecommendFragment;
 import com.jiubai.lzenglish.ui.fragment.UserFragment;
 import com.jiubai.lzenglish.ui.fragment.VideoFragment;
