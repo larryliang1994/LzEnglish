@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
+import com.badoo.mobile.util.WeakHandler;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
@@ -51,9 +52,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
 
-import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
-import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING_BUFFERING_START;
-
 public class ShadowingActivity extends AppCompatActivity implements IShadowingView {
 
     @Bind(R.id.videoplayer)
@@ -83,6 +81,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     private List<Record> mRecords = new ArrayList<>();
     private PermissionHelper mHelper;
 
+    private WeakHandler handler;
     private DownloadManager mDownloadManager;
 
     private ArrayList<Shadowing> shadowingList;
@@ -90,13 +89,16 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     private int videoId;
     private String videoUrl;
     private String videoImage;
-    private int currentShadowingIndex;
+    private int currentShadowingIndex = 0;
 
     private boolean changed = false;
 
     private View.OnTouchListener trueTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+            int position = mAdapter.arrangeIndex.indexOf(currentShadowingIndex);
+            View view = mRecyclerView.getChildAt(position);
+            mAdapter.leftItemClick((ShadowingAdapter.LeftItemViewHolder) mRecyclerView.getChildViewHolder(view), position);
             return true;
         }
     };
@@ -104,6 +106,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     private View.OnTouchListener falseTouchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View v, MotionEvent event) {
+
             return false;
         }
     };
@@ -168,6 +171,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                     , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
         }
 
+        jcVideoPlayerStandard.seekToInAdvance = -1;
+
         jcVideoPlayerStandard.progressBar.setOnTouchListener(trueTouchListener);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, 0);
@@ -219,15 +224,9 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
                                 mAdapter.notifyDataSetChanged();
 
-                                //mRecyclerView.setNestedScrollingEnabled(true);
-//                                mRecyclerView.scrollToPosition(
-//                                        mAdapter.arrangeIndex.lastIndexOf(currentShadowingIndex)
-//                                );
-                                //mRecyclerView.setNestedScrollingEnabled(false);
-
-                                
-
-                                mScrollView.smoothScrollTo(100, 200);
+                                mScrollView.smoothScrollTo(mScrollView.getScrollX(),
+                                        mScrollView.getScrollY()
+                                                + UtilBox.dip2px(ShadowingActivity.this, 56) * shadowingList.get(currentShadowingIndex).getVoiceList().size());
 
                                 new ShadowingPresenterImpl(ShadowingActivity.this)
                                         .saveVoice(ShadowingActivity.this, voice);
@@ -305,10 +304,11 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
                         Toast.makeText(ShadowingActivity.this, "跟读内容时间过短", Toast.LENGTH_SHORT).show();
                     }
 
-                    if (jcVideoPlayerStandard.currentState != CURRENT_STATE_PLAYING
-                            && jcVideoPlayerStandard.currentState != CURRENT_STATE_PLAYING_BUFFERING_START) {
-                        jcVideoPlayerStandard.startButton.performClick();
-                    }
+                    jcVideoPlayerStandard.startButton.performClick();
+
+                    Log.i("HahaPlayerrrrr", "performClick");
+
+                    jcVideoPlayerStandard.seekToInAdvance = (int) (shadowingList.get(position).getStartSecond() - 0) * 1000;
 
                     mRecordButton.setHandler(mAdapter.leftHandler);
                 }
@@ -354,11 +354,14 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     private void setPlayerProgress(final int index) {
         jcVideoPlayerStandard.release();
         initPlayer();
-        jcVideoPlayerStandard.seekToInAdvance = (int) shadowingList.get(index).getStartSecond() * 1000;
+        jcVideoPlayerStandard.seekToInAdvance = (int) (shadowingList.get(index).getStartSecond() - 0) * 1000;
+
         jcVideoPlayerStandard.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress * 0.01 * jcVideoPlayerStandard.getDuration() >= shadowingList.get(index).getEndSecond() * 1000) {
+                    Log.i("HahaPlayerrrrr", "should stop  " + progress + "==" + jcVideoPlayerStandard.getDuration() * 0.01 + "===" + shadowingList.get(index).getStartSecond() + "--" + shadowingList.get(index).getEndSecond());
+
                     jcVideoPlayerStandard.startButton.performClick();
                     mVideoCoverView.setOnTouchListener(trueTouchListener);
                 } else {

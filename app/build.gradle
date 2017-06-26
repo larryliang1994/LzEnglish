@@ -3,14 +3,14 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         debug {
-            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
             v2SigningEnabled false
         }
         release {
-            storeFile file("/Users/Leunghowell/Desktop/AndroidProject/LzEnglish/app/android.keystore")
+            storeFile file("D:\\Others\\EngineeringPractice\\LZEnglish\\app\\android.keystore")
             storePassword "fen3363816"
             keyAlias "larryliang"
             keyPassword "fen3363816"
@@ -83,6 +83,7 @@ dependencies {
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.9'
     compile 'com.github.HotBitmapGG:RingProgressBar:V1.2.2'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'com.linsea:universalvideoview:1.1.0@aar'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
     testCompile 'junit:junit:4.12'
 }

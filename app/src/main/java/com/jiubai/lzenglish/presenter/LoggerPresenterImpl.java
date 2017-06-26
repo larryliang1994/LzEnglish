@@ -7,14 +7,12 @@ import android.util.Log;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.common.UtilBox;
-import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.config.Urls;
 import com.jiubai.lzenglish.net.RequestUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +25,7 @@ public class LoggerPresenterImpl implements ILoggerPresenter {
     public void writeLog(Context context, String activityName, String content) {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("date", UtilBox.getTimestampToString(UtilBox.getCurrentTime(), UtilBox.DATE_TIME_SECOND));
+            jsonObject.put("date", UtilBox.getTimestampToString(UtilBox.getCurrentTime(), UtilBox.DATE_TIME_SECOND_MILL));
             jsonObject.put("device", Build.VERSION.SDK_INT + "_"
                     + UtilBox.getPackageInfo(context).versionName + "_"
                     + android.os.Build.MODEL);

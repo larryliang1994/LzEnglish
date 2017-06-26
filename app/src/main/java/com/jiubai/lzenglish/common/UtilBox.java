@@ -366,6 +366,7 @@ public class UtilBox {
     public static String TIME = "HH:mm";
     public static String DATE_TIME = "MM-dd HH:mm";
     public static String DATE_TIME_SECOND = "MM-dd HH:mm:ss";
+    public static String DATE_TIME_SECOND_MILL = "MM-dd HH:mm:ss SSS";
 
     /**
      * 时间戳转换成字符串

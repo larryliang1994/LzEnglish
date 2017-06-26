@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.media.AudioManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -31,8 +30,6 @@ import com.jiubai.lzenglish.presenter.LoggerPresenterImpl;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import fm.jiecao.jcvideoplayer_lib.JCMediaManager;
-import fm.jiecao.jcvideoplayer_lib.JCUserAction;
 import fm.jiecao.jcvideoplayer_lib.JCUserActionStandard;
 import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
@@ -173,6 +170,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                 case MotionEvent.ACTION_DOWN:
                     if (writeLog) {
                         new LoggerPresenterImpl().writeLog(context, "Player", "onTouchDown");
+                        Log.i("HahaPlayerrrrr", "onTouchDown");
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
@@ -190,6 +188,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
                     }
                     if (writeLog) {
                         new LoggerPresenterImpl().writeLog(context, "Player", "onTouchUp");
+                        Log.i("HahaPlayerrrrr", "onTouchUp");
                     }
                     break;
             }
@@ -234,9 +233,11 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.start) {
             if (writeLog) {
                 new LoggerPresenterImpl().writeLog(context, "Player", "onClickStart");
+                Log.i("HahaPlayerrrrr", "onClickStart");
 
                 if (currentState == CURRENT_STATE_PLAYING) {
                     new LoggerPresenterImpl().writeLog(context, "Player", "pauseVideo");
+                    Log.i("HahaPlayerrrrr", "pauseVideo");
                 }
             }
         }
@@ -444,6 +445,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "onPrepared");
+            Log.i("HahaPlayerrrrr", "onPrepared");
         }
     }
 
@@ -836,6 +838,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "onAutoCompletion");
+            Log.i("HahaPlayerrrrr", "onAutoCompletion");
         }
     }
 
@@ -846,6 +849,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "onCompletion");
+            Log.i("HahaPlayerrrrr", "onCompletion");
         }
     }
 
@@ -855,6 +859,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "onError" + what + " - " + extra);
+            Log.i("HahaPlayerrrrr", "onError");
         }
     }
 
@@ -864,6 +869,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "prepareMediaPlayer");
+            Log.i("HahaPlayerrrrr", "prepareMediaPlayer");
         }
     }
 }

@@ -168,83 +168,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    currentIndex = position;
-                    notifyDataSetChanged();
-
-                    // 先停掉右动画
-                    if (rightHandler != null) {
-                        rightHandler.removeMessages(0);
-                        rightHandler.sendEmptyMessage(1);
-                    }
-
-                    // 如果在播放音频，就停掉音频
-                    if (AudioPlayer.getInstance().mediaPlayer != null
-                            && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
-                        AudioPlayer.getInstance().pause();
-                        AudioPlayer.getInstance().stop();
-                    }
-
-                    // 先停掉当前的左动画
-                    if (leftHandler != null) {
-                        leftHandler.removeMessages(0);
-                        leftHandler.sendEmptyMessage(1);
-                    }
-
-                    final int[] count = {0};
-
-                    // 如果在播放自身，就停下来
-                    if (jcVideoPlayerStandard.currentId == shadowing.getId()
-                            && jcVideoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
-                        jcVideoPlayerStandard.currentId = -99;
-                        jcVideoPlayerStandard.startButton.performClick();
-                    } else { // 否则开始播放新视频
-                        leftHandler = new WeakHandler(new Handler.Callback() {
-                            @Override
-                            public boolean handleMessage(Message message) {
-                                if (message.what == 0) {
-                                    ((Activity) context).runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            jcVideoPlayerStandard.currentId = shadowing.getId();
-
-                                            int resId = context.getResources().getIdentifier("read_left_" + (count[0] % 3 + 1),
-                                                    "drawable", context.getPackageName());
-                                            viewHolder.readImageView.setImageTintList(
-                                                    ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
-                                            viewHolder.readImageView.setImageResource(resId);
-
-                                            count[0]++;
-
-                                            // 用count作计时器，因此不需要监听完成事件
-                                            if (count[0] * 300 >= (shadowing.getEndSecond() - shadowing.getStartSecond()) * 1000) {
-                                                // 已播放完毕，则停止左动画
-                                                leftHandler.sendEmptyMessage(1);
-                                            } else {
-                                                // 否则继续播放左动画
-                                                leftHandler.sendEmptyMessageDelayed(0, 300);
-                                            }
-                                        }
-                                    });
-                                } else if (message.what == 1) {
-                                    count[0] = 0;
-                                    jcVideoPlayerStandard.currentId = -99;
-                                    viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
-                                    viewHolder.readImageView.setImageResource(R.drawable.read_left_3);
-                                }
-
-                                return false;
-                            }
-                        });
-
-                        // 播放左动画
-                        count[0] = 0;
-                        leftHandler.sendEmptyMessage(0);
-
-                        // 通知外部
-                        if (listener != null) {
-                            listener.onLeftItemClick(arrangeIndex.get(position));
-                        }
-                    }
+                    leftItemClick(viewHolder, position);
                 }
             });
         } else {
@@ -403,95 +327,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        // 停掉左动画
-                        if (leftHandler != null) {
-                            leftHandler.removeMessages(0);
-                            leftHandler.sendEmptyMessage(1);
-                        }
-
-                        // 如果在播视频，就停掉视频
-                        if (jcVideoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
-                            jcVideoPlayerStandard.startButton.performClick();
-                        }
-
-                        // 先停掉当前的右动画
-                        if (rightHandler != null) {
-                            rightHandler.removeMessages(0);
-                            rightHandler.sendEmptyMessage(1);
-                        }
-
-                        final int[] count = {0};
-
-                        // 如果在播放自身，就停下来
-                        if (AudioPlayer.getInstance().currentId == voice.getId()
-                                && AudioPlayer.getInstance().mediaPlayer != null
-                                && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
-                            AudioPlayer.getInstance().currentId = -99;
-                            AudioPlayer.getInstance().pause();
-                            AudioPlayer.getInstance().stop();
-                        } else { // 否则开始播放新音频
-                            rightHandler = new WeakHandler(new Handler.Callback() {
-                                @Override
-                                public boolean handleMessage(Message message) {
-                                    if (message.what == 0) {
-                                        ((Activity) context).runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                AudioPlayer.getInstance().currentId = voice.getId();
-                                                int resId = context.getResources().getIdentifier("read_right_" + (count[0] % 3 + 1),
-                                                        "drawable", context.getPackageName());
-                                                viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.WHITE));
-                                                viewHolder.readImageView.setImageResource(resId);
-
-                                                count[0]++;
-
-                                                rightHandler.sendEmptyMessageDelayed(0, 300);
-                                            }
-                                        });
-                                    } else if (message.what == 1) {
-                                        count[0] = 0;
-                                        AudioPlayer.getInstance().currentId = -99;
-                                        viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#439E1B")));
-                                        viewHolder.readImageView.setImageResource(R.drawable.read_right_3);
-                                    }
-
-                                    return false;
-                                }
-                            });
-
-                            // 播放右动画
-                            count[0] = 0;
-                            rightHandler.sendEmptyMessage(0);
-
-                            // 通知外部
-                            if (listener != null) {
-                                listener.onRightItemClick(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
-                            }
-
-                            Log.i("text", voice.getWav());
-
-                            // 开始播放
-                            if (voice.getWav().contains("http")) {
-                                HttpProxyCacheServer proxy = App.getProxy(context);
-                                String proxyUrl = proxy.getProxyUrl(voice.getWav());
-
-                                AudioPlayer.getInstance().playUrl(proxyUrl, voice.getId());
-                            } else {
-                                AudioPlayer.getInstance().playUrl(voice.getWav(), voice.getId());
-                            }
-
-                            // 监听完成事件
-                            AudioPlayer.getInstance().setListener(new AudioPlayer.onAudioStateChangedListener() {
-                                @Override
-                                public void onCompleted() {
-                                    if (rightHandler != null) {
-                                        rightHandler.removeMessages(0);
-                                        rightHandler.sendEmptyMessage(1);
-                                    }
-                                }
-                            });
-                        }
+                        rightItemClick(viewHolder, position);
                     }
                 });
 
@@ -508,6 +344,184 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
                 layoutParams.width = UtilBox.dip2px(context, 5 * length + 80);
                 viewHolder.layout.setLayoutParams(layoutParams);
             }
+        }
+    }
+
+    public void leftItemClick(final LeftItemViewHolder viewHolder, final int position) {
+        final Shadowing shadowing = shadowingList.get(arrangeIndex.get(position));
+
+        currentIndex = position;
+        notifyDataSetChanged();
+
+        // 先停掉右动画
+        if (rightHandler != null) {
+            rightHandler.removeMessages(0);
+            rightHandler.sendEmptyMessage(1);
+        }
+
+        // 如果在播放音频，就停掉音频
+        if (AudioPlayer.getInstance().mediaPlayer != null
+                && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+            AudioPlayer.getInstance().pause();
+            AudioPlayer.getInstance().stop();
+        }
+
+        // 先停掉当前的左动画
+        if (leftHandler != null) {
+            leftHandler.removeMessages(0);
+            leftHandler.sendEmptyMessage(1);
+        }
+
+        final int[] count = {0};
+
+        // 如果在播放自身，就停下来
+        if (jcVideoPlayerStandard.currentId == shadowing.getId()
+                && jcVideoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
+            jcVideoPlayerStandard.currentId = -99;
+            jcVideoPlayerStandard.startButton.performClick();
+        } else { // 否则开始播放新视频
+            leftHandler = new WeakHandler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message message) {
+                    if (message.what == 0) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                jcVideoPlayerStandard.currentId = shadowing.getId();
+
+                                int resId = context.getResources().getIdentifier("read_left_" + (count[0] % 3 + 1),
+                                        "drawable", context.getPackageName());
+                                viewHolder.readImageView.setImageTintList(
+                                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
+                                viewHolder.readImageView.setImageResource(resId);
+
+                                count[0]++;
+
+                                // 用count作计时器，因此不需要监听完成事件
+                                if (count[0] * 300 >= (shadowing.getEndSecond() - shadowing.getStartSecond()) * 1000) {
+                                    // 已播放完毕，则停止左动画
+                                    leftHandler.sendEmptyMessage(1);
+                                } else {
+                                    // 否则继续播放左动画
+                                    leftHandler.sendEmptyMessageDelayed(0, 300);
+                                }
+                            }
+                        });
+                    } else if (message.what == 1) {
+                        count[0] = 0;
+                        jcVideoPlayerStandard.currentId = -99;
+                        viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
+                        viewHolder.readImageView.setImageResource(R.drawable.read_left_3);
+                    }
+
+                    return false;
+                }
+            });
+
+            // 播放左动画
+            count[0] = 0;
+            leftHandler.sendEmptyMessage(0);
+
+            // 通知外部
+            if (listener != null) {
+                listener.onLeftItemClick(arrangeIndex.get(position));
+            }
+        }
+    }
+
+    public void rightItemClick(final RightItemViewHolder viewHolder, final int position) {
+        final Voice voice = shadowingList
+                .get(arrangeIndex.get(position))
+                .getVoiceList()
+                .get(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
+
+        // 停掉左动画
+        if (leftHandler != null) {
+            leftHandler.removeMessages(0);
+            leftHandler.sendEmptyMessage(1);
+        }
+
+        // 如果在播视频，就停掉视频
+        if (jcVideoPlayerStandard.currentState == CURRENT_STATE_PLAYING) {
+            jcVideoPlayerStandard.startButton.performClick();
+        }
+
+        // 先停掉当前的右动画
+        if (rightHandler != null) {
+            rightHandler.removeMessages(0);
+            rightHandler.sendEmptyMessage(1);
+        }
+
+        final int[] count = {0};
+
+        // 如果在播放自身，就停下来
+        if (AudioPlayer.getInstance().currentId == voice.getId()
+                && AudioPlayer.getInstance().mediaPlayer != null
+                && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+            AudioPlayer.getInstance().currentId = -99;
+            AudioPlayer.getInstance().pause();
+            AudioPlayer.getInstance().stop();
+        } else { // 否则开始播放新音频
+            rightHandler = new WeakHandler(new Handler.Callback() {
+                @Override
+                public boolean handleMessage(Message message) {
+                    if (message.what == 0) {
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AudioPlayer.getInstance().currentId = voice.getId();
+                                int resId = context.getResources().getIdentifier("read_right_" + (count[0] % 3 + 1),
+                                        "drawable", context.getPackageName());
+                                viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.WHITE));
+                                viewHolder.readImageView.setImageResource(resId);
+
+                                count[0]++;
+
+                                rightHandler.sendEmptyMessageDelayed(0, 300);
+                            }
+                        });
+                    } else if (message.what == 1) {
+                        count[0] = 0;
+                        AudioPlayer.getInstance().currentId = -99;
+                        viewHolder.readImageView.setImageTintList(ColorStateList.valueOf(Color.parseColor("#439E1B")));
+                        viewHolder.readImageView.setImageResource(R.drawable.read_right_3);
+                    }
+
+                    return false;
+                }
+            });
+
+            // 播放右动画
+            count[0] = 0;
+            rightHandler.sendEmptyMessage(0);
+
+            // 通知外部
+            if (listener != null) {
+                listener.onRightItemClick(position - shadowIndex.get(arrangeIndex.get(position)) - 1);
+            }
+
+            Log.i("text", voice.getWav());
+
+            // 开始播放
+            if (voice.getWav().contains("http")) {
+                HttpProxyCacheServer proxy = App.getProxy(context);
+                String proxyUrl = proxy.getProxyUrl(voice.getWav());
+
+                AudioPlayer.getInstance().playUrl(proxyUrl, voice.getId());
+            } else {
+                AudioPlayer.getInstance().playUrl(voice.getWav(), voice.getId());
+            }
+
+            // 监听完成事件
+            AudioPlayer.getInstance().setListener(new AudioPlayer.onAudioStateChangedListener() {
+                @Override
+                public void onCompleted() {
+                    if (rightHandler != null) {
+                        rightHandler.removeMessages(0);
+                        rightHandler.sendEmptyMessage(1);
+                    }
+                }
+            });
         }
     }
 
@@ -533,7 +547,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
         return shadowIndex.size() + voiceIndex.size();
     }
 
-    class RightItemViewHolder extends RecyclerView.ViewHolder {
+    public class RightItemViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.textView_seconds)
         TextView lengthTextView;
 
@@ -568,7 +582,7 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
         }
     }
 
-    class LeftItemViewHolder extends RecyclerView.ViewHolder {
+    public class LeftItemViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.imageView_portrait)
         ImageView portraitImageView;
 
