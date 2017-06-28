@@ -20,13 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.badoo.mobile.util.WeakHandler;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.adapter.ShadowingAdapter;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
-import com.jiubai.lzenglish.bean.Record;
 import com.jiubai.lzenglish.bean.Shadowing;
 import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.StatusBarUtil;
@@ -45,7 +43,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -75,15 +72,9 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     @Bind(R.id.scrollView)
     NestedScrollView mScrollView;
 
-    private ArrayList<String> list = new ArrayList<>();
     private ShadowingAdapter mAdapter;
-
-    private List<Record> mRecords = new ArrayList<>();
     private PermissionHelper mHelper;
-
-    private WeakHandler handler;
     private DownloadManager mDownloadManager;
-
     private ArrayList<Shadowing> shadowingList;
 
     private int videoId;
@@ -139,7 +130,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         mCoverView.setVisibility(View.VISIBLE);
 
         jcVideoPlayerStandard.setUp("", JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
-        jcVideoPlayerStandard.writeLog = true;
+        jcVideoPlayerStandard.writeLog = false;
 
         initPlayer();
         mVideoCoverView.setOnTouchListener(trueTouchListener);
@@ -158,8 +149,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         int index = mDownloadManager.getPrefetchVideoByVideoId(videoId);
 
         if (index != -1
-                && mDownloadManager.getPrefetchVideos().get(index).getVideoStatus()
-                == PrefetchVideo.VideoStatus.Downloaded) {
+                && mDownloadManager.getPrefetchVideos().get(index).getVideoStatus() == PrefetchVideo.VideoStatus.Downloaded) {
             Log.i("prefetch", DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"));
             jcVideoPlayerStandard.setUp(
                     DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"),
@@ -180,9 +170,6 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
         jcVideoPlayerStandard.fullscreenButton.setLayoutParams(params);
         jcVideoPlayerStandard.currentTimeTextView.setLayoutParams(params);
         jcVideoPlayerStandard.totalTimeTextView.setLayoutParams(params);
-
-        //RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(0, 0);
-        //jcVideoPlayerStandard.startButton.setLayoutParams(buttonParams);
 
         jcVideoPlayerStandard.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         ImageLoader.getInstance().displayImage(videoImage, jcVideoPlayerStandard.thumbImageView);
@@ -226,7 +213,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
                                 mScrollView.smoothScrollTo(mScrollView.getScrollX(),
                                         mScrollView.getScrollY()
-                                                + UtilBox.dip2px(ShadowingActivity.this, 56) * shadowingList.get(currentShadowingIndex).getVoiceList().size());
+                                                + UtilBox.dip2px(ShadowingActivity.this, 56) * shadowingList.get(currentShadowingIndex).getVoiceList().size()
+                                                + UtilBox.dip2px(ShadowingActivity.this, 100));
 
                                 new ShadowingPresenterImpl(ShadowingActivity.this)
                                         .saveVoice(ShadowingActivity.this, voice);
@@ -306,8 +294,6 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
                     jcVideoPlayerStandard.startButton.performClick();
 
-                    Log.i("HahaPlayerrrrr", "performClick");
-
                     jcVideoPlayerStandard.seekToInAdvance = (int) (shadowingList.get(position).getStartSecond() - 0) * 1000;
 
                     mRecordButton.setHandler(mAdapter.leftHandler);
@@ -353,6 +339,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
     private void setPlayerProgress(final int index) {
         jcVideoPlayerStandard.release();
+        jcVideoPlayerStandard.seekToInAdvance = 0;
         initPlayer();
         jcVideoPlayerStandard.seekToInAdvance = (int) (shadowingList.get(index).getStartSecond() - 0) * 1000;
 
@@ -360,8 +347,6 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if (progress * 0.01 * jcVideoPlayerStandard.getDuration() >= shadowingList.get(index).getEndSecond() * 1000) {
-                    Log.i("HahaPlayerrrrr", "should stop  " + progress + "==" + jcVideoPlayerStandard.getDuration() * 0.01 + "===" + shadowingList.get(index).getStartSecond() + "--" + shadowingList.get(index).getEndSecond());
-
                     jcVideoPlayerStandard.startButton.performClick();
                     mVideoCoverView.setOnTouchListener(trueTouchListener);
                 } else {

@@ -1,5 +1,6 @@
 package com.jiubai.lzenglish.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -54,6 +55,8 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseView {
     @Bind(R.id.view_cover)
     View mCoverView;
 
+    private ProgressDialog progressDialog;
+
     private CouponAdapter mAdapter;
     private PurchaseInfo mPurchaseInfo;
 
@@ -91,6 +94,11 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseView {
         mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("加载中...");
+        progressDialog.setCancelable(false);
+        progressDialog.setCanceledOnTouchOutside(false);
+
         mSwitchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
@@ -124,16 +132,15 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseView {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.button_submit:
-                if (currentPrice == 0) {
-                    if (mAdapter.currentIndex != -1) {
-//                        new PurchasePresenterImpl(this).didPurchase(
-//                                mPurchaseInfo.getCoupons().get(mAdapter.currentIndex).getId()
-//                        );
-                    } else {
-//                        new PurchasePresenterImpl(this).didPurchase(-1);
-                    }
+                progressDialog.show();
+
+                if (mAdapter.currentIndex != -1) {
+                    new PurchasePresenterImpl(this).didPurchase(
+                            seasonId,
+                            mPurchaseInfo.getCoupons().get(mAdapter.currentIndex).getId()
+                    );
                 } else {
-                    // 跳转到微信支付
+                    new PurchasePresenterImpl(this).didPurchase(seasonId, -1);
                 }
 
                 break;
@@ -213,10 +220,35 @@ public class PurchaseActivity extends BaseActivity implements IPurchaseView {
 
     @Override
     public void onDoPurchaseResult(boolean result, String info, Object extras) {
+        progressDialog.dismiss();
+
         if (result) {
 
         } else {
+            UtilBox.dismissLoading(false);
 
+            UtilBox.alert(this, info,
+                    "重试", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            progressDialog.show();
+
+                            if (mAdapter.currentIndex != -1) {
+                                new PurchasePresenterImpl(PurchaseActivity.this).didPurchase(
+                                        seasonId,
+                                        mPurchaseInfo.getCoupons().get(mAdapter.currentIndex).getId()
+                                );
+                            } else {
+                                new PurchasePresenterImpl(PurchaseActivity.this).didPurchase(seasonId, -1);
+                            }
+                        }
+                    },
+                    "取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    });
         }
     }
 }

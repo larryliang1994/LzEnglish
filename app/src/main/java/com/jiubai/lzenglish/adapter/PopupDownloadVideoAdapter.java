@@ -62,7 +62,9 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
             PrefetchVideo prefetchVideo = DownloadManager.getInstance().getPrefetchVideos().get(videoIndex);
 
             if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Downloaded) {
+                viewHolder.progressLayout.setVisibility(View.GONE);
                 viewHolder.progressImageView.setVisibility(View.VISIBLE);
+
                 viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_blue);
                 viewHolder.progressImageView.setImageResource(R.drawable.check);
                 viewHolder.progressImageView.setPadding(
@@ -70,7 +72,9 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                         UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3));
             } else if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Paused
                     || prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Error) {
+                viewHolder.progressLayout.setVisibility(View.GONE);
                 viewHolder.progressImageView.setVisibility(View.VISIBLE);
+
                 viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_orange);
                 viewHolder.progressImageView.setImageResource(R.drawable.downward);
                 viewHolder.progressImageView.setPadding(
@@ -78,18 +82,11 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                         UtilBox.dip2px(context, 4), UtilBox.dip2px(context, 4));
             } else {
                 viewHolder.progressLayout.setVisibility(View.VISIBLE);
+                viewHolder.progressImageView.setVisibility(View.GONE);
+
                 viewHolder.progressBar.setMax(100);
                 viewHolder.progressBar.setProgress(
                         (int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100));
-
-                if ((int) (prefetchVideo.getSoFarSize() * 1.0 / prefetchVideo.getTotalSize() * 100) == 100) {
-                    viewHolder.progressImageView.setVisibility(View.VISIBLE);
-                    viewHolder.progressImageView.setBackgroundResource(R.drawable.circle_blue);
-                    viewHolder.progressImageView.setImageResource(R.drawable.check);
-                    viewHolder.progressImageView.setPadding(
-                            UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3),
-                            UtilBox.dip2px(context, 3), UtilBox.dip2px(context, 3));
-                }
             }
         }
 
@@ -119,9 +116,11 @@ public class PopupDownloadVideoAdapter extends RecyclerView.Adapter {
                     if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Paused) {
                         DownloadManager.getInstance().changeVideoStatus(prefetchVideo, PrefetchVideo.VideoStatus.Downloading);
                         notifyDataSetChanged();
+                        Toast.makeText(context, "继续下载", Toast.LENGTH_SHORT).show();
                     } else if (prefetchVideo.getVideoStatus() == PrefetchVideo.VideoStatus.Downloading) {
                         DownloadManager.getInstance().changeVideoStatus(prefetchVideo, PrefetchVideo.VideoStatus.Paused);
                         notifyDataSetChanged();
+                        Toast.makeText(context, "已暂停", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context, "该视频已缓存", Toast.LENGTH_SHORT).show();
                     }

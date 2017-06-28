@@ -43,7 +43,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.ArrayList;
-import java.util.Timer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,13 +68,15 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
 
     public JCVideoPlayerStandard jcVideoPlayerStandard;
 
-    private Timer readTimer;
+    private ArrayList<LeftItemViewHolder> leftHolders;
 
     private int currentIndex = 0;
 
     public ShadowingAdapter(Context context, ArrayList<Shadowing> list) {
         this.context = context;
         this.shadowingList = list;
+
+        leftHolders = new ArrayList<>();
 
         initIndex();
     }
@@ -124,6 +125,10 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
             ImageLoader.getInstance().displayImage(shadowing.getHeaderImg(), viewHolder.portraitImageView);
             viewHolder.engTextView.setText(arrangeIndex.get(position) + 1 + "." + shadowing.getSentenceEng());
             viewHolder.chTextView.setText(shadowing.getSentenceCh());
+
+            if (leftHolders.size() != getItemCount()) {
+                leftHolders.add(viewHolder);
+            }
 
             if (currentIndex == position) {
                 viewHolder.engTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
@@ -350,8 +355,17 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
     public void leftItemClick(final LeftItemViewHolder viewHolder, final int position) {
         final Shadowing shadowing = shadowingList.get(arrangeIndex.get(position));
 
+        for (LeftItemViewHolder leftItemViewHolder: leftHolders) {
+            leftItemViewHolder.engTextView.setTextColor(Color.parseColor("#333333"));
+            leftItemViewHolder.readImageView.setImageTintList(
+                    ColorStateList.valueOf(Color.parseColor("#A2A2A2")));
+        }
+
         currentIndex = position;
-        notifyDataSetChanged();
+
+        viewHolder.engTextView.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        viewHolder.readImageView.setImageTintList(
+                ColorStateList.valueOf(ContextCompat.getColor(context, R.color.colorPrimary)));
 
         // 先停掉右动画
         if (rightHandler != null) {
@@ -609,9 +623,5 @@ public class ShadowingAdapter extends RecyclerView.Adapter {
         void onLeftItemClick(int position);
 
         void onRightItemClick(int position);
-    }
-
-    public interface OnConstructHandlerListener {
-        void onConstructed();
     }
 }

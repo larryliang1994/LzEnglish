@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.ui.activity.PurchaseActivity;
@@ -715,6 +716,8 @@ public class UtilBox {
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
 
+        ((TextView)contentView.findViewById(R.id.textView_message)).setText(message);
+
         contentView.findViewById(R.id.button_confirm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -723,15 +726,13 @@ public class UtilBox {
                 Intent intent = new Intent(context, PurchaseActivity.class);
                 intent.putExtra("seasonId", seasonId);
                 startActivity((Activity) context, intent, false);
+            }
+        });
 
-//                Intent intent = new Intent(Intent.ACTION_VIEW);
-//                intent.setData(Uri.parse("http://weixin.qq.com/r/o3W_sRvEMSVOhwrSnyCH"));
-//
-//                intent.setPackage("com.tencent.mm");
-//
-//                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//
-//                context.startActivity(intent);
+        contentView.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
             }
         });
     }

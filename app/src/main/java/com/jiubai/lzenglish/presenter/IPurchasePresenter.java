@@ -6,5 +6,5 @@ package com.jiubai.lzenglish.presenter;
 
 public interface IPurchasePresenter {
     void getPurchaseInfo(int seasonId);
-    void didPurchase(int couponId);
+    void didPurchase(int seasonId, int couponId);
 }
