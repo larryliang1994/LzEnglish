@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,13 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,18 +36,22 @@ import com.jiubai.lzenglish.adapter.PlayVideoAdapter;
 import com.jiubai.lzenglish.adapter.PlayVideoRecommendAdapter;
 import com.jiubai.lzenglish.adapter.PopupDownloadVideoAdapter;
 import com.jiubai.lzenglish.bean.DetailedSeason;
+import com.jiubai.lzenglish.bean.OpeningClosingImage;
 import com.jiubai.lzenglish.bean.PrefetchVideo;
 import com.jiubai.lzenglish.bean.Video;
 import com.jiubai.lzenglish.bean.WatchHistory;
 import com.jiubai.lzenglish.common.StatusBarUtil;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Config;
+import com.jiubai.lzenglish.config.Urls;
 import com.jiubai.lzenglish.manager.DownloadManager;
 import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.net.DownloadUtil;
 import com.jiubai.lzenglish.presenter.GetCartoonInfoPresenterImpl;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
+import com.jiubai.lzenglish.widget.CustomViewPager;
 import com.jiubai.lzenglish.widget.JCVideoPlayerStandard;
+import com.jiubai.lzenglish.widget.recorder.AudioPlayer;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
@@ -108,6 +116,18 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
     @Bind(R.id.scrollView)
     NestedScrollView mScrollView;
 
+    @Bind(R.id.layout_image)
+    RelativeLayout mImageLayout;
+
+    @Bind(R.id.viewPager)
+    CustomViewPager mViewPager;
+
+    @Bind(R.id.progressBar)
+    ProgressBar mProgressBar;
+
+    @Bind(R.id.imageView_play)
+    ImageView mPlayImageView;
+
     private ArrayList<String> list = new ArrayList<>();
     private PlayVideoAdapter mVideoAdapter;
     private PlayVideoRecommendAdapter mRecommendAdapter;
@@ -119,6 +139,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
     private DetailedSeason mDetailedSeason;
     private ArrayList<Video> videoList;
+
+    private WeakHandler progressHandler;
+    private int which = 0;
 
     private int videoId;
     private int currentVideoIndex = 0;
@@ -269,6 +292,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
 
             handler.sendEmptyMessage(0);
 
+            mImageLayout.setVisibility(View.GONE);
+            mPlayImageView.setVisibility(View.GONE);
+
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
@@ -296,6 +322,178 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         }
     }
 
+    private void initViewPager(final ArrayList<OpeningClosingImage> images) {
+        mImageLayout.setVisibility(View.GONE);
+        mPlayImageView.setVisibility(View.GONE);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mImageLayout.getLayoutParams();
+        layoutParams.height = mJVideoPlayer.getHeight();
+        mImageLayout.setLayoutParams(layoutParams);
+
+        PagerAdapter pagerAdapter = new PagerAdapter() {
+            @Override
+            public int getCount() {
+                return images.size();
+            }
+
+            @Override
+            public boolean isViewFromObject(View view, Object object) {
+                return view == object;
+            }
+
+            @Override
+            public void destroyItem(ViewGroup container, int position, Object object) {
+                if (object != null) {
+                    int count = container.getChildCount();
+                    for (int i = 0; i < count; i++) {
+                        View childView = container.getChildAt(i);
+                        if (childView == object) {
+                            container.removeView(childView);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+
+                View rootView = LayoutInflater.from(PlayVideoActivity.this).inflate(R.layout.item_opening_closing, null);
+
+                ImageView imageView = rootView.findViewById(R.id.imageView);
+
+                ImageLoader.getInstance().displayImage(Config.ResourceUrl + images.get(position).getUrl(), imageView);
+
+                container.addView(rootView);
+
+                return rootView;
+            }
+        };
+
+        int totalSecond = 0;
+        final ArrayList<Integer> seconds = new ArrayList<>();
+        for (OpeningClosingImage image : images) {
+            totalSecond += image.getInterval();
+            seconds.add(totalSecond);
+        }
+        mProgressBar.setMax(totalSecond);
+
+        mViewPager.setOffscreenPageLimit(3);
+
+        mViewPager.setAdapter(pagerAdapter);
+
+        progressHandler = new WeakHandler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(Message message) {
+                if (message.what == 0) {
+                    if (mProgressBar.getProgress() < mProgressBar.getMax()) {
+                        if (seconds.contains(mProgressBar.getProgress())) {
+                            mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
+                        }
+
+                        mProgressBar.setProgress(mProgressBar.getProgress() + 1);
+
+                        Message newMessage = new Message();
+                        newMessage.what = 0;
+                        newMessage.arg1 = message.arg1;
+                        progressHandler.sendMessageDelayed(newMessage, 1000);
+                    } else {
+                        toggleOpeningClosingImage(0, false);
+                        toggleOpeningClosingImage(1, false);
+
+                        // 如果是播完片头，就点击一下开始播放正片
+                        if (message.arg1 == 0) {
+                            mJVideoPlayer.startButton.performClick();
+                        }
+                    }
+                }
+                return false;
+            }
+        });
+    }
+
+    private void toggleOpeningClosingImage(int which, boolean on) {
+        this.which = which;
+
+        if (on) {
+            String voiceUrl = "";
+            if (which == 0) {
+                voiceUrl = Config.ResourceUrl + videoList.get(currentVideoIndex).getOpeningVoice();
+            } else if (which == 1) {
+                voiceUrl = Config.ResourceUrl + videoList.get(currentVideoIndex).getClosingVoice();
+            }
+
+            if (voiceUrl.contains("http")) {
+                HttpProxyCacheServer proxy = App.getProxy(this);
+                String proxyUrl = proxy.getProxyUrl(voiceUrl);
+
+                AudioPlayer.getInstance().playUrl(proxyUrl, -99);
+            } else {
+                AudioPlayer.getInstance().playUrl(voiceUrl, -99);
+            }
+
+            mImageLayout.setVisibility(View.VISIBLE);
+
+            if (progressHandler != null) {
+                Message message = new Message();
+                message.what = 0;
+                message.arg1 = which;
+                progressHandler.sendMessage(message);
+            }
+        } else {
+            if (AudioPlayer.getInstance().mediaPlayer != null
+                    && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                AudioPlayer.getInstance().currentId = -99;
+                AudioPlayer.getInstance().pause();
+                AudioPlayer.getInstance().stop();
+            }
+
+            mImageLayout.setVisibility(View.GONE);
+
+            if (progressHandler != null) {
+                progressHandler.removeMessages(0);
+            }
+
+            mProgressBar.setProgress(0);
+            if (mViewPager.getAdapter() != null) {
+                mViewPager.setCurrentItem(0, false);
+            }
+        }
+    }
+
+    @OnClick({R.id.layout_image, R.id.imageView_play})
+    public void onImageLayoutClick(View view) {
+        // 暂停播放
+        if (mPlayImageView.getVisibility() == View.GONE) {
+
+            mPlayImageView.setVisibility(View.VISIBLE);
+
+            if (AudioPlayer.getInstance().mediaPlayer != null
+                    && AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                AudioPlayer.getInstance().currentId = -99;
+                AudioPlayer.getInstance().pause();
+            }
+
+            progressHandler.removeMessages(0);
+        }
+        // 继续播放
+        else {
+            mPlayImageView.setVisibility(View.GONE);
+
+            if (AudioPlayer.getInstance().mediaPlayer != null
+                    && !AudioPlayer.getInstance().mediaPlayer.isPlaying()) {
+                AudioPlayer.getInstance().currentId = -99;
+                AudioPlayer.getInstance().play();
+            }
+
+            Message message = new Message();
+            message.what = 0;
+            message.arg1 = which;
+            // todo 这个延迟时间只能随意设定一下了，取均值500
+            progressHandler.sendMessageDelayed(message, 500);
+        }
+    }
+
     @Override
     public void onItemClick(int position) {
         currentVideoIndex = position;
@@ -320,26 +518,524 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
         } else {
             mLockImageView.setVisibility(View.VISIBLE);
         }
+
+        toggleOpeningClosingImage(0, false);
+        toggleOpeningClosingImage(1, false);
     }
 
-    private void setupPlayer(int position) {
-
-        int index = mDownloadManager.getPrefetchVideoByVideoId(videoList.get(position).getId());
+    private void setupPlayer(final int position) {
+        final int index = mDownloadManager.getPrefetchVideoByVideoId(videoList.get(position).getId());
 
         if (index != -1
                 && mDownloadManager.getPrefetchVideos().get(index).getVideoStatus()
                 == PrefetchVideo.VideoStatus.Downloaded) {
             Log.i("prefetch", DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"));
-            mJVideoPlayer.setUp(
-                    DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"),
-                    JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+            setupOpeningAndClosing(DownloadUtil.getFileName(mDownloadManager.getPrefetchVideos().get(index).getVideoId() + ".mp4"));
         } else {
             HttpProxyCacheServer proxy = App.getProxy(this);
             String proxyUrl = proxy.getProxyUrl(Config.ResourceUrl + videoList.get(position).getVideo());
-            mJVideoPlayer.setUp(proxyUrl, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+            setupOpeningAndClosing(proxyUrl);
         }
         mJVideoPlayer.thumbImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+        mJVideoPlayer.fullscreenButton.setVisibility(View.VISIBLE);
+
         ImageLoader.getInstance().displayImage(Config.ResourceUrl + videoList.get(position).getHeadImg(), mJVideoPlayer.thumbImageView);
+    }
+
+    private void setupOpeningAndClosing(final String url) {
+        final HttpProxyCacheServer proxy = App.getProxy(this);
+        mJVideoPlayer.setUp(proxy.getProxyUrl(Urls.OPENING_URL), JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+        final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mJVideoPlayer.fullscreenButton.getLayoutParams();
+        final LinearLayout.LayoutParams emptyParams = new LinearLayout.LayoutParams(UtilBox.dip2px(this, 16), 1);
+
+        mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (progress == 100) {
+                    if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                        mJVideoPlayer.fullscreenButton.performClick();
+                    }
+
+                    final Video currentVideo = videoList.get(currentVideoIndex);
+
+                    // todo 以下有3*3=9种情况，用了最糟糕的写法
+                    // 无片头片尾
+                    if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        // 播放完毕，初始化播放器
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    setupPlayer(currentVideoIndex);
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 无片头+视频片尾
+                    else if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVideo())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                        mJVideoPlayer.fullscreenButton.performClick();
+                                    }
+
+                                    mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getClosingVideo()),
+                                            JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                    mJVideoPlayer.startButton.performClick();
+
+                                    mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                                    // 播放完毕，初始化播放器
+                                    mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        @Override
+                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                            if (progress == 100) {
+                                                setupPlayer(currentVideoIndex);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                        }
+
+                                        @Override
+                                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 无片头+图片片尾
+                    else if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                        mJVideoPlayer.fullscreenButton.performClick();
+                                    }
+
+                                    initViewPager(videoList.get(currentVideoIndex).getClosingImages());
+
+                                    toggleOpeningClosingImage(1, true);
+
+                                    setupPlayer(currentVideoIndex);
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 视频片头+无片尾
+                    else if (!TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getOpeningVideo()),
+                                JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                    mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                                    mJVideoPlayer.startButton.performClick();
+
+                                    // 播放完毕，初始化播放器
+                                    mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        @Override
+                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                            if (progress == 100) {
+                                                setupPlayer(currentVideoIndex);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onStartTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStartTrackingTouch(seekBar);
+                                        }
+
+                                        @Override
+                                        public void onStopTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStopTrackingTouch(seekBar);
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                    }
+                    // 视频片头+视频片尾
+                    else if (!TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVideo())) {
+                        mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getOpeningVideo()),
+                                JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                    mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                                    mJVideoPlayer.startButton.performClick();
+
+                                    mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        @Override
+                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                            if (progress == 100) {
+                                                if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                                    mJVideoPlayer.fullscreenButton.performClick();
+                                                }
+
+                                                mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getClosingVideo()),
+                                                        JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                                mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                                                mJVideoPlayer.startButton.performClick();
+
+                                                // 播放完毕，初始化播放器
+                                                mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                                    @Override
+                                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                                        if (progress == 100) {
+                                                            setupPlayer(currentVideoIndex);
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                                    }
+
+                                                    @Override
+                                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                                    }
+                                                });
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onStartTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStartTrackingTouch(seekBar);
+                                        }
+
+                                        @Override
+                                        public void onStopTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStopTrackingTouch(seekBar);
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                    }
+                    // 视频片头+图片片尾
+                    else if (!TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getOpeningVideo()),
+                                JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                        mJVideoPlayer.startButton.performClick();
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                    mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                                    mJVideoPlayer.startButton.performClick();
+
+                                    mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        @Override
+                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                            if (progress == 100) {
+                                                if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                                    mJVideoPlayer.fullscreenButton.performClick();
+                                                }
+
+                                                initViewPager(videoList.get(currentVideoIndex).getClosingImages());
+
+                                                toggleOpeningClosingImage(1, true);
+
+                                                setupPlayer(currentVideoIndex);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onStartTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStartTrackingTouch(seekBar);
+                                        }
+
+                                        @Override
+                                        public void onStopTrackingTouch(SeekBar seekBar) {
+                                            mJVideoPlayer.onStopTrackingTouch(seekBar);
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        });
+                    }
+                    // 图片片头+无片尾
+                    else if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && !TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                        initViewPager(videoList.get(currentVideoIndex).getOpeningImages());
+
+                        toggleOpeningClosingImage(0, true);
+
+                        // 播放完毕，初始化播放器
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    setupPlayer(currentVideoIndex);
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 图片片头+视频片尾
+                    else if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && !TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVideo())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                        initViewPager(videoList.get(currentVideoIndex).getOpeningImages());
+
+                        toggleOpeningClosingImage(0, true);
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                        mJVideoPlayer.fullscreenButton.performClick();
+                                    }
+
+                                    mJVideoPlayer.setUp(proxy.getProxyUrl(Config.ResourceUrl + currentVideo.getClosingVideo()),
+                                            JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                                    mJVideoPlayer.fullscreenButton.setLayoutParams(emptyParams);
+
+                                    mJVideoPlayer.startButton.performClick();
+
+                                    // 播放完毕，初始化播放器
+                                    mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                                        @Override
+                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                            if (progress == 100) {
+                                                setupPlayer(currentVideoIndex);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                        }
+
+                                        @Override
+                                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                        }
+                                    });
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 图片片头+图片片尾
+                    else if (TextUtils.isEmpty(currentVideo.getOpeningVideo())
+                            && !TextUtils.isEmpty(currentVideo.getOpeningVoice())
+                            && TextUtils.isEmpty(currentVideo.getClosingVideo())
+                            && !TextUtils.isEmpty(currentVideo.getClosingVoice())) {
+                        mJVideoPlayer.setUp(url, JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "");
+
+                        mJVideoPlayer.fullscreenButton.setLayoutParams(params);
+
+                        initViewPager(videoList.get(currentVideoIndex).getOpeningImages());
+
+                        toggleOpeningClosingImage(0, true);
+
+                        mJVideoPlayer.progressBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (progress == 100) {
+                                    if (mJVideoPlayer.currentScreen == JCVideoPlayerStandard.SCREEN_WINDOW_FULLSCREEN) {
+                                        mJVideoPlayer.fullscreenButton.performClick();
+                                    }
+
+                                    initViewPager(videoList.get(currentVideoIndex).getClosingImages());
+
+                                    toggleOpeningClosingImage(1, true);
+
+                                    setupPlayer(currentVideoIndex);
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStartTrackingTouch(seekBar);
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+                                mJVideoPlayer.onStopTrackingTouch(seekBar);
+                            }
+                        });
+                    }
+                    // 其他情况(出错)
+                    else {
+                        Toast.makeText(PlayVideoActivity.this, "视频信息出错", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     @OnClick({R.id.layout_abstract})
@@ -592,6 +1288,9 @@ public class PlayVideoActivity extends BaseActivity implements IGetCartoonInfoVi
             popupHandler.removeMessages(0);
         }
         super.onDestroy();
+
+        toggleOpeningClosingImage(0, false);
+        toggleOpeningClosingImage(1, false);
     }
 
     @Override

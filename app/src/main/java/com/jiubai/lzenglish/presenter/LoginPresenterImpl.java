@@ -1,8 +1,5 @@
 package com.jiubai.lzenglish.presenter;
 
-import android.os.Handler;
-import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.config.Config;
@@ -31,7 +28,7 @@ public class LoginPresenterImpl implements ILoginPresenter {
 
     @Override
     public void login(BaseResp resp) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("appid", Constants.WX_APP_ID);
         params.put("secret", Constants.WX_APP_SECRET);
         params.put("code", ((SendAuth.Resp) resp).code);

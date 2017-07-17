@@ -1,7 +1,6 @@
 package com.jiubai.lzenglish.presenter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Response;
@@ -10,6 +9,8 @@ import com.jiubai.lzenglish.bean.Shadowing;
 import com.jiubai.lzenglish.bean.Voice;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.net.UploadUtil;
 import com.jiubai.lzenglish.ui.iview.IShadowingView;
@@ -40,7 +41,7 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
 
     @Override
     public void getShadowingList(final int videoId) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoonItemReview/indexV2");
         params.put("_ajax", "1");
         params.put("id", videoId + "");
@@ -50,6 +51,8 @@ public class ShadowingPresenterImpl implements IShadowingPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");

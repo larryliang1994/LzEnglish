@@ -23,8 +23,8 @@ android {
         applicationId "com.jiubai.lzenglish"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 4
-        versionName "0.8.3"
+        versionCode 6
+        versionName "0.8.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -60,6 +60,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile files('src/main/jniLibs/mta-android-sdk-3.0.1.jar')
+    compile files('src/main/jniLibs/mid-sdk-3.73.jar')
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.danikula:videocache:2.7.0'
     compile 'com.umeng.analytics:analytics:latest.integration'
@@ -72,7 +74,7 @@ dependencies {
     compile 'com.github.techery:properratingbar:0.0.5'
     compile 'me.shaohui:bottomdialog:1.1.9'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.github.limxing:Android-PromptDialog:1.0.5'
+    compile 'com.kaopiz:kprogresshud:1.0.2'
     compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     compile 'net.gotev:uploadservice:3.2.3'
     compile 'net.gotev:uploadservice-okhttp:3.2.3'
@@ -85,5 +87,6 @@ dependencies {
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile 'com.linsea:universalvideoview:1.1.0@aar'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
+    compile 'com.youth.banner:banner:1.4.9'
     testCompile 'junit:junit:4.12'
 }

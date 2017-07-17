@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.common.UtilBox;
+import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.presenter.LoggerPresenterImpl;
 
 import java.util.Timer;
@@ -54,6 +55,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
     public boolean writeLog = false;
 
+    public OnPlayerStateChangedListener onPlayerStateChangedListener;
 
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
 
@@ -231,6 +233,8 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.back_tiny) {
             backPress();
         } else if (i == fm.jiecao.jcvideoplayer_lib.R.id.start) {
+            Log.i(Constants.TAG, url);
+
             if (writeLog) {
                 new LoggerPresenterImpl().writeLog(context, "Player", "onClickStart");
                 Log.i("HahaPlayerrrrr", "onClickStart");
@@ -840,6 +844,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
             new LoggerPresenterImpl().writeLog(context, "Player", "onAutoCompletion");
             Log.i("HahaPlayerrrrr", "onAutoCompletion");
         }
+
+        if (onPlayerStateChangedListener != null) {
+            onPlayerStateChangedListener.onCompletion();
+        }
     }
 
     @Override
@@ -850,6 +858,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         if (writeLog) {
             new LoggerPresenterImpl().writeLog(context, "Player", "onCompletion");
             Log.i("HahaPlayerrrrr", "onCompletion");
+        }
+
+        if (onPlayerStateChangedListener != null) {
+            onPlayerStateChangedListener.onCompletion();
         }
     }
 
@@ -871,6 +883,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
             new LoggerPresenterImpl().writeLog(context, "Player", "prepareMediaPlayer");
             Log.i("HahaPlayerrrrr", "prepareMediaPlayer");
         }
+    }
+
+    public interface OnPlayerStateChangedListener {
+        void onCompletion();
     }
 }
 

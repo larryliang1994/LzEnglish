@@ -13,6 +13,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
@@ -31,6 +33,7 @@ import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
 import com.jiubai.lzenglish.ui.activity.PurchaseActivity;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -46,8 +49,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import me.leefeng.promptlibrary.PromptDialog;
 
 /**
  * 自用工具盒
@@ -363,6 +364,27 @@ public class UtilBox {
         }
     }
 
+    public static boolean isConnected(Context context) {
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        try {
+            ConnectivityManager connectivity = (ConnectivityManager) context
+                    .getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (connectivity != null) {
+                // 获取网络连接管理的对象
+                NetworkInfo info = connectivity.getActiveNetworkInfo();
+                if (info != null&& info.isConnected()) {
+                    // 判断当前网络是否已经连接
+                    if (info.getState() == NetworkInfo.State.CONNECTED) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public static String DATE = "MM-dd";
     public static String TIME = "HH:mm";
     public static String DATE_TIME = "MM-dd HH:mm";
@@ -657,22 +679,35 @@ public class UtilBox {
         return availableBlocks * blockSize / 1024.0 / 1024.0 / 1024.0;
     }
 
-    private static PromptDialog promptDialog;
+    //private static PromptDialog promptDialog;
+
+    private static KProgressHUD kProgressHUD;
 
     public static void showLoading(Activity activity, boolean withAnim) {
-        promptDialog = new PromptDialog(activity);
+//        promptDialog = new PromptDialog(activity);
+//
+//        promptDialog.showLoading("加载中", withAnim);
 
-        promptDialog.showLoading("加载中", withAnim);
+        kProgressHUD = KProgressHUD.create(activity)
+                .setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+	            .setCancellable(false)
+                .setAnimationSpeed(2)
+                .setDimAmount(0.5f);
+        kProgressHUD.show();
     }
 
     public static void dismissLoading(boolean immediately) {
-        if (promptDialog != null) {
-            if (immediately) {
-                promptDialog.dismissImmediately();
-            } else {
-                promptDialog.dismiss();
-            }
-        }
+//        if (promptDialog != null) {
+//            if (immediately) {
+//                promptDialog.dismissImmediately();
+//            } else {
+//                promptDialog.dismiss();
+//            }
+//        }
+
+       if (kProgressHUD != null) {
+           kProgressHUD.dismiss();
+       }
     }
 
     public static int getStatusBarHeight(Context context) {

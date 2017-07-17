@@ -9,6 +9,8 @@ import com.jiubai.lzenglish.bean.AgeRecommend;
 import com.jiubai.lzenglish.bean.InterestRecommend;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IRecommendView;
 
@@ -34,7 +36,7 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
     @Override
     public void getHomeInfo() {
         if (TextUtils.isEmpty(Config.AgeIndex) || TextUtils.isEmpty(Config.PreferenceVideoIndex)) {
-            Map<String, String> params = new HashMap<>();
+            final Map<String, String> params = new HashMap<>();
             params.put("_url", "appSuggest/suggestData");
             params.put("_ajax", "1");
 
@@ -45,6 +47,8 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                             Log.i("text", response);
 
                             try {
+                                RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                                 JSONObject jsonObject = new JSONObject(response);
 
                                 String result = jsonObject.getString("code");
@@ -67,7 +71,7 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                         }
                     });
         } else {
-            Map<String, String> params = new HashMap<>();
+            final Map<String, String> params = new HashMap<>();
             params.put("_url", "appSuggest/saveMemberChose");
             params.put("_ajax", "1");
 
@@ -82,6 +86,8 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                             Log.i("text", response);
 
                             try {
+                                RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                                 JSONObject jsonObject = new JSONObject(response);
 
                                 String result = jsonObject.getString("code");

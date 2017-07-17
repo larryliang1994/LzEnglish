@@ -1,15 +1,19 @@
 package com.jiubai.lzenglish.presenter;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.bean.Cartoon;
 import com.jiubai.lzenglish.bean.DetailedSeason;
+import com.jiubai.lzenglish.bean.OpeningClosingImage;
 import com.jiubai.lzenglish.bean.Season;
 import com.jiubai.lzenglish.bean.Video;
 import com.jiubai.lzenglish.common.UtilBox;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IGetCartoonInfoView;
 
@@ -35,7 +39,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
 
     @Override
     public void getCartoonList(int ageGroupsIndex) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoon/index");
         params.put("_ajax", "1");
         params.put("age_idx", ageGroupsIndex + 1 + "");
@@ -45,6 +49,8 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -109,7 +115,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
 
     @Override
     public void getCartoonSeason(int cartoonId) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoon/get");
         params.put("_ajax", "1");
         params.put("id", cartoonId + "");
@@ -119,6 +125,8 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -215,7 +223,7 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
 
     @Override
     public void getVideoList(int seasonId) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoonItem/getV2");
         params.put("_ajax", "1");
         params.put("id", seasonId + "");
@@ -225,6 +233,8 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -238,10 +248,6 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
 
                                 for (int i = 0; i < videoArray.length(); i++) {
                                     JSONObject videoObject = videoArray.getJSONObject(i);
-
-                                    if (i == 0) {
-                                        Log.i("text", videoObject.toString());
-                                    }
 
                                     Video video = new Video(
                                             videoObject.getInt("id"),
@@ -265,6 +271,50 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
                                             videoObject.getBoolean("___allow_review"),
                                             videoObject.toString().contains("\"___has_watch\":false") ? null : new JSONObject()
                                     );
+
+                                    if (videoObject.toString().contains("titles_video")
+                                            && !TextUtils.isEmpty(videoObject.getString("titles_video"))) {
+                                        video.setOpeningVideo(videoObject.getString("titles_video"));
+                                    } else if (videoObject.toString().contains("titles_voice")
+                                            && !TextUtils.isEmpty(videoObject.getString("titles_voice"))) {
+                                        video.setOpeningVoice(videoObject.getString("titles_voice"));
+
+                                        ArrayList<OpeningClosingImage> openingImages = new ArrayList<>();
+
+                                        JSONArray jsonArray = videoObject.getJSONArray("titles_image");
+
+                                        for (int index = 0; index < jsonArray.length(); index++) {
+                                            JSONObject object = jsonArray.getJSONObject(index);
+
+                                            openingImages.add(new OpeningClosingImage(
+                                                 object.getString("imgurl"), object.getInt("text1")
+                                            ));
+                                        }
+
+                                        video.setOpeningImages(openingImages);
+                                    }
+
+                                    if (videoObject.toString().contains("trailer_video")
+                                            && !TextUtils.isEmpty(videoObject.getString("trailer_video"))) {
+                                        video.setClosingVideo(videoObject.getString("trailer_video"));
+                                    } else if (videoObject.toString().contains("trailer_voice")
+                                            && !TextUtils.isEmpty(videoObject.getString("trailer_voice"))) {
+                                        video.setClosingVoice(videoObject.getString("trailer_voice"));
+
+                                        ArrayList<OpeningClosingImage> closingImages = new ArrayList<>();
+
+                                        JSONArray jsonArray = videoObject.getJSONArray("trailer_image");
+
+                                        for (int index = 0; index < jsonArray.length(); index++) {
+                                            JSONObject object = jsonArray.getJSONObject(index);
+
+                                            closingImages.add(new OpeningClosingImage(
+                                                    object.getString("imgurl"), object.getInt("text1")
+                                            ));
+                                        }
+
+                                        video.setClosingImages(closingImages);
+                                    }
 
                                     videos.add(video);
                                 }

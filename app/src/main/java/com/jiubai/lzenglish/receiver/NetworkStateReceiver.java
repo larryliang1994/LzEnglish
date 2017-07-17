@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.jiubai.lzenglish.config.Config;
-
 
 /**
  * 用于监听网络状态
@@ -16,15 +14,24 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)){
-            // 获取网络连接管理器对象（系统服务对象）
-            ConnectivityManager cm = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            // 获取网络状态
-            NetworkInfo info = cm.getActiveNetworkInfo();
-
-            Config.IS_CONNECTED = info != null && info.isAvailable();
+            // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+            try {
+                ConnectivityManager connectivity = (ConnectivityManager) context
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                if (connectivity != null) {
+                    // 获取网络连接管理的对象
+                    NetworkInfo info = connectivity.getActiveNetworkInfo();
+                    if (info != null&& info.isConnected()) {
+                        // 判断当前网络是否已经连接
+                        if (info.getState() == NetworkInfo.State.CONNECTED) {
+                            //Config.IS_CONNECTED = true;
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            //Config.IS_CONNECTED = false;
         }
-
     }
 }

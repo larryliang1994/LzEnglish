@@ -2,6 +2,8 @@ package com.jiubai.lzenglish.bean;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * Created by Larry Liang on 22/05/2017.
  */
@@ -27,6 +29,14 @@ public class Video {
     private boolean hasReview;
     private boolean allowReview;
     private JSONObject hasWatch;
+
+    private String openingVideo;
+    private String openingVoice;
+    private ArrayList<OpeningClosingImage> openingImages;
+
+    private String closingVideo;
+    private String closingVoice;
+    private ArrayList<OpeningClosingImage> closingImages;
 
     public Video() {
     }
@@ -215,5 +225,53 @@ public class Video {
 
     public void setHasWatch(JSONObject hasWatch) {
         this.hasWatch = hasWatch;
+    }
+
+    public String getOpeningVideo() {
+        return openingVideo;
+    }
+
+    public void setOpeningVideo(String openingVideo) {
+        this.openingVideo = openingVideo;
+    }
+
+    public String getOpeningVoice() {
+        return openingVoice;
+    }
+
+    public void setOpeningVoice(String openingVoice) {
+        this.openingVoice = openingVoice;
+    }
+
+    public ArrayList<OpeningClosingImage> getOpeningImages() {
+        return openingImages;
+    }
+
+    public void setOpeningImages(ArrayList<OpeningClosingImage> openingImages) {
+        this.openingImages = openingImages;
+    }
+
+    public String getClosingVideo() {
+        return closingVideo;
+    }
+
+    public void setClosingVideo(String closingVideo) {
+        this.closingVideo = closingVideo;
+    }
+
+    public String getClosingVoice() {
+        return closingVoice;
+    }
+
+    public void setClosingVoice(String closingVoice) {
+        this.closingVoice = closingVoice;
+    }
+
+    public ArrayList<OpeningClosingImage> getClosingImages() {
+        return closingImages;
+    }
+
+    public void setClosingImages(ArrayList<OpeningClosingImage> closingImages) {
+        this.closingImages = closingImages;
     }
 }

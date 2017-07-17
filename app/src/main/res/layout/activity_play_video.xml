@@ -14,6 +14,40 @@
         android:background="#000000"
         android:transitionName="player" />
 
+    <RelativeLayout
+        android:id="@+id/layout_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:visibility="gone">
+
+        <com.jiubai.lzenglish.widget.CustomViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"/>
+
+        <ImageView
+            android:id="@+id/imageView_play"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerInParent="true"
+            android:tint="#171B27"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="16dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/round_play_background_white"
+            android:src="@drawable/play"/>
+
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/imageView_back"
         android:layout_width="@dimen/appbar_height"

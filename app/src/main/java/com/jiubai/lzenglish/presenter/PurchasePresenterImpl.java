@@ -7,7 +7,10 @@ import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.App;
 import com.jiubai.lzenglish.bean.Coupon;
 import com.jiubai.lzenglish.bean.PurchaseInfo;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IPurchaseView;
 import com.tencent.mm.opensdk.modelpay.PayReq;
@@ -33,16 +36,19 @@ public class PurchasePresenterImpl implements IPurchasePresenter {
 
     @Override
     public void getPurchaseInfo(int seasonId) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "order/buySingleCartoon");
         params.put("id", seasonId + "");
         params.put("_ajax", "1");
+        params.put("third_session", Config.ThirdSession);
 
         RequestUtil.getRequest(params,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -102,7 +108,7 @@ public class PurchasePresenterImpl implements IPurchasePresenter {
 
     @Override
     public void didPurchase(int seasonId, int couponId) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "order/buySingleCartoon");
         params.put("_ajax", "1");
         params.put("id", seasonId + "");
@@ -149,18 +155,17 @@ public class PurchasePresenterImpl implements IPurchasePresenter {
     }
 
     public void initOrder(String orderNum) {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "order/getAppletPayment");
         params.put("_ajax", "1");
         params.put("order_number", orderNum);
+        params.put("third_session", Config.ThirdSession);
 
         RequestUtil.getRequest(params,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.i("text", response);
-
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");

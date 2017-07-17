@@ -1,12 +1,12 @@
 package com.jiubai.lzenglish.presenter;
 
-import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.jiubai.lzenglish.bean.Cartoon;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
+import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.net.RequestUtil;
 import com.jiubai.lzenglish.ui.iview.IInitDataView;
 
@@ -31,7 +31,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
 
     @Override
     public void getResourceUrl() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "api/getSrcPath");
         params.put("_ajax", "1");
 
@@ -40,6 +40,8 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -67,7 +69,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
 
     @Override
     public void getAgeGroups() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoon/getAgeList");
         params.put("_ajax", "1");
 
@@ -76,6 +78,8 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -108,7 +112,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
 
     @Override
     public void getAllCartoon() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoon/getAll");
         params.put("_ajax", "1");
 
@@ -117,6 +121,8 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");
@@ -156,7 +162,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
 
     @Override
     public void getUserInfo() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "member/getUserInfo");
         params.put("_ajax", "1");
 
@@ -165,7 +171,7 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            Log.i("text", response);
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
 
                             JSONObject jsonObject = new JSONObject(response);
 
@@ -196,18 +202,47 @@ public class InitDataPresenterImpl implements IInitDataPresenter {
 
     @Override
     public void getAgeInterestConfig() {
-        Map<String, String> params = new HashMap<>();
+        final Map<String, String> params = new HashMap<>();
         params.put("_url", "appSuggest/getAgeInterestConfig");
         params.put("_ajax", "1");
 
         Map<String, String> postParams = new HashMap<>();
         postParams.put("no_check_user", "1");
 
+        if (!Config.IS_CONNECTED) {
+            String res = "{" +
+                    "\"code\": 200,\n" +
+                    "\"data\": {\n" +
+                    "\"age\": {\n" +
+                    "\"1\": \"4岁以下\",\n" +
+                    "\"2\": \"5-9岁\",\n" +
+                    "\"3\": \"10岁以上\",\n" +
+                    "\"4\": \"其它\"\n" +
+                    "},\n" +
+                    "\"interest\": {\n" +
+                    "\"1\": \"字母积木\",\n" +
+                    "\"2\": \"数字虫\",\n" +
+                    "\"3\": \"英文儿歌\",\n" +
+                    "\"4\": \"单词世界\",\n" +
+                    "\"5\": \"疯狂动物城\",\n" +
+                    "\"6\": \"小猪佩奇\",\n" +
+                    "\"7\": \"功夫熊猫\",\n" +
+                    "\"8\": \"托福\",\n" +
+                    "\"9\": \"美国之音\"\n" +
+                    "}\n" +
+                    "}\n" +
+                    "}";
+
+            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, res);
+        }
+
         RequestUtil.request(params, postParams,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            RequestCacheManager.getInstance().insertRequestCache(Urls.SERVER_URL, params, response);
+
                             JSONObject jsonObject = new JSONObject(response);
 
                             String result = jsonObject.getString("code");

@@ -7,9 +7,11 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
         android:name=".App"
@@ -89,12 +91,26 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBarOverlay" />
 
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="592ac65ff43e4805000013f6" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="Developer" />
+        <receiver android:name=".receiver.NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name="com.tencent.mid.api.MidProvider"
+            android:authorities="com.jiubai.lzenglish.TENCENT.MID.V3"
+            android:exported="true" >
+        </provider>
+
+        <meta-data android:name="UMENG_APPKEY" android:value="592ac65ff43e4805000013f6" />
+
+        <meta-data android:name="UMENG_CHANNEL" android:value="Developer" />
+
+        <meta-data android:name="TA_APPKEY" android:value="A9MEAABL424S"/>
+
+        <meta-data android:name="InstallChannel" android:value="Developer"/>
 
     </application>
 

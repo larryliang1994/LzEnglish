@@ -2,19 +2,20 @@ package com.jiubai.lzenglish;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
+import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.manager.DownloadManager;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 import com.jiubai.lzenglish.manager.SearchHistoryManager;
 import com.jiubai.lzenglish.manager.WatchHistoryManager;
 import com.jiubai.lzenglish.net.RequestUtil;
-import com.jiubai.lzenglish.ui.activity.MainActivity;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -44,6 +45,8 @@ public class App extends Application {
 
         sharedPreferences = getSharedPreferences("LzEnglish", MODE_PRIVATE);
 
+        getNetworkState();
+
         RequestUtil.initRequestQueue(getApplicationContext());
 
         initImageLoader();
@@ -57,6 +60,8 @@ public class App extends Application {
         SearchHistoryManager.getInstance().readHistory();
 
         WatchHistoryManager.getInstance().readHistory();
+
+        RequestCacheManager.getInstance().readRequestCache();
     }
 
     private void initWechat() {
@@ -89,6 +94,17 @@ public class App extends Application {
                 .fileNameGenerator(new MyFileNameGenerator())
                 .maxCacheFilesCount(20)
                 .build();
+    }
+
+    private void getNetworkState() {
+        // 获取网络连接管理器对象（系统服务对象）
+        ConnectivityManager cm
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        // 获取网络状态
+        NetworkInfo info = cm.getActiveNetworkInfo();
+
+        Config.IS_CONNECTED = info != null && info.isAvailable();
     }
 
     private void proxyTest() {

@@ -23,7 +23,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:scaleType="centerInside"
-            android:src="@drawable/no_network" />
+            android:src="@drawable/wifi_off" />
 
         <TextView
             android:layout_width="wrap_content"

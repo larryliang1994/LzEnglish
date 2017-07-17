@@ -14,6 +14,7 @@ import com.android.volley.toolbox.Volley;
 import com.jiubai.lzenglish.config.Config;
 import com.jiubai.lzenglish.config.Constants;
 import com.jiubai.lzenglish.config.Urls;
+import com.jiubai.lzenglish.manager.RequestCacheManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,6 +44,15 @@ public class RequestUtil {
         url += "app=android";
 
         Log.i("url", url);
+
+        // 无网络时，显示缓存数据
+        if (!Config.IS_CONNECTED) {
+            if (RequestCacheManager.requestCache.containsKey(url)) {
+                successCallback.onResponse(RequestCacheManager.requestCache.get(url));
+                Log.i(Constants.TAG, "no network");
+                return;
+            }
+        }
 
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -78,6 +88,15 @@ public class RequestUtil {
         url += "app=android";
 
         Log.i("url", url);
+
+        // 无网络时，显示缓存数据
+        if (!Config.IS_CONNECTED) {
+            if (RequestCacheManager.requestCache.containsKey(url)) {
+                successCallback.onResponse(RequestCacheManager.requestCache.get(url));
+                Log.i(Constants.TAG, "no network");
+                return;
+            }
+        }
 
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -117,6 +136,15 @@ public class RequestUtil {
 
         Log.i("url", url);
 
+        // 无网络时，显示缓存数据
+        if (!Config.IS_CONNECTED) {
+            if (RequestCacheManager.requestCache.containsKey(url)) {
+                successCallback.onResponse(RequestCacheManager.requestCache.get(url));
+                Log.i(Constants.TAG, "no network");
+                return;
+            }
+        }
+
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 successCallback, errorCallback) {
@@ -152,11 +180,18 @@ public class RequestUtil {
             url += key + "=" + params.get(key) + "&";
         }
 
-        url += "third_session" + "=" + Config.ThirdSession;
-
         url += "&app=android";
 
         Log.i("url", url);
+
+        // 无网络时，显示缓存数据
+        if (!Config.IS_CONNECTED) {
+            if (RequestCacheManager.requestCache.containsKey(url)) {
+                successCallback.onResponse(RequestCacheManager.requestCache.get(url));
+                Log.i(Constants.TAG, "no network");
+                return;
+            }
+        }
 
         // 构建Post请求对象
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,

@@ -18,6 +18,7 @@ import com.jiubai.lzenglish.ui.activity.BaseActivity;
 import com.jiubai.lzenglish.ui.activity.ChooseAgeActivity;
 import com.jiubai.lzenglish.ui.activity.HomeActivity;
 import com.jiubai.lzenglish.ui.iview.IInitDataView;
+import com.tencent.stat.StatService;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -72,6 +73,8 @@ public class EntryActivity extends BaseActivity implements IInitDataView {
             IInitDataPresenter initDataPresenter = new InitDataPresenterImpl(this);
             initDataPresenter.getAgeInterestConfig();
         }
+
+        StatService.trackCustomEvent(this, "onCreate", "");
     }
 
     @OnClick(R.id.btn_reconnect)

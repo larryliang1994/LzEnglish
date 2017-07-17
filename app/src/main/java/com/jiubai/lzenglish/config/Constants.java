@@ -17,7 +17,9 @@ public class Constants {
     public static final int ListFooter = 2;
     public static final int ListNoMore = 3;
 
-    public static final String WX_APP_ID = "wxfd15544a4780ab14";
-    public static final String WX_APP_SECRET = "c30f3e4e1a8d1bb68e6e0699d03cc5b3";
+    public static final String WX_APP_ID = "wx119e1f519c196681";
+    public static final String WX_APP_SECRET = "27e4944b9531fef993fdcf392b0f7f53";
     public static final String WX_MCH_ID = "1431310402";
+
+    public static final String TAG = "LZEnglish.tag";
 }
