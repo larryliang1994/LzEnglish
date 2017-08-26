@@ -5,5 +5,5 @@ package com.jiubai.lzenglish.ui.iview;
  */
 
 public interface IRecommendView {
-    void OnGetHomeInfoResult(boolean result, String info, Object extras);
+    void onGetHomeInfoResult(boolean result, String info, Object extras);
 }

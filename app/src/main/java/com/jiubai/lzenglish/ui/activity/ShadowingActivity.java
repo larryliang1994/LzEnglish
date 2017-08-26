@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,8 +68,8 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
     @Bind(R.id.imageView_back)
     ImageView mBackImageView;
 
-    @Bind(R.id.scrollView)
-    NestedScrollView mScrollView;
+//    @Bind(R.id.scrollView)
+//    NestedScrollView mScrollView;
 
     private ShadowingAdapter mAdapter;
     private PermissionHelper mHelper;
@@ -137,7 +136,7 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setNestedScrollingEnabled(false);
+        //mRecyclerView.setNestedScrollingEnabled(false);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mBackImageView.getLayoutParams();
@@ -211,10 +210,24 @@ public class ShadowingActivity extends AppCompatActivity implements IShadowingVi
 
                                 mAdapter.notifyDataSetChanged();
 
-                                mScrollView.smoothScrollTo(mScrollView.getScrollX(),
-                                        mScrollView.getScrollY()
-                                                + UtilBox.dip2px(ShadowingActivity.this, 56) * shadowingList.get(currentShadowingIndex).getVoiceList().size()
-                                                + UtilBox.dip2px(ShadowingActivity.this, 100));
+                                int index = 0;
+                                for (int i = 0; i < mAdapter.shadowingList.size(); i++) {
+                                    ArrayList<Voice> voices = (ArrayList<Voice>) mAdapter.shadowingList.get(i).getVoiceList();
+                                    for (int j = 0; j < voices.size(); j++) {
+                                        index++;
+
+                                        if (voices.get(j).getId() == -99) {
+                                            mRecyclerView.smoothScrollToPosition(index);
+                                        }
+                                    }
+
+                                    index++;
+                                }
+
+//                                mScrollView.smoothScrollTo(mScrollView.getScrollX(),
+//                                        mScrollView.getScrollY()
+//                                                + UtilBox.dip2px(ShadowingActivity.this, 56) * shadowingList.get(currentShadowingIndex).getVoiceList().size()
+//                                                + UtilBox.dip2px(ShadowingActivity.this, 100));
 
                                 new ShadowingPresenterImpl(ShadowingActivity.this)
                                         .saveVoice(ShadowingActivity.this, voice);

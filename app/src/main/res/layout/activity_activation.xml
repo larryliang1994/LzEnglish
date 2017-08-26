@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.jiubai.lzenglish.ui.activity.ActivationActivity">
+
+    <LinearLayout
+        android:id="@+id/layout_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="#ffffff"
+        android:orientation="horizontal"
+        android:paddingTop="20dp"
+        android:transitionName="appbar">
+
+        <ImageView
+            android:id="@+id/imageView_back"
+            android:layout_width="@dimen/appbar_height"
+            android:layout_height="@dimen/appbar_height"
+            android:padding="12dp"
+            android:src="@drawable/back"
+            android:tint="#151515" />
+
+        <View
+            android:layout_width="22dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="视频激活"
+            android:textColor="#151515"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/textView_edit"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|right"
+            android:paddingRight="10dp"
+            android:text=""
+            android:textColor="#151515"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="48dp"
+            android:text="首次进入，请先激活"
+            android:textColor="#666868"
+            android:textSize="14sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="#ffffff"
+            android:hint="请输入激活码"
+            android:inputType="text"
+            android:lines="1"
+            android:maxLines="1"
+            android:paddingLeft="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#999999"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/divider" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="32dp">
+
+            <Button
+                android:id="@+id/button_confirm"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_button_login"
+                android:text="确定"
+                android:textColor="#ffffff"
+                android:textSize="18sp" />
+
+            <View
+                android:id="@+id/view_cover"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="#77ffffff"/>
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textView_find_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="哪有激活码？"
+            android:textColor="#586472"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Copyright© 2017 量子英语　All Rights Reserved."
+            android:textColor="#9f666868"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+</LinearLayout>

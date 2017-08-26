@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="24dp"
+        android:text="请关注量子英语微信购买"
+        android:textColor="#666666"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <Button
+        android:id="@+id/button_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/ripple"
+        android:text="我知道了"
+        android:textColor="#909090"
+        android:textSize="18sp" />
+
+</LinearLayout>

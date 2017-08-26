@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// 管理部（人事部） —— 财务部
 public class PurchaseActivity extends BaseActivity implements IPurchaseView {
 
     @Bind(R.id.textView_price)

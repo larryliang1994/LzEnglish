@@ -202,4 +202,35 @@ public class RequestUtil {
         // 加入请求队列
         requestQueue.add(stringRequest);
     }
+
+    public static void directRequest(final String params,
+                                     Response.Listener<String> successCallback,
+                                     Response.ErrorListener errorCallback) {
+        String url = Urls.SERVER_URL + "?" + params;
+
+        url += "&_ajax=1&app=android";
+
+        Log.i("url", url);
+
+        // 构建Post请求对象
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                successCallback, errorCallback) {
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+
+                if (!TextUtils.isEmpty(Config.ThirdSession)) {
+                    params.put("third_session", Config.ThirdSession);
+                }
+
+                return params;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(Constants.REQUEST_TIMEOUT, 1, 1.0f));
+
+        // 加入请求队列
+        requestQueue.add(stringRequest);
+    }
 }

@@ -11,9 +11,9 @@
     <com.jiubai.lzenglish.widget.JCVideoPlayerStandard
         android:id="@+id/videoplayer"
         android:layout_width="match_parent"
-        android:transitionName="player"
         android:layout_height="180dp"
-        android:background="#000000" />
+        android:background="#000000"
+        android:transitionName="player" />
 
     <View
         android:id="@+id/view_video_cover"
@@ -35,12 +35,12 @@
     <FrameLayout
         android:id="@+id/layout_bottom"
         android:layout_width="match_parent"
-        android:transitionName="bottomLayout"
         android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
         android:background="#ffffff"
         android:elevation="1dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true">
+        android:transitionName="bottomLayout">
 
         <View
             android:layout_width="match_parent"
@@ -49,39 +49,37 @@
 
         <com.jiubai.lzenglish.widget.recorder.manager.AudioRecordButton
             android:id="@+id/button"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:layout_gravity="center"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/round_button_login"
-            style="?android:attr/borderlessButtonStyle"
-            app:elevation="0dp"
             android:text="按住录音 跟读"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            app:elevation="0dp" />
 
     </FrameLayout>
 
-    <android.support.v4.widget.NestedScrollView
-        android:id="@+id/scrollView"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/layout_bottom"
-        android:layout_below="@id/videoplayer">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </android.support.v4.widget.NestedScrollView>
+        android:layout_below="@id/videoplayer" />
 
     <View
         android:id="@+id/view_cover"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
         android:layout_below="@id/videoplayer"
-        android:background="#ffffff" />
+        android:background="#ffffff"
+        android:visibility="visible" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

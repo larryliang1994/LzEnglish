@@ -158,7 +158,7 @@ public class RecommendFragment extends Fragment implements IRecommendView {
     }
 
     @Override
-    public void OnGetHomeInfoResult(boolean result, String info, Object extras) {
+    public void onGetHomeInfoResult(boolean result, String info, Object extras) {
         if (result) {
             Object[] objects = (Object[]) extras;
 

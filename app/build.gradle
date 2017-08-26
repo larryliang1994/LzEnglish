@@ -18,13 +18,13 @@ android {
         }
     }
     compileSdkVersion 26
-    buildToolsVersion '26.0.0'
+    buildToolsVersion '26.0.1'
     defaultConfig {
         applicationId "com.jiubai.lzenglish"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 6
-        versionName "0.8.5"
+        versionCode 8
+        versionName "0.8.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -84,9 +84,8 @@ dependencies {
     compile 'com.badoo.mobile:android-weak-handler:1.1'
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.9'
     compile 'com.github.HotBitmapGG:RingProgressBar:V1.2.2'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
-    compile 'com.linsea:universalvideoview:1.1.0@aar'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.4.0'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
-    compile 'com.youth.banner:banner:1.4.9'
+    compile 'com.google.zxing:core:3.3.0'
     testCompile 'junit:junit:4.12'
 }

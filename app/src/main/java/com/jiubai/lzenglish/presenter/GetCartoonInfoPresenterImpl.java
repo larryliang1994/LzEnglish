@@ -222,11 +222,11 @@ public class GetCartoonInfoPresenterImpl implements IGetCartoonInfoPresenter {
     }
 
     @Override
-    public void getVideoList(int seasonId) {
+    public void getVideoList(int videoId) {
         final Map<String, String> params = new HashMap<>();
         params.put("_url", "cartoonItem/getV2");
         params.put("_ajax", "1");
-        params.put("id", seasonId + "");
+        params.put("id", videoId + "");
 
         RequestUtil.request(params,
                 new Response.Listener<String>() {

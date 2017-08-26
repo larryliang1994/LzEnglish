@@ -56,18 +56,18 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                                 if (Constants.SUCCESS.equals(result)) {
                                     decodeRecommendInfo(jsonObject.getJSONObject("data"));
                                 } else {
-                                    iRecommendView.OnGetHomeInfoResult(false, jsonObject.getString("msg"), response);
+                                    iRecommendView.onGetHomeInfoResult(false, jsonObject.getString("msg"), response);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                iRecommendView.OnGetHomeInfoResult(false, "推荐页数据源出错", e);
+                                iRecommendView.onGetHomeInfoResult(false, "推荐页数据源出错", e);
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            iRecommendView.OnGetHomeInfoResult(false, "获取推荐页数据失败", error);
+                            iRecommendView.onGetHomeInfoResult(false, "获取推荐页数据失败", error);
                         }
                     });
         } else {
@@ -95,18 +95,18 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
                                 if (Constants.SUCCESS.equals(result)) {
                                     decodeRecommendInfo(jsonObject.getJSONObject("data"));
                                 } else {
-                                    iRecommendView.OnGetHomeInfoResult(false, jsonObject.getString("msg"), response);
+                                    iRecommendView.onGetHomeInfoResult(false, jsonObject.getString("msg"), response);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                                iRecommendView.OnGetHomeInfoResult(false, "推荐页数据源出错", e);
+                                iRecommendView.onGetHomeInfoResult(false, "推荐页数据源出错", e);
                             }
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            iRecommendView.OnGetHomeInfoResult(false, "获取推荐页数据失败", error);
+                            iRecommendView.onGetHomeInfoResult(false, "获取推荐页数据失败", error);
                         }
                     });
         }
@@ -148,6 +148,6 @@ public class RecommendPresenterImpl implements IRecommendPresenter {
 
         Object[] objects = {ageRecommends, interestRecommends};
 
-        iRecommendView.OnGetHomeInfoResult(true, "", objects);
+        iRecommendView.onGetHomeInfoResult(true, "", objects);
     }
 }

@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.ListAdapter;
@@ -736,6 +737,78 @@ public class UtilBox {
         dialog.setCancelable(true);
         dialog.setCanceledOnTouchOutside(true);
         dialog.show();
+    }
+
+    public static void alert(Context context, String message,
+                             String positiveText, DialogInterface.OnClickListener positiveListener) {
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                        .setMessage(message)
+                        .setCancelable(true)
+                        .setPositiveButton(positiveText, positiveListener);
+
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+    }
+
+    public static AlertDialog colorfulDoubleAlertDialog;
+
+    public static void colorfulAlert(final Context context, String message,
+                                      String positiveText, View.OnClickListener positiveListener,
+                                      String negativeText) {
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_colorful_double, null);
+
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                        .setView(contentView)
+                        .setCancelable(true);
+
+        colorfulDoubleAlertDialog = builder.create();
+        colorfulDoubleAlertDialog.setCancelable(true);
+        colorfulDoubleAlertDialog.setCanceledOnTouchOutside(true);
+        colorfulDoubleAlertDialog.show();
+
+        ((TextView)contentView.findViewById(R.id.textView_message)).setText(message);
+
+        ((Button)contentView.findViewById(R.id.button_confirm)).setText(positiveText);
+
+        ((Button)contentView.findViewById(R.id.button_cancel)).setText(negativeText);
+
+        contentView.findViewById(R.id.button_confirm).setOnClickListener(positiveListener);
+
+        contentView.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                colorfulDoubleAlertDialog.dismiss();
+            }
+        });
+    }
+
+    public static void colorfulAlert(final Context context, String message, String text) {
+        View contentView = LayoutInflater.from(context).inflate(R.layout.dialog_colorful_single, null);
+
+        final AlertDialog.Builder builder =
+                new AlertDialog.Builder(context, android.R.style.Theme_DeviceDefault_Light_Dialog_NoActionBar_MinWidth)
+                        .setView(contentView)
+                        .setCancelable(true);
+
+        final AlertDialog dialog = builder.create();
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
+
+        ((TextView)contentView.findViewById(R.id.textView_message)).setText(message);
+
+        ((Button)contentView.findViewById(R.id.button_cancel)).setText(text);
+
+        contentView.findViewById(R.id.button_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public static void purchaseAlert(final Context context, String message, final int seasonId) {

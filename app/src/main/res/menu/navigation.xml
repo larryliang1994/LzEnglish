@@ -13,6 +13,11 @@
         android:title="视频" />
 
     <item
+        android:id="@+id/navigation_qrscan"
+        android:icon="@drawable/selector_navigation_qrscan"
+        android:title="扫一扫" />
+
+    <item
         android:id="@+id/navigation_person"
         android:icon="@drawable/selector_navigation_user"
         android:title="我的" />

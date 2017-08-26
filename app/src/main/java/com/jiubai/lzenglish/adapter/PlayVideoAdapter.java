@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jiubai.lzenglish.R;
@@ -30,6 +31,7 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
     private OnStateChangeListener listener;
 
     private int currentVideo = 0;
+    public int playingVideo = -1;
 
     public PlayVideoAdapter(Context context, ArrayList<Video> list) {
         this.context = context;
@@ -38,6 +40,10 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
 
     public void setCurrentVideo(int currentVideo) {
         this.currentVideo = currentVideo;
+    }
+
+    public int getCurrentVideo() {
+        return currentVideo;
     }
 
     @Override
@@ -55,6 +61,20 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
         if (currentVideo == position) {
             viewHolder.playImageView.setVisibility(View.VISIBLE);
             viewHolder.ePTextView.setText("");
+
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) viewHolder.playImageView.getLayoutParams();
+
+            if (position == playingVideo) {
+                params.width = UtilBox.dip2px(context, 20);
+                params.height = UtilBox.dip2px(context, 20);
+                viewHolder.playImageView.setImageResource(R.drawable.pause);
+            } else {
+                params.width = UtilBox.dip2px(context, 16);
+                params.height = UtilBox.dip2px(context, 16);
+                viewHolder.playImageView.setImageResource(R.drawable.play);
+            }
+
+            viewHolder.playImageView.setLayoutParams(params);
         } else {
             viewHolder.playImageView.setVisibility(View.GONE);
             viewHolder.ePTextView.setText(position + 1 + "");
@@ -89,7 +109,17 @@ public class PlayVideoAdapter extends RecyclerView.Adapter {
             @Override
             public void onClick(View v) {
                 if (video.isAllowWatch()) {
-                    currentVideo = position;
+                    if (currentVideo != position) {
+                        currentVideo = position;
+
+                        playingVideo = -1;
+                    } else {
+//                        if (playingVideo == position) {
+//                            playingVideo = -1;
+//                        } else {
+//                            playingVideo = position;
+//                        }
+                    }
 
                     notifyDataSetChanged();
 

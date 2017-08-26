@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -258,6 +257,11 @@ public class DownloadAdapter extends RecyclerView.Adapter implements DownloadMan
     @Override
     public void onChanged(int index) {
         notifyItemRangeChanged(0, getItemCount());
+    }
+
+    @Override
+    public void onCompletion(int id) {
+
     }
 
     class ItemViewHolder extends RecyclerView.ViewHolder {

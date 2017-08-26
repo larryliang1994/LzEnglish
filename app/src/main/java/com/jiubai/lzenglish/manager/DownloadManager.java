@@ -81,6 +81,7 @@ public class DownloadManager {
 
                         if (listener != null) {
                             listener.onChanged(index);
+                            listener.onCompletion(prefetchVideo.getVideoId());
                         }
 
                         writeVideoSharedPreferences();
@@ -324,5 +325,6 @@ public class DownloadManager {
 
     public interface OnProgressChangedListener {
         void onChanged(int index);
+        void onCompletion(int id);
     }
 }

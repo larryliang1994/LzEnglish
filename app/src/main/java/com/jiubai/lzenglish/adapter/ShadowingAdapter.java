@@ -55,7 +55,7 @@ import static fm.jiecao.jcvideoplayer_lib.JCVideoPlayer.CURRENT_STATE_PLAYING;
  */
 
 public class ShadowingAdapter extends RecyclerView.Adapter {
-    private ArrayList<Shadowing> shadowingList;
+    public ArrayList<Shadowing> shadowingList;
     private Context context;
     private OnItemClickListener listener;
 
